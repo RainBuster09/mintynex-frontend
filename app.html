@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1e1f22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MintyNex — TCG Social</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app-styles-base.css">
+<link rel="stylesheet" href="app-styles-creatures.css">
+<style>
+#login-screen{background:linear-gradient(135deg,#0d0e11 0%,#1a1c22 25%,#1e1f22 50%,#23272a 75%,#5865f2 100%);position:relative;overflow:hidden}
+#login-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(88,101,242,.18) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(245,158,11,.10) 0%,transparent 45%),radial-gradient(ellipse at 60% 85%,rgba(35,165,90,.08) 0%,transparent 40%);pointer-events:none}
+.login-cards::before,.login-cards::after{content:'';position:absolute;border-radius:50%;filter:blur(1px);animation:loginFloat 10s ease-in-out infinite}
+.login-cards::before{width:160px;height:160px;left:-40px;top:18%;background:radial-gradient(circle,rgba(88,101,242,.25) 0%,rgba(88,101,242,0) 70%)}
+.login-cards::after{width:190px;height:190px;right:-45px;bottom:12%;background:radial-gradient(circle,rgba(245,158,11,.2) 0%,rgba(245,158,11,0) 72%);animation-delay:-4s}
+@keyframes loginFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.llogo-icon{filter:drop-shadow(0 0 14px rgba(0,210,255,.65));display:block;margin-bottom:6px}
+.llogo-title{text-shadow:0 0 20px rgba(88,101,242,.4);font-size:22px!important}
+.llogo{margin-bottom:12px!important}
+.lcard{background:linear-gradient(160deg,rgba(43,45,49,.97) 0%,rgba(30,31,34,.97) 100%);border:1px solid rgba(88,101,242,.25);box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 64px rgba(0,0,0,.6),0 0 40px rgba(88,101,242,.12);backdrop-filter:blur(12px)}
+.fi-glow:focus{border-color:#5865f2;box-shadow:0 0 0 3px rgba(88,101,242,.15)}
+.lbtn-pulse{background:linear-gradient(135deg,#5865f2,#4752c4);box-shadow:0 4px 20px rgba(88,101,242,.4);animation:btnGlow 2.4s ease-in-out infinite}
+.lbtn-pulse:hover{box-shadow:0 6px 28px rgba(88,101,242,.6);transform:translateY(-1px)}
+@keyframes btnGlow{0%,100%{box-shadow:0 4px 20px rgba(88,101,242,.35)}50%{box-shadow:0 4px 30px rgba(88,101,242,.7)}}
+.lbtn-otp{width:100%;padding:9px;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;margin-bottom:10px;color:#b5bac1;background:rgba(255,255,255,.04);transition:all .18s}
+.lbtn-otp:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(88,101,242,.4)}
+.lbtn-ghost{width:100%;padding:11px;font-size:14px;font-weight:700;background:rgba(255,255,255,.05);color:#dbdee1;border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;margin-bottom:10px;transition:all .18s}
+.lbtn-ghost:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2)}
+.phone-wrap{display:flex;gap:6px}
+.fi-dial{width:110px;flex-shrink:0;padding:9px 6px;font-size:12px}
+.fi-phone{flex:1}
+.fl-opt{font-weight:400;text-transform:none;letter-spacing:0;color:#5865f2;margin-left:3px;font-size:9px}
+.otp-row{background:rgba(88,101,242,.06);border:1px solid rgba(88,101,242,.2);border-radius:10px;padding:12px;margin-bottom:10px}
+.otp-inputs{display:flex;gap:7px;justify-content:center;margin:8px 0}
+.otp-box{width:40px!important;height:44px;text-align:center;font-size:18px;font-weight:800;padding:4px!important;border-radius:8px!important;border-color:rgba(88,101,242,.3)!important}
+.otp-box:focus{border-color:#5865f2!important;box-shadow:0 0 0 2px rgba(88,101,242,.25)!important}
+.adm-disputes-header{background:linear-gradient(135deg,rgba(114,137,218,.12),rgba(88,101,242,.06));border:1px solid rgba(114,137,218,.2);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.dispute-filter-btn.active{background:#5865f2!important;color:#fff!important}
+.dispute-filter-btn{transition:all .15s}
+.post-acts .pab[data-action="share"] svg{transition:transform .2s}
+.post-acts .pab[data-action="share"]:hover svg{transform:translateY(-2px)}
+.post-acts .pab.shared{color:#5865f2!important}
+
+/* ── Toast text always white ── */
+.toast{color:#fff!important}
+.toast.grn{background:#23a55a!important;color:#fff!important;border-color:rgba(255,255,255,.25)!important}
+.toast.red{background:#ed4245!important;color:#fff!important;border-color:rgba(255,255,255,.25)!important}
+.toast.gold{background:#d97706!important;color:#fff!important;border-color:rgba(255,255,255,.25)!important}
+.toast.on{color:#fff!important}
+.composer-card{background:linear-gradient(135deg,rgba(43,45,49,1) 0%,rgba(35,36,40,1) 100%);border:1px solid rgba(88,101,242,.18);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.composer-avatar-ring{background:linear-gradient(135deg,#5865f2,#f59e0b);padding:2px;border-radius:50%}
+.composer-inner-av{width:36px;height:36px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;border:2px solid #2b2d31}
+.composer-input{background:rgba(30,31,34,.9)!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:20px!important;font-size:13px}
+.composer-input:focus{border-color:rgba(88,101,242,.5)!important;box-shadow:0 0 0 3px rgba(88,101,242,.1)!important}
+.composer-btn-row{display:flex;gap:6px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.composer-media-btns{display:flex;gap:5px;flex-wrap:wrap}
+.admtop{background:linear-gradient(135deg,#1a1c22,#1e1f22);border-bottom:1px solid rgba(88,101,242,.2)}
+.admtabs{background:linear-gradient(to bottom,#1e1f22,#1a1c22);border-bottom:1px solid rgba(255,255,255,.08)}
+.adm-sec{animation:fadeUp .2s ease}
+
+/* Premium modal */
+#premiumModal{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.87);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px}
+#premiumModal.on{display:flex}
+.premium-modal-inner{background:linear-gradient(160deg,#1e1f22,#232428);border:1px solid rgba(245,158,11,.32);border-radius:18px;padding:28px 22px;max-width:400px;width:100%;box-shadow:0 0 60px rgba(245,158,11,.12),0 24px 64px rgba(0,0,0,.7);text-align:center;position:relative;animation:slideUp .3s ease;overflow-y:auto;max-height:90vh}
+.premium-modal-inner *{color:#dbdee1}
+.premium-modal-inner h2,.premium-modal-inner strong,.premium-modal-inner .price{color:#fff}
+.close-prem{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.06);border:none;color:#b5bac1;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.close-prem:hover{background:rgba(255,255,255,.12);color:#fff}
+.plan-opt{background:#2b2d31;border:2px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 8px;cursor:pointer;transition:all .18s;text-align:center}
+.plan-opt.selected,.plan-opt:hover{border-color:#f59e0b;background:rgba(245,158,11,.07)}
+.plan-opt .price{font-size:18px;font-weight:900;color:#f59e0b!important}
+.plan-opt .period{font-size:10px;color:#80848e!important;margin-top:1px}
+.plan-opt .save-tag{display:inline-block;background:rgba(35,165,90,.2);color:#3ba55c!important;font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-top:4px}
+
+/* Trial popup */
+#trialPopup{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px}
+#trialPopup.on{display:flex}
+.trial-popup-card{background:linear-gradient(160deg,#1e1f22 0%,#232428 100%);border:1px solid rgba(245,158,11,.35);border-radius:20px;padding:28px 22px;max-width:390px;width:100%;text-align:center;box-shadow:0 0 80px rgba(245,158,11,.12),0 24px 64px rgba(0,0,0,.85);animation:slideUp .35s ease;overflow-y:auto;max-height:90vh}
+.trial-popup-card h2{font-size:20px;font-weight:900;margin-bottom:6px;color:#ffffff!important}
+.trial-popup-card p{font-size:13px;color:#b5bac1!important;line-height:1.6;margin-bottom:18px}
+.trial-features-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.trial-feat{background:#2b2d31;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 8px;text-align:center}
+.trial-feat-icon{font-size:1.3rem;display:block;margin-bottom:5px}
+.trial-feat-label{font-size:11px;font-weight:700;color:#dbdee1!important;display:block}
+
+/* Premium banner */
+.premium-banner{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(88,101,242,.05));border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px 14px;margin:0 12px 10px;display:flex;align-items:center;gap:10px}
+
+/* Bigger trade tabs */
+#tradeTabs{display:flex;overflow-x:auto;scrollbar-width:none;background:#2b2d31;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:2px;padding:6px}
+#tradeTabs::-webkit-scrollbar{display:none}
+#tradeTabs .atab{font-size:12px!important;padding:10px 16px!important;border-radius:8px;white-space:nowrap;font-weight:700;background:transparent;border:none;color:#b5bac1;cursor:pointer;transition:all .18s;flex-shrink:0}
+#tradeTabs .atab.on{background:rgba(88,101,242,.15);color:#fff}
+#tradeTabs .atab:hover:not(.on){background:rgba(255,255,255,.05);color:#fff}
+
+/* Players hero — remove Global subtitle */
+#pg-players .hero p{display:none}
+#pg-mart .hero p{display:none}
+
+/* Alert banner */
+.alert-banner{margin:10px 12px 0;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;animation:fadeUp .3s ease}
+.alert-banner.info{background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.25);color:#7289da}
+.alert-banner.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+.alert-banner.success{background:rgba(35,165,90,.12);border:1px solid rgba(35,165,90,.25);color:#3ba55c}
+
+/* Ensure all text is visible */
+.tcg-nm{color:#fff!important;font-size:13px;font-weight:700;margin-bottom:3px}
+.tcg-meta{color:#b5bac1!important;font-size:10px;margin-bottom:5px}
+.tcg-price{color:#f59e0b!important;font-size:15px;font-weight:900;margin-bottom:8px}
+.tc-nm{color:#fff!important;font-size:13px;font-weight:800;margin-bottom:2px}
+.tc-loc{color:#b5bac1!important;font-size:11px;margin-bottom:6px}
+.post-cap{color:#dbdee1!important;font-size:13px;line-height:1.5;margin-bottom:6px}
+.sh-t{color:#fff!important}
+.stat-v{color:#f59e0b!important;font-size:17px;font-weight:900}
+.stat-l{color:#80848e!important;font-size:9px;text-transform:uppercase;margin-top:1px}
+
+/* Free badge */
+.free-badge{background:rgba(255,255,255,.08);color:#b5bac1;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px}
+.premium-nav-badge{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#000;font-size:9px;font-weight:900;padding:2px 7px;border-radius:20px;letter-spacing:.5px}
+
+/* Admin premium tab */
+.adm-premium-stat{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(88,101,242,.05))!important}
+.adm-prem-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.adm-prem-row:last-child{border-bottom:none}
+.prem-status-active{color:#23a55a;font-size:10px;font-weight:700}
+.prem-status-trial{color:#f59e0b;font-size:10px;font-weight:700}
+.prem-status-expired{color:#ed4245;font-size:10px;font-weight:700}
+
+@media(max-width:600px){
+  .tnav{padding:0 8px;gap:5px}
+  .srch{max-width:120px}
+  .dtabs{display:none}
+  #gbn{display:flex}
+  .sb{display:none}
+  #tradeTabs .atab{font-size:11px!important;padding:8px 10px!important}
+  .premium-modal-inner{padding:22px 16px}
+  .trial-popup-card{padding:22px 16px}
+  /* Mobile safe area bottom */
+  #gbn{padding-bottom:env(safe-area-inset-bottom,0);height:calc(60px + env(safe-area-inset-bottom,0))}
+  .scr-pb{padding-bottom:calc(70px + env(safe-area-inset-bottom,0))!important}
+  /* Composer fix on mobile */
+  .composer-btn-row{flex-direction:column;gap:8px}
+  .composer-media-btns{flex-wrap:wrap}
+  /* Login card mobile */
+  .lcard{padding:16px}
+  .lbox{padding:0 4px}
+}
+@media(min-width:601px){.dtabs{display:flex}#gbn{display:none}}
+
+/* Forgot password step dots */
+.fp-step-dot{width:28px;height:4px;border-radius:2px;background:rgba(255,255,255,.1);transition:all .3s}
+.fp-dot-active{background:#5865f2;width:36px}
+.fp-dot-done{background:#23a55a}
+/* OTP box focus ring in forgot modal */
+#fpOtpBoxes .fp-otp:focus{border-color:#5865f2!important;box-shadow:0 0 0 2px rgba(88,101,242,.25)!important}
+
+/* ── Password Eye Toggle ── */
+.pw-wrap { position: relative; }
+.pw-eye { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#80848e; cursor:pointer; padding:4px; display:flex; align-items:center; transition:color .15s; }
+.pw-eye:hover { color:#b5bac1; }
+.pw-eye svg { display:block; }
+
+/* ── Trade Type Buttons ── */
+.trade-type-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:7px 12px; font-size:11px; font-weight:700;
+  background:#383a40; border:1.5px solid rgba(255,255,255,.08);
+  border-radius:20px; color:#b5bac1; cursor:pointer;
+  transition:all .18s; white-space:nowrap;
+}
+.trade-type-btn.active, .trade-type-btn:hover {
+  background:rgba(88,101,242,.18); border-color:#5865f2; color:#fff;
+}
+.trade-side-btn {
+  flex:1; padding:6px 8px; font-size:11px; font-weight:700;
+  background:#383a40; border:1.5px solid rgba(255,255,255,.06);
+  border-radius:6px; color:#b5bac1; cursor:pointer; transition:all .15s;
+}
+.trade-side-btn.active {
+  background:rgba(245,158,11,.15); border-color:#f59e0b; color:#f59e0b;
+}
+
+/* ── Messages: Chat List ── */
+.msg-chat-row {
+  display:flex; align-items:center; gap:11px;
+  padding:11px 10px; border-radius:10px; cursor:pointer;
+  transition:background .15s; margin-bottom:2px;
+}
+.msg-chat-row:hover { background:rgba(255,255,255,.05); }
+.msg-av-circle {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; overflow:hidden;
+}
+.msg-online-dot {
+  position:absolute; bottom:1px; right:1px;
+  width:11px; height:11px; border-radius:50%;
+  background:#23a55a; border:2px solid #313338;
+}
+.msg-away-dot {
+  position:absolute; bottom:1px; right:1px;
+  width:11px; height:11px; border-radius:50%;
+  background:#f59e0b; border:2px solid #313338;
+}
+.msg-unread-badge {
+  background:#5865f2; color:#fff; font-size:10px; font-weight:800;
+  padding:2px 6px; border-radius:20px; flex-shrink:0;
+}
+.msg-search-in { font-family:inherit; }
+.msg-search-in::placeholder { color:#80848e; }
+
+/* ── Messages: Edit / Context Menu ── */
+.msg-ctx-btn {
+  display:flex; align-items:center; gap:8px;
+  width:100%; padding:10px 14px; background:none; border:none;
+  color:#dbdee1; font-size:13px; font-weight:600; cursor:pointer;
+  text-align:left; transition:background .12s; font-family:inherit;
+}
+.msg-ctx-btn:hover { background:rgba(255,255,255,.07); }
+.bbl.editing-msg {
+  outline:2px solid #5865f2; border-radius:10px;
+}
+
+/* ── Sidebar Online section avatars fix ── */
+#pg-feed .sb .lrow > div:first-child svg { pointer-events:none; }
+
+/* ── SCROLL FIX ── */
+#shell { display:none; flex-direction:column; height:100vh; overflow:hidden; }
+#shell.on { display:flex; }
+#pages { flex:1; overflow:hidden; position:relative; min-height:0; }
+.pg { position:absolute; inset:0; display:none; flex-direction:column; overflow:hidden; }
+.pg.on { display:flex; }
+.scr {
+  flex: 1;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain;
+  min-height: 0;
+}
+/* Feed sidebar + main both need scroll */
+#pg-feed > div { min-height: 0; }
+#pg-feed .scr { overflow-y: auto !important; }
+/* Each page's scrollable area */
+.pg > .scr,
+.pg > div > .scr { overflow-y: auto !important; flex: 1; min-height: 0; }
+/* Fix for pages that have a flex row (feed, messages) */
+.pg > div[style*="display:flex"],
+.pg > div[style*="display: flex"] { min-height:0; flex:1; overflow:hidden; }
+
+
+/* ── Profile banner - remove white lines ── */
+.prof-ban {
+  background: linear-gradient(135deg, #5865f2, #7c3aed, #f59e0b) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: clamp(160px, 22vw, 280px) !important;
+  width: 100% !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+/* Remove any inherited borders/gaps */
+#pg-profile > div { gap: 0 !important; }
+#pg-profile .scr > div:first-child { margin-bottom: 0 !important; }
+
+/* ── Admin: proper tab isolation ── */
+#adm { display:none; flex-direction:column; height:100vh; overflow:hidden; background:#313338; position:fixed; inset:0; z-index:1000; }
+#adm.on { display:flex; }
+.adm-sec { display:none !important; }
+.adm-sec.on { display:block !important; animation:fadeUp .2s ease; }
+.admbody { flex:1; overflow-y:auto; padding:14px; background:#313338; min-height:0; }
+
+/* ── Login page: fit to screen, no extra space ── */
+#login-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: var(--vvh, 100vh) !important;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) !important;
+}
+.lbox { width: 100%; max-width: 380px; }
+.lcard { padding: 14px 16px !important; }
+.fg { margin-bottom: 7px !important; }
+.lbtn { margin-bottom: 7px !important; padding: 9px !important; }
+/* Prevent extra bottom padding that creates gap */
+#login-screen .lbox { padding-bottom: 0 !important; }
+
+/* ── Message input gap fix (keyboard) ── */
+.msg-area {
+  padding: 8px 12px !important;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  background: #2b2d31 !important;
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 5;
+}
+
+/* ── Profile collection binder grid ── */
+#pt-0 .hc { min-height: 110px; }
+
+/* ── Prevent keyboard zoom on all inputs ── */
+input, select, textarea { font-size: 16px !important; }
+input.otp-box { font-size: 18px !important; }
+.msg-in { font-size: 16px !important; }
+
+
+/* ── Admin tabs: desktop padding ── */
+.admtabs { gap: 2px !important; }
+.atab { min-width: 56px !important; border-radius: 6px 6px 0 0 !important; }
+@media (min-width: 601px) {
+  .admtabs { padding: 0 10px !important; gap: 4px !important; }
+  .atab { padding: 0 12px !important; min-width: 64px !important; }
+}
+
+/* ── Premium badge state-aware click ── */
+.premium-nav-badge { 
+  background: linear-gradient(135deg,#f59e0b,#d97706); 
+  color: #000 !important; font-size: 9px; font-weight: 800; 
+  padding: 3px 8px; border-radius: 20px; cursor: pointer;
+  box-shadow: 0 0 10px rgba(245,158,11,.4);
+}
+
+
+/* ── Login: desktop — full card visible, no scroll ── */
+@media (min-width: 600px) and (min-height: 600px) {
+  #login-screen {
+    align-items: center !important;
+    padding: 16px !important;
+  }
+  .llogo-icon svg { width: 44px !important; height: 44px !important; }
+  .llogo { margin-bottom: 8px !important; }
+  .llogo-title { font-size: 20px !important; }
+  .lbox { max-width: 360px !important; }
+  .lcard { padding: 14px 16px !important; }
+  .fg { margin-bottom: 6px !important; }
+  .lbtn { padding: 8px !important; margin-bottom: 6px !important; font-size: 12px !important; }
+  .lbtn-otp { padding: 7px !important; margin-bottom: 7px !important; font-size: 11px !important; }
+  .lbtn-ghost { padding: 8px !important; margin-bottom: 7px !important; font-size: 12px !important; }
+  .ldiv { margin: 5px 0 !important; }
+  .lfoot { font-size: 11px !important; margin-top: 4px !important; }
+  .otp-row { padding: 9px !important; margin-bottom: 7px !important; }
+}
+</style>
+</head>
+<body>
+<div id="creature-bg" aria-hidden="true"></div>
+<div id="toast" class="toast"></div>
+<div id="shareSheet" class="share-sheet"></div>
+
+<!-- ══ TRIAL POPUP ══ -->
+<div id="trialPopup">
+  <div class="trial-popup-card">
+    <span style="font-size:2.8rem;display:block;margin-bottom:8px;animation:bounce 1s ease"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> </span>
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:6px">Welcome to <span style="color:#f59e0b">MintyNex!</span></h2>
+    <p style="font-size:13px;color:#b5bac1;line-height:1.6;margin-bottom:18px">Try all Premium features FREE for <strong style="color:#fbbf24">7 days</strong> — no card required. Unlock trading, binder, marketplace & more.</p>
+    <div class="trial-features-grid">
+      <div class="trial-feat"><span class="trial-feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><span class="trial-feat-label">Trade</span></div>
+      <div class="trial-feat"><span class="trial-feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="trial-feat-label">Full Binder</span></div>
+      <div class="trial-feat"><span class="trial-feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span><span class="trial-feat-label">Marketplace</span></div>
+      <div class="trial-feat"><span class="trial-feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="trial-feat-label">Messages</span></div>
+    </div>
+    <button class="lbtn acc lbtn-pulse" onclick="activateTrial()" style="margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Start My 7-Day Free Trial</button>
+    <button onclick="closeTrialPopup()" style="background:none;border:none;color:#80848e;font-size:12px;cursor:pointer;font-family:inherit">Skip for now — use Free plan</button>
+    <div style="font-size:10px;color:#80848e;margin-top:10px">No credit card needed · Cancel anytime · Full access for 7 days</div>
+  </div>
+</div>
+
+<!-- ══ PREMIUM MODAL ══ -->
+<div id="premiumModal">
+  <div class="premium-modal-inner">
+    <button class="close-prem" onclick="closePremiumModal()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <span style="font-size:3rem;display:block;margin-bottom:10px;animation:pfloat 3s ease-in-out infinite"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> </span>
+    <div style="font-size:20px;font-weight:900;margin-bottom:4px;color:#fff">Unlock <span style="color:#f59e0b">Premium</span></div>
+    <div style="font-size:12px;color:#b5bac1;margin-bottom:6px" id="premReasonText">Full access to MintyNex</div>
+    <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px;margin-bottom:16px;display:flex;align-items:center;gap:10px;text-align:left">
+      <span style="font-size:1.8rem;flex-shrink:0">⏰</span>
+      <div><strong style="display:block;font-size:14px;color:#fbbf24">7 Days Free Trial</strong><span style="font-size:11px;color:#b5bac1">No card required. Try everything free.</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div class="plan-opt selected" onclick="selectPlan(this,'monthly')">
+        <div class="price">$9.99</div><div class="period">per month</div>
+      </div>
+      <div class="plan-opt" onclick="selectPlan(this,'yearly')">
+        <div class="price">$89.99</div><div class="period">per year</div>
+        <div class="save-tag">Save 25%</div>
+      </div>
+    </div>
+    <ul style="list-style:none;text-align:left;margin-bottom:16px">
+      <li style="padding:5px 0;font-size:12px;color:#dbdee1 !important;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04)"><span style="color:#f59e0b;font-weight:900"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Full Trade Access</li>
+      <li style="padding:5px 0;font-size:12px;color:#dbdee1 !important;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04)"><span style="color:#f59e0b;font-weight:900"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Unlimited Binder</li>
+      <li style="padding:5px 0;font-size:12px;color:#dbdee1 !important;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04)"><span style="color:#f59e0b;font-weight:900"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Mart & Shop Access</li>
+      <li style="padding:5px 0;font-size:12px;color:#dbdee1 !important;display:flex;align-items:center;gap:8px"><span style="color:#f59e0b;font-weight:900"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Direct Messaging</li>
+    </ul>
+    <button class="lbtn acc lbtn-pulse" onclick="activateTrial()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Start Free Trial</button>
+    <button class="lbtn lbtn-ghost" onclick="activatePremium('monthly')" style="margin-bottom:0;font-size:12px">Subscribe Now (skip trial)</button>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-cards"></div>
+  <div class="lbox">
+    <div class="llogo">
+      <span class="llogo-icon">
+  <svg width="52" height="52" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="40" fill="url(#loginPb1)"/>
+    <circle cx="40" cy="40" r="40" fill="url(#loginPb2)" opacity="0.5"/>
+    <!-- Horizontal divider -->
+    <line x1="6" y1="40" x2="74" y2="40" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+    <!-- Center ring -->
+    <circle cx="40" cy="40" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+    <!-- Center dot -->
+    <circle cx="40" cy="40" r="7" fill="white"/>
+    <circle cx="40" cy="40" r="4" fill="url(#loginPb1)"/>
+    <defs>
+      <linearGradient id="loginPb1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#00f5a0"/>
+        <stop offset="0.5" stop-color="#00d2ff"/>
+        <stop offset="1" stop-color="#0ea5e9"/>
+      </linearGradient>
+      <linearGradient id="loginPb2" x1="80" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#00f5a0" stop-opacity="0.5"/>
+        <stop offset="1" stop-color="#0ea5e9" stop-opacity="0.2"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</span>
+      <span class="llogo-title">Minty<span class="acc">Nex</span></span>
+      <span class="llogo-sub" style="font-size:11px;color:#b5bac1">Your Global TCG Trading Community</span>
+    </div>
+    <div class="lcard">
+      <div class="ltabs">
+        <button class="ltab on" id="trainerTab" onclick="switchMode('trainer')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Trainer</button>
+        <button class="ltab" id="adminTab" onclick="switchMode('admin')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
+      </div>
+      <div id="trainerForm">
+        <div class="fg"><label class="fl">Username</label><input class="fi fi-glow" id="tUser" placeholder="YourTrainerTag" autocomplete="username"/></div>
+        <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="tPass" type="password" placeholder="••••••••" autocomplete="current-password" style="padding-right:40px"/><button type="button" onclick="togglePwVis('tPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_tPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <div class="fg">
+          <label class="fl">Phone <span class="fl-opt">(for OTP login)</span></label>
+          <div class="phone-wrap">
+            <select class="fi fi-dial" id="tDial"><option value="">Select code</option></select>
+            <input class="fi fi-phone" id="tPhone" type="tel" placeholder="712 345 678"/>
+          </div>
+        </div>
+        <button class="lbtn acc lbtn-pulse" onclick="doLogin()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
+        <button class="lbtn lbtn-otp" onclick="doSendOTP('login')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Login with OTP</button>
+        <div id="otpRowLogin" class="otp-row" style="display:none">
+          <label class="fl">Enter OTP sent to your phone</label>
+          <div class="otp-inputs">
+            <input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/>
+          </div>
+          <button class="lbtn acc" style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="doVerifyOTP('login')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verify OTP</button>
+        </div>
+        <div style="text-align:right;margin-bottom:6px"><a onclick="showForgotPassword()" style="font-size:11px;color:#5865f2;cursor:pointer;text-decoration:none">Forgot password?</a></div>
+        <div class="ldiv">or</div>
+        <button class="lbtn lbtn-ghost" onclick="showRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Create Account</button>
+        <div class="lfoot">No account? <a onclick="showRegister()">Sign up free</a></div>
+      </div>
+      <div id="registerForm" style="display:none">
+        <div class="fg"><label class="fl">Username</label><input class="fi fi-glow" id="rUser" placeholder="YourTrainerTag"/></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi fi-glow" id="rEmail" type="email" placeholder="trainer@example.com"/></div>
+        <div class="fg">
+          <label class="fl">Phone <span class="fl-opt">(OTP verification)</span></label>
+          <div class="phone-wrap">
+            <select class="fi fi-dial" id="rDial"><option value="">Select code</option></select>
+            <input class="fi fi-phone" id="rPhone" type="tel" placeholder="712 345 678"/>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Country</label>
+          <select class="fi fi-glow" id="rCountry"><option value="">Select country</option></select>
+        </div>
+        <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="rPass" type="password" placeholder="Min 8 chars" style="padding-right:40px"/><button type="button" onclick="togglePwVis('rPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_rPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Join MintyNex</button>
+        <button class="lbtn lbtn-otp" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Verify Phone with OTP</button>
+        <div id="otpRowRegister" class="otp-row" style="display:none">
+          <label class="fl">Enter OTP sent to your phone</label>
+          <div class="otp-inputs">
+            <input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/><input class="fi otp-box" maxlength="1" inputmode="numeric"/>
+          </div>
+          <button class="lbtn acc" style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="doVerifyOTP('register')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verify OTP</button>
+        </div>
+        <div class="lfoot" style="margin-top:4px">Already have an account? <a onclick="showLogin()">Log in</a></div>
+      </div>
+      <div id="adminForm" style="display:none">
+        <div class="awarn" style="display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin access only. Credentials: admin@mintynex.com / admin123</div>
+        <div class="fg"><label class="fl">Admin Email</label><input class="fi" id="aUser" placeholder="admin@mintynex.com" autocomplete="username"/></div>
+        <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi" id="aPass" type="password" placeholder="••••••••" style="padding-right:40px"/><button type="button" onclick="togglePwVis('aPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_aPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button class="lbtn danger" onclick="doAdminLogin()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Admin Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div id="adm">
+  <div class="admtop">
+    <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+      <div class="admnm">Minty<span class="b">Nex</span> <span class="a">Admin</span></div>
+      <span class="god">GOD MODE</span>
+      <span class="ldot2"></span><span style="font-size:11px;color:#80848e;white-space:nowrap">Live</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <button class="btn brd bxs" id="admLogoutBtn" style="font-size:11px;padding:4px 10px">Logout</button>
+      <button class="btn bgh bxs" id="admBackBtn" style="font-size:11px;padding:4px 10px">← App</button>
+    </div>
+  </div>
+  <div class="admtabs" id="admTabs">
+    <button class="atab on" data-as="overview"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><br>Overview</button>
+    <button class="atab" data-as="users"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><br>Users</button>
+    <button class="atab" data-as="trades"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><br>Trades</button>
+    <button class="atab" data-as="disputes"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><br>Disputes</button>
+    <button class="atab" data-as="reports"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><br>Reports</button>
+    <button class="atab" data-as="verify"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><br>Verify</button>
+    <button class="atab" data-as="shop"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><br>Shop</button>
+    <button class="atab" data-as="premium"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><br>Premium</button>
+    <button class="atab" data-as="settings"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><br>Settings</button>
+  </div>
+  <div class="admbody">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="adm-sec on" id="as-overview">
+      <div class="g4" style="margin-bottom:12px">
+        <div class="stat-b"><div class="stat-v">8,420</div><div class="stat-l">Users</div></div>
+        <div class="stat-b"><div class="stat-v">3,412</div><div class="stat-l">Listings</div></div>
+        <div class="stat-b"><div class="stat-v">1,247</div><div class="stat-l">Trades</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#23a55a">$16.2K</div><div class="stat-l">Volume</div></div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-weight:800;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Live Activity
+        </div>
+        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#23a55a;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">New trade: TrainerAsh_KE ↔ ShinySister_TZ</span><span class="bdg bdg-g">Now</span></div>
+        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#5865f2;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">New signup: CardBoss_GH</span><span class="bdg bdg-b">2m</span></div>
+        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">Verify request: PokeKing_NG</span><span class="bdg bdg-v">5m</span></div>
+        <div class="lrow" style="padding:8px 0"><div style="width:7px;height:7px;border-radius:50%;background:#ed4245;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">Dispute opened: #DSP-0014</span><span class="bdg bdg-r">8m</span></div>
+      </div>
+      <div class="g2" style="margin-bottom:10px">
+        <div class="card" style="text-align:center;padding:14px 10px">
+          <div style="font-size:22px;font-weight:900;color:#23a55a">94%</div>
+          <div style="font-size:11px;color:#80848e;margin-top:2px">Trade Success Rate</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px 10px">
+          <div style="font-size:22px;font-weight:900;color:#5865f2">847</div>
+          <div style="font-size:11px;color:#80848e;margin-top:2px">Online Now</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ USERS ══ -->
+    <div class="adm-sec" id="as-users">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-weight:800;font-size:14px;color:#fff;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> User Management
+        </div>
+        <div style="font-size:11px;color:#80848e">8,420 total</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="trade-type-btn active" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">All</button>
+        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Verified</button>
+        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Sanctioned</button>
+        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Premium</button>
+      </div>
+      <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;background:#1e1f22;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 12px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#80848e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input style="background:none;border:none;color:#fff;font-size:12px;flex:1;outline:none;font-family:inherit" placeholder="Search users..."/>
+      </div>
+      <div class="card csm" style="margin-bottom:7px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#5865f2,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:100px">
+            <div style="font-weight:700;font-size:12px;color:#fff">TrainerAsh_KE</div>
+            <div style="font-size:10px;color:#80848e">Global · Elite · 142 cards · 38 trades</div>
+          </div>
+          <span class="bdg bdg-grn" style="font-size:9px">Verified</span>
+          <div style="display:flex;gap:4px">
+            <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Viewing profile...','')">View</button>
+            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
+          </div>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:7px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#082f49,#0284c7);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:100px">
+            <div style="font-weight:700;font-size:12px;color:#fff">ShinySister_TZ</div>
+            <div style="font-size:10px;color:#80848e">Global · Trainer · 89 cards · 12 trades</div>
+          </div>
+          <span class="bdg bdg-grn" style="font-size:9px">Verified</span>
+          <div style="display:flex;gap:4px">
+            <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Viewing profile...','')">View</button>
+            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
+          </div>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:7px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:100px">
+            <div style="font-weight:700;font-size:12px;color:#fff">PokeKing_NG</div>
+            <div style="font-size:10px;color:#80848e">Global · Master · 210 cards · 51 trades</div>
+          </div>
+          <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Pending</span>
+          <div style="display:flex;gap:4px">
+            <button class="btn bgrn bxs" style="font-size:10px;padding:4px 8px" data-action="approve">Verify</button>
+            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Loading more users...','')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Load More
+      </button>
+    </div>
+
+    <!-- ══ TRADES ══ -->
+    <div class="adm-sec" id="as-trades">
+      <div style="font-weight:800;font-size:14px;margin-bottom:10px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Trade Monitoring
+      </div>
+      <div class="g4" style="margin-bottom:12px">
+        <div class="stat-b"><div class="stat-v" style="color:#23a55a">1,190</div><div class="stat-l">Completed</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#5865f2">57</div><div class="stat-l">Active</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#f59e0b">12</div><div class="stat-l">Pending</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Disputed</div></div>
+      </div>
+      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #23a55a">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4821</span>
+          <span class="bdg bdg-grn" style="font-size:9px">Completed</span>
+        </div>
+        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">TrainerAsh_KE ↔ ShinySister_TZ · Charizard VMAX for Irida SAR</div>
+        <div style="display:flex;gap:5px">
+          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Trade details coming soon','')">Details</button>
+          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" data-pg="messages">Message</button>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #5865f2">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4820</span>
+          <span class="bdg bdg-b" style="font-size:9px">Active</span>
+        </div>
+        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">PokeKing_NG ↔ CardQueenZA · Rayquaza VMAX + $38</div>
+        <div style="display:flex;gap:5px">
+          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Trade details coming soon','')">Details</button>
+          <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="flagtrade">Flag</button>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #ed4245">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4819</span>
+          <span class="bdg bdg-r" style="font-size:9px">Disputed</span>
+        </div>
+        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">TrainerAsh_KE ↔ GhostPuller_GH · Rayquaza VMAX PSA 9</div>
+        <div style="display:flex;gap:5px">
+          <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" onclick="admShowSec('disputes')">View Dispute</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DISPUTES ══ -->
+    <div class="adm-sec" id="as-disputes">
+      <div style="font-weight:800;font-size:14px;margin-bottom:4px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ed4245" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Dispute Centre
+      </div>
+      <div style="font-size:11px;color:#80848e;margin-bottom:12px">Review and mediate trade disputes</div>
+      <div class="g4" style="margin-bottom:12px">
+        <div class="stat-b"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Open</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#f59e0b">5</div><div class="stat-l">In Review</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#23a55a">41</div><div class="stat-l">Resolved</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#7289da">2</div><div class="stat-l">Escalated</div></div>
+      </div>
+      <div class="card" style="margin-bottom:9px;border-left:3px solid #ed4245">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div>
+            <div style="font-size:12px;font-weight:800;color:#f59e0b">#DSP-0014</div>
+            <div style="font-size:10px;color:#80848e">Opened 1h ago · Trade #TXN-4819</div>
+          </div>
+          <span class="bdg bdg-r" style="font-size:9px">Open</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:center;margin-bottom:10px">
+          <div style="background:#383a40;border-radius:7px;padding:8px;text-align:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div style="font-size:11px;font-weight:700;margin-top:2px">TrainerAsh_KE</div>
+            <div style="font-size:10px;color:#80848e">Claimant</div>
+          </div>
+          <div style="text-align:center;color:#80848e;font-size:18px">↔</div>
+          <div style="background:#383a40;border-radius:7px;padding:8px;text-align:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ed4245" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div style="font-size:11px;font-weight:700;margin-top:2px">GhostPuller_GH</div>
+            <div style="font-size:10px;color:#80848e">Respondent</div>
+          </div>
+        </div>
+        <div style="background:#383a40;border-radius:7px;padding:9px;margin-bottom:10px;font-size:12px;color:#dbdee1;line-height:1.5">
+          <span style="color:#f59e0b;font-weight:700">Issue:</span> Card received was not as described. Rayquaza VMAX listed as PSA 9 but appears raw/ungraded.
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn bgrn bxs" style="font-size:11px" data-action="resolvedispute">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Resolve
+          </button>
+          <button class="btn brd bxs" style="font-size:11px" data-action="escalatedispute">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="12 19 12 5"/><polyline points="5 12 12 5 19 12"/></svg>Escalate
+          </button>
+          <button class="btn bgh bxs" style="font-size:11px" data-pg="messages">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Mediate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REPORTS ══ -->
+    <div class="adm-sec" id="as-reports">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        Content Reports
+        <span class="bdg bdg-r" style="font-size:10px">2 pending</span>
+      </div>
+      <div class="card csm" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:12px;font-weight:700;color:#fff">Suspicious listing · Charizard VMAX</div>
+          <span class="bdg bdg-r" style="font-size:9px">Listing</span>
+        </div>
+        <div style="font-size:11px;color:#80848e;margin-bottom:8px">Reported by MintFresh_KE · Price mismatch vs market rate</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn bgrn bxs" style="font-size:10px" data-action="keeppost">Keep</button>
+          <button class="btn brd bxs" style="font-size:10px" data-action="removepost">Remove</button>
+          <button class="btn bgh bxs" style="font-size:10px" data-action="dismissreport">Dismiss</button>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:12px;font-weight:700;color:#fff">Inappropriate post · CardBoss_GH</div>
+          <span class="bdg bdg-r" style="font-size:9px">Post</span>
+        </div>
+        <div style="font-size:11px;color:#80848e;margin-bottom:8px">Reported by 3 users · Spam content</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn bgrn bxs" style="font-size:10px" data-action="keeppost">Keep</button>
+          <button class="btn brd bxs" style="font-size:10px" data-action="removepost">Remove</button>
+          <button class="btn bgh bxs" style="font-size:10px" data-action="dismissreport">Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VERIFY ══ -->
+    <div class="adm-sec" id="as-verify">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#23a55a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Verify Queue
+        <span class="bdg" style="background:rgba(35,165,90,.2);color:#23a55a;font-size:10px">3 pending</span>
+      </div>
+      <div class="card csm" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:80px">
+            <div style="font-weight:700;font-size:13px;color:#fff">PokeKing_NG</div>
+            <div style="font-size:10px;color:#80848e">51 trades · ★4.9 · Global</div>
+            <div style="font-size:10px;color:#80848e">ID submitted · 2h ago</div>
+          </div>
+          <div style="display:flex;gap:5px">
+            <button class="btn bgrn bxs" style="font-size:11px" data-action="approve">Approve</button>
+            <button class="btn brd bxs" style="font-size:11px" data-action="reject">Reject</button>
+            <button class="btn bgh bxs" style="font-size:11px" onclick="showToast('Viewing ID...','')">View ID</button>
+          </div>
+        </div>
+      </div>
+      <div class="card csm" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#15803d);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:80px">
+            <div style="font-weight:700;font-size:13px;color:#fff">CardQueenZA</div>
+            <div style="font-size:10px;color:#80848e">67 trades · ★5.0 · Global</div>
+            <div style="font-size:10px;color:#80848e">ID submitted · 5h ago</div>
+          </div>
+          <div style="display:flex;gap:5px">
+            <button class="btn bgrn bxs" style="font-size:11px" data-action="approve">Approve</button>
+            <button class="btn brd bxs" style="font-size:11px" data-action="reject">Reject</button>
+            <button class="btn bgh bxs" style="font-size:11px" onclick="showToast('Viewing ID...','')">View ID</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SHOP ══ -->
+    <div class="adm-sec" id="as-shop">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Shop Listings
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-weight:700;font-size:12px;color:#fff;margin-bottom:10px">Add New Listing</div>
+        <div class="fg"><label class="fl">Card Name</label><input class="fi" placeholder="e.g. Charizard VMAX PSA 10"/></div>
+        <div class="g2">
+          <div class="fg"><label class="fl">Price (USD)</label><input class="fi" type="number" placeholder="308"/></div>
+          <div class="fg"><label class="fl">Grade</label><select class="fi"><option>PSA 10</option><option>PSA 9</option><option>BGS 9.5</option><option>Raw NM</option></select></div>
+        </div>
+        <div class="fg"><label class="fl">Seller</label><input class="fi" placeholder="Trainer username"/></div>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" data-action="publishshop">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Publish Listing
+        </button>
+      </div>
+      <div class="card csm" style="margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fff">Charizard VMAX PSA 10</div>
+          <div style="font-size:10px;color:#80848e">$323 · TrainerAsh</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button class="btn bgh bxs" style="font-size:10px" onclick="showToast('Editing listing...','')">Edit</button>
+          <button class="btn brd bxs" style="font-size:10px" data-action="removeshop">Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PREMIUM ══ -->
+    <div class="adm-sec" id="as-premium">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Premium Subscriptions
+      </div>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:22px;font-weight:900;color:#f59e0b">342</div>
+          <div style="font-size:11px;color:#80848e">Active Subs</div>
+        </div>
+        <div class="card" style="text-align:center;padding:14px">
+          <div style="font-size:22px;font-weight:900;color:#23a55a">$9.2K</div>
+          <div style="font-size:11px;color:#80848e">Monthly Rev</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-weight:700;font-size:12px;color:#fff;margin-bottom:10px">Pricing Configuration</div>
+        <div class="fg"><label class="fl">Monthly Price (USD)</label><input class="fi" type="number" value="7.99" placeholder="7.99"/></div>
+        <div class="fg"><label class="fl">Annual Price (USD)</label><input class="fi" type="number" value="79.99" placeholder="79.99"/></div>
+        <div class="fg"><label class="fl">Trial Period (days)</label><input class="fi" type="number" value="7" placeholder="7"/></div>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Pricing updated!','grn')">Save Pricing</button>
+      </div>
+      <div class="card csm" style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fff">TrainerAsh_KE</div>
+          <div style="font-size:10px;color:#80848e">Premium · Renews May 30</div>
+        </div>
+        <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Active</span>
+      </div>
+      <div class="card csm" style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fff">PokeKing_NG</div>
+          <div style="font-size:10px;color:#80848e">Premium Annual · Renews Jan 2026</div>
+        </div>
+        <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Active</span>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="adm-sec" id="as-settings">
+      <div style="font-weight:800;font-size:14px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Platform Settings
+      </div>
+      <!-- General Toggles -->
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">General</div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="font-size:12px;color:#dbdee1">Maintenance Mode</span>
+          <div class="tog" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="font-size:12px;color:#dbdee1">New Registrations</span>
+          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="font-size:12px;color:#dbdee1">Trade System</span>
+          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0">
+          <span style="font-size:12px;color:#dbdee1">Push Notifications</span>
+          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,.04)">
+          <span style="font-size:12px;color:#dbdee1">Auto-archive resolved disputes</span>
+          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+        <div class="lrow" style="justify-content:space-between;padding:6px 0">
+          <span style="font-size:12px;color:#dbdee1">Require ID for high-value trades</span>
+          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+        </div>
+      </div>
+      <!-- Security -->
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Security</div>
+        <div class="fg"><label class="fl">Max Trade Value (USD)</label><input class="fi" type="number" value="3850" placeholder="3850"/></div>
+        <div class="fg"><label class="fl">Cooldown Between Trades (hrs)</label><input class="fi" type="number" value="2" placeholder="2"/></div>
+        <div class="fg"><label class="fl">Max Reports Before Auto-Review</label><input class="fi" type="number" value="3" placeholder="3"/></div>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Security settings saved!','grn')">Save Security Settings</button>
+      </div>
+      <!-- Announcements -->
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Announcements</div>
+        <div class="fg"><label class="fl">Banner Message</label><input class="fi" value="Live: New trades happening now — 1,247 active trades this week"/></div>
+        <div class="fg"><label class="fl">Banner Type</label>
+          <select class="fi">
+            <option>Info</option><option>Warning</option><option>Success</option><option>Alert</option>
+          </select>
+        </div>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Banner updated!','grn')">Update Banner</button>
+      </div>
+      <!-- Danger Zone -->
+      <div class="card" style="border:1px solid rgba(237,66,69,.3);margin-bottom:10px">
+        <div style="font-size:11px;font-weight:800;color:#ed4245;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Danger Zone</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Clearing cache...','')">Clear Cache</button>
+          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Exporting data...','')">Export Data</button>
+          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Backup started...','')">Backup DB</button>
+        </div>
+      </div>
+      <!-- Admin Account -->
+      <div class="card">
+        <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Admin Account</div>
+        <div class="fg"><label class="fl">Change Admin Password</label><div style="position:relative"><input class="fi" type="password" placeholder="New password" id="admNewPass" style="padding-right:40px"/><button type="button" onclick="togglePwVis('admNewPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Password updated!','grn')">Update Password</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<!-- ══ MAIN SHELL ══ -->
+<div id="shell">
+  <nav class="tnav">
+    <div class="logo" data-pg="feed">
+      <svg width="32" height="32" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(0,210,255,0.5))">
+  <circle cx="40" cy="40" r="40" fill="url(#navPb1)"/>
+  <circle cx="40" cy="40" r="40" fill="url(#navPb2)" opacity="0.5"/>
+  <line x1="6" y1="40" x2="74" y2="40" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+  <circle cx="40" cy="40" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+  <circle cx="40" cy="40" r="7" fill="white"/>
+  <circle cx="40" cy="40" r="4" fill="url(#navPb1)"/>
+  <defs>
+    <linearGradient id="navPb1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00f5a0"/>
+      <stop offset="0.5" stop-color="#00d2ff"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="navPb2" x1="80" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00f5a0" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#0ea5e9" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+</svg>
+      <span class="logo-txt">Minty<span class="b">Nex</span></span>
+    </div>
+    <div class="srch">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#80848e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input placeholder="Search cards, trainers..." aria-label="Search"/>
+    </div>
+    <div class="dtabs">
+      <button class="dta on" data-pg="feed">Feed</button>
+      <button class="dta" data-pg="binder">Binder</button>
+      <button class="dta" data-pg="trade">Trade</button>
+      <button class="dta" data-pg="players">Players</button>
+      <button class="dta" data-pg="shop">Shop</button>
+      <button class="dta" data-pg="mart">Mart</button>
+    </div>
+    <div class="nav-r">
+      <span id="premBadge" class="free-badge" style="cursor:pointer" onclick="badgeClick()">FREE</span>
+      <button class="nic" data-pg="notifs" aria-label="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="nbdg" id="nBdg">5</span>
+      </button>
+      <button class="nic" data-pg="messages" aria-label="Messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="ndot"></span>
+      </button>
+      <div class="drop-wrap">
+        <button class="avbtn" id="avBtn" aria-label="Profile menu">🔥</button>
+        <div class="drop" id="avDrop">
+          <div class="dh">
+            <div class="dh-av" id="dhAv">🔥</div>
+            <div class="dh-nm" id="dName">TrainerAsh_KE</div>
+            <div class="dh-rk">⭐ Elite Trainer</div>
+            <div class="xpbar"><div class="xpfill"></div></div>
+            <div class="dstats">
+              <div class="ds"><div class="dsv">142</div><div class="dsl">Cards</div></div>
+              <div class="dsdiv"></div>
+              <div class="ds"><div class="dsv">38</div><div class="dsl">Trades</div></div>
+              <div class="dsdiv"></div>
+              <div class="ds"><div class="dsv">★4.9</div><div class="dsl">Rep</div></div>
+            </div>
+          </div>
+          <div class="dsep"></div>
+          <button class="di" data-pg="profile"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</button>
+          <button class="di" data-pg="binder"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> My Binder</button>
+          <button class="di" data-action="openverify"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Get Verified</button>
+          <button class="di" onclick="openPremiumModal('Upgrade to Premium')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Upgrade to Premium</button>
+          <div class="dsep"></div>
+          <button class="di red" onclick="doLogout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log Out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="pages">
+
+    <!-- ════ FEED ════ -->
+    <div class="pg on" id="pg-feed">
+      <div style="display:flex;height:100%;overflow:hidden">
+        <div class="scr scr-pb" style="flex:1;position:relative">
+          <div class="alert-banner info" id="feedAlert">
+            <span>⚡</span> <span>Live: New trades happening now — <strong>1,247 active trades</strong> this week</span>
+            <span class="alert-banner-close" data-action="closealert">✕</span>
+          </div>
+          <div style="padding:12px clamp(11px,3vw,18px)">
+            <div class="composer-card">
+              <div style="display:flex;gap:10px;align-items:center;margin-bottom:11px">
+                <div class="composer-avatar-ring"><div class="composer-inner-av" id="postAv">🔥</div></div>
+                <input class="fi composer-input" id="postInput" placeholder="Share your latest pull, Trainer! 🔥" style="flex:1"/>
+              </div>
+              <div class="composer-btn-row">
+                <div class="composer-media-btns">
+                  <button class="btn bgh bxs">📷 Photo</button>
+                  <button class="btn bgh bxs" data-pg="trade">⇄ Trade</button>
+                  <button class="btn bgh bxs" data-action="addlocation"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location</button>
+                </div>
+                <button class="btn bg bxs" id="postBtn" style="background:linear-gradient(135deg,#5865f2,#4752c4);box-shadow:0 2px 12px rgba(88,101,242,.4)">✦ Post Pull</button>
+              </div>
+            </div>
+            <div id="feedCards"></div>
+          </div>
+        </div>
+        <div class="sb" style="width:210px;border-left:1px solid rgba(255,255,255,.04);border-right:none;padding:12px 10px">
+          <div style="font-weight:700;font-size:12px;color:#f59e0b;margin-bottom:8px">🟢 Online Now</div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(88,101,242,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">👑</div><div style="flex:1;margin-left:6px"><div style="font-size:11px;font-weight:600;color:#fff">PokeKing_NG</div><div style="font-size:10px;color:#80848e">Elite Trainer</div></div><span class="on-dot"></span></div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(88,101,242,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🌿</div><div style="flex:1;margin-left:6px"><div style="font-size:11px;font-weight:600;color:#fff">CardQueenZA</div><div style="font-size:10px;color:#80848e">ZA Champ</div></div><span class="on-dot"></span></div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(88,101,242,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">⚡</div><div style="flex:1;margin-left:6px"><div style="font-size:11px;font-weight:600;color:#fff">MintFresh_KE</div><div style="font-size:10px;color:#80848e">KE Trainer</div></div><span class="on-dot"></span></div>
+          <div style="font-weight:700;font-size:12px;color:#f59e0b;margin:12px 0 8px">📈 Trending</div>
+          <div class="lrow"><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Rayquaza VMAX</div><div style="font-size:10px;color:#80848e">Ev. Skies</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#f59e0b">$415</div><div style="font-size:10px;font-weight:700;color:#3ba55c">▲ 12%</div></div></div>
+          <div class="lrow"><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Charizard VMAX</div><div style="font-size:10px;color:#80848e">Dark Ablaze</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#f59e0b">$308</div><div style="font-size:10px;font-weight:700;color:#3ba55c">▲ 5%</div></div></div>
+          <div class="lrow"><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Mewtwo EX</div><div style="font-size:10px;color:#80848e">VSTAR Uni.</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#f59e0b">$185</div><div style="font-size:10px;font-weight:700;color:#ed4245">▼ 2%</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ BINDER ════ -->
+    <div class="pg" id="pg-binder"><div class="scr scr-pb">
+      <div class="premium-banner">
+        <span style="font-size:1.5rem;flex-shrink:0">👑</span>
+        <div style="flex:1"><strong style="display:block;font-size:13px;font-weight:800;color:#fbbf24">Premium Feature</strong><span style="font-size:11px;color:#b5bac1">Your binder is unlocked during your trial</span></div>
+        <button class="btn bgh bxs" onclick="openPremiumModal('Full Binder Access')">Upgrade</button>
+      </div>
+      <div style="position:relative;padding:12px clamp(11px,3vw,18px);background:#2b2d31;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div style="width:42px;height:42px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0" id="binderAv">🔥</div>
+        <div style="flex:1"><div style="font-weight:800;font-size:13px;color:#fff" id="binderNm">TrainerAsh_KE</div><div style="font-size:10px;color:#f59e0b">⭐ Elite</div></div>
+        <div style="display:flex;gap:12px">
+          <div style="text-align:center"><div style="font-weight:900;font-size:14px;color:#f59e0b">45</div><div style="font-size:8px;color:#80848e">CARDS</div></div>
+          <div style="text-align:center"><div style="font-weight:900;font-size:14px;color:#f59e0b">$2,840</div><div style="font-size:8px;color:#80848e">VALUE</div></div>
+        </div>
+      </div>
+      <div style="padding:12px clamp(11px,3vw,18px)">
+        <div class="g4" style="margin-bottom:12px">
+          <div class="stat-b"><div class="stat-v">45</div><div class="stat-l">Total</div></div>
+          <div class="stat-b"><div class="stat-v" style="color:#5865f2">8</div><div class="stat-l">PSA</div></div>
+          <div class="stat-b"><div class="stat-v" style="color:#3ba55c">3</div><div class="stat-l">Alt Art</div></div>
+          <div class="stat-b"><div class="stat-v" style="color:#ed4245">2</div><div class="stat-l">4 Trade</div></div>
+        </div>
+        <div style="background:#2b2d31;border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap;gap:6px">
+            <div><div style="font-size:13px;font-weight:700;color:#fff">My Binder <span class="bdg bdg-b">TCG Collection</span></div><div style="font-size:11px;color:#80848e" id="pgLbl">Page 1 of 5</div></div>
+            <div style="display:flex;gap:5px"><button class="btn bgh bxs" id="prevBtn">← Prev</button><button class="btn bgh bxs" id="nextBtn">Next →</button></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,2vw,11px);padding:clamp(9px,2.5vw,13px)" id="binderGrid"></div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- ════ TRADE ════ -->
+    <div class="pg" id="pg-trade">
+      <div id="tradeTabs">
+        <button class="atab on" data-tt="active">📦 Active</button>
+        <button class="atab" data-tt="propose">⇄ Propose</button>
+        <button class="atab" data-tt="find">🔍 Partners</button>
+        <button class="atab" data-tt="history">📜 History</button>
+        <button class="atab" data-tt="howto">❓ How It Works</button>
+      </div>
+      <div class="scr scr-pb">
+        <div class="asec on tt-s" id="tt-active" style="padding:12px">
+          <div class="alert-banner success" style="margin:0 0 12px">
+            <span>🤝</span><span>You have <strong>1 active trade</strong> in progress</span>
+          </div>
+          <div class="card" style="margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:5px">
+              <div><div style="font-size:12px;font-weight:800;color:#f59e0b">#TXN-4821</div><div style="font-size:11px;color:#80848e">Started 2 days ago</div></div>
+              <span class="bdg bdg-grn">🤝 Agreed</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px">
+              <div style="background:#383a40;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;margin-bottom:3px">🔥</div><div style="font-weight:700;font-size:11px;color:#fff">TrainerAsh_KE</div><div style="font-size:10px;color:#80848e">Charizard VMAX</div><div style="font-size:13px;font-weight:800;color:#f59e0b">$310</div><span class="bdg bdg-grn" style="margin-top:4px">Ready</span></div>
+              <div style="text-align:center;font-size:20px">⇄</div>
+              <div style="background:#383a40;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;margin-bottom:3px">💧</div><div style="font-weight:700;font-size:11px;color:#fff">ShinySister_TZ</div><div style="font-size:10px;color:#80848e">Lugia V Alt Art</div><div style="font-size:13px;font-weight:800;color:#f59e0b">$245</div><span class="bdg bdg-g" style="margin-top:4px">Pending</span></div>
+            </div>
+            <div style="background:#383a40;border-radius:6px;display:flex;overflow:hidden;margin-bottom:10px">
+              <div style="flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;background:rgba(35,165,90,.12);color:#3ba55c">Proposed</div>
+              <div style="flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;background:rgba(35,165,90,.12);color:#3ba55c">Agreed</div>
+              <div style="flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;background:rgba(88,101,242,.1);color:#7289da">Meet Set</div>
+              <div style="flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;color:#80848e">Traded</div>
+              <div style="flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;color:#80848e">Done</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn bgrn bsm" data-action="markmet">✓ Mark Met</button>
+              <button class="btn bgh bsm" data-pg="messages">💬 Chat</button>
+              <button class="btn brd bxs" style="margin-left:auto">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="asec tt-s" id="tt-propose" style="padding:12px">
+          <div class="card">
+            <div style="font-weight:700;font-size:14px;margin-bottom:12px;color:#fff">⇄ Send Trade Proposal</div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:12px">
+              <div style="background:#383a40;border-radius:8px;padding:11px;text-align:center;border:2px dashed rgba(88,101,242,.3);cursor:pointer"><div style="font-size:9px;color:#80848e;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">My Card</div><div style="font-size:24px;margin-bottom:3px">+</div><div style="font-size:11px;font-weight:600;color:#b5bac1">Select</div></div>
+              <div style="text-align:center;font-size:18px">⇄</div>
+              <div style="background:#383a40;border-radius:8px;padding:11px;text-align:center;border:2px dashed rgba(35,165,90,.3);cursor:pointer"><div style="font-size:9px;color:#80848e;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">I Want</div><div style="font-size:24px;margin-bottom:3px">+</div><div style="font-size:11px;font-weight:600;color:#b5bac1">Select</div></div>
+            </div>
+            <div class="fg"><label class="fl">Cash Adjustment (USD)</label><input class="fi" type="number" placeholder="0"/></div>
+            <div class="fg"><label class="fl">Meetup Location</label><input class="fi" id="tradeMeetup" placeholder="e.g. Central Mall, Downtown"/></div>
+            <div class="fg"><label class="fl">Message</label><textarea class="fi" id="tradeNote" rows="2" placeholder="Add a note..."></textarea></div>
+            <button class="btn bg bfw" data-action="proposetrade">🤝 Send Proposal</button>
+          </div>
+        </div>
+        <div class="asec tt-s" id="tt-find" style="padding:12px">
+          <div class="card" style="margin-bottom:10px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:9px;color:#fff">🔍 Find Trade Partners</div>
+            <div class="g2" style="margin-bottom:8px">
+              <select class="fi" style="font-size:12px" id="tfc"><option value="">Any Country</option></select>
+              <input class="fi" placeholder="City (optional)" id="tfci" style="font-size:12px"/>
+            </div>
+            <div style="display:flex;gap:6px"><button class="btn bg bsm" id="tSearchBtn">Search</button><button class="btn bgh bsm" id="tClearBtn">Clear</button></div>
+          </div>
+          <div class="ga-lg" id="tradePL"></div>
+        </div>
+        <div class="asec tt-s" id="tt-history" style="padding:12px">
+          <div class="sh"><div class="sh-t">📜 Trade History</div></div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(35,165,90,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🔥</div><div style="flex:1;margin-left:8px"><div style="font-size:12px;font-weight:600;color:#fff">Charizard VMAX to Lugia V Alt Art</div><div style="font-size:10px;color:#80848e">2 days ago</div></div><span class="bdg bdg-grn">Done</span></div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(35,165,90,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">⚡</div><div style="flex:1;margin-left:8px"><div style="font-size:12px;font-weight:600;color:#fff">Pikachu VMAX + $15 to Gengar VMAX</div><div style="font-size:10px;color:#80848e">1 week ago</div></div><span class="bdg bdg-grn">Done</span></div>
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(237,66,69,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🌙</div><div style="flex:1;margin-left:8px"><div style="font-size:12px;font-weight:600;color:#fff">Umbreon Alt Art - cancelled</div><div style="font-size:10px;color:#80848e">2 weeks ago</div></div><span class="bdg bdg-r">Cancelled</span></div>
+        </div>
+        <div class="asec tt-s" id="tt-howto" style="padding:12px">
+          <div style="font-weight:800;font-size:15px;margin-bottom:12px;color:#fff">How In-Person Trading Works</div>
+          <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="width:28px;height:28px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0">1</div><div><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Find a Trainer</div><div style="font-size:11px;color:#b5bac1;line-height:1.5">Browse Partners, filter by location and card type</div></div></div>
+          <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="width:28px;height:28px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0">2</div><div><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Send Proposal</div><div style="font-size:11px;color:#b5bac1;line-height:1.5">Select your card and what you want, add meetup area</div></div></div>
+          <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="width:28px;height:28px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0">3</div><div><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Meet and Swap</div><div style="font-size:11px;color:#b5bac1;line-height:1.5">Meet in person, inspect cards, swap face to face</div></div></div>
+          <div style="display:flex;gap:10px;padding:10px 0"><div style="width:28px;height:28px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0">4</div><div><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Confirm and Rate</div><div style="font-size:11px;color:#b5bac1;line-height:1.5">Both mark complete and leave a star rating</div></div></div>
+          <div style="margin-top:12px;background:rgba(88,101,242,.06);border:1px solid rgba(88,101,242,.18);border-radius:9px;padding:11px;font-size:12px;color:#b5bac1;line-height:1.6">💡 No money moves through MintyNex. Cash is handled face-to-face.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SHOP ════ -->
+    <div class="pg" id="pg-shop"><div class="scr scr-pb">
+      <div class="hero" style="background:linear-gradient(135deg,#2c2f33,#5865f2)"><h1>🏅 MintyShop</h1><p style="color:rgba(255,255,255,.8)">Official MintyNex store — Verified Authentic cards only</p><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn bg bsm">All Cards</button><button class="btn bgh bsm">PSA Graded</button><button class="btn bgh bsm">Raw NM</button></div></div>
+      <div class="alert-banner warn" style="margin:10px 12px 0">
+        <span>👑</span><span>Shop access requires Premium — <strong style="cursor:pointer" onclick="openPremiumModal('Shop Access')">Start free trial →</strong></span>
+      </div>
+      <div style="padding:12px clamp(11px,3vw,18px)"><div class="sh"><div class="sh-t">⭐ Official Listings</div><span class="sh-m">View all →</span></div>
+        <div class="ga-lg">
+          <div class="tcg"><div class="tcg-art" style="background:rgba(220,38,38,.3)"><img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX PSA 10" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-top">✓ Auth</div></div><div class="tcg-body"><div class="tcg-nm">Charizard VMAX PSA 10</div><div class="tcg-meta">Dark Ablaze · <span class="bdg bdg-g">PSA 10</span></div><div class="tcg-price">$310</div><div style="display:flex;gap:5px"><button class="btn bgrn bxs bfw" data-action="addcart">🛒 Add</button><button class="btn brd bxs" data-action="buynow">Buy</button></div></div></div>
+          <div class="tcg"><div class="tcg-art" style="background:rgba(56,189,248,.3)"><img src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="Lugia V" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-top">✓ Auth</div></div><div class="tcg-body"><div class="tcg-nm">Lugia V Alt Art BGS 9.5</div><div class="tcg-meta">Silver Tempest · <span class="bdg bdg-g">BGS 9.5</span></div><div class="tcg-price">$245</div><div style="display:flex;gap:5px"><button class="btn bgrn bxs bfw" data-action="addcart">🛒 Add</button><button class="btn brd bxs" data-action="buynow">Buy</button></div></div></div>
+          <div class="tcg"><div class="tcg-art" style="background:rgba(251,191,36,.2)"><img src="https://images.pokemontcg.io/swsh6/215_hires.png" alt="Umbreon VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-top">✓ Auth</div></div><div class="tcg-body"><div class="tcg-nm">Umbreon VMAX Alt Art</div><div class="tcg-meta">Evolving Skies · <span class="bdg bdg-g">PSA 9</span></div><div class="tcg-price">$89</div><div style="display:flex;gap:5px"><button class="btn bgrn bxs bfw" data-action="addcart">🛒 Add</button><button class="btn brd bxs" data-action="buynow">Buy</button></div></div></div>
+          <div class="tcg"><div class="tcg-art" style="background:rgba(253,224,71,.2)"><img src="https://images.pokemontcg.io/swsh4/44_hires.png" alt="Pikachu VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-top">✓ Auth</div></div><div class="tcg-body"><div class="tcg-nm">Pikachu VMAX BGS 9</div><div class="tcg-meta">Vivid Voltage · <span class="bdg bdg-g">BGS 9</span></div><div class="tcg-price">$55</div><div style="display:flex;gap:5px"><button class="btn bgrn bxs bfw" data-action="addcart">🛒 Add</button><button class="btn brd bxs" data-action="buynow">Buy</button></div></div></div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- ════ MART ════ -->
+    <div class="pg" id="pg-mart"><div style="display:flex;height:100%;overflow:hidden">
+      <div class="sb">
+        <div style="font-weight:700;font-size:12px;color:#f59e0b;margin-bottom:8px;padding:0 3px">🚚 MintyMart</div>
+        <button class="sni on" data-action="filtertrainers">All Listings</button>
+        <button class="sni" data-action="filtertrainers">🔥 Fire</button>
+        <button class="sni" data-action="filtertrainers">💧 Water</button>
+        <button class="sni" data-action="filtertrainers">⚡ Electric</button>
+        <button class="sni" data-action="filtertrainers">🏅 PSA Graded</button>
+        <button class="sni" data-action="filtertrainers">Region A</button>
+        <button class="sni" data-action="filtertrainers">Region B</button>
+      </div>
+      <div class="scr scr-pb" style="flex:1">
+        <div class="hero"><h1>TCG Marketplace</h1></div>
+        <div style="padding:12px clamp(11px,3vw,18px)">
+          <div style="display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;background:#1e1f22;border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:7px 10px;flex:1;min-width:160px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="fi" placeholder="Search cards..." style="border:none;background:none;padding:0;font-size:12px;color:#fff"/>
+            </div>
+            <button class="btn bgh bsm">Filter</button>
+            <button class="btn bgh bsm">↕ Sort</button>
+          </div>
+          <div class="ga-lg">
+            <div class="tcg"><div class="tcg-art"><img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-badge">🔥 TrainerAsh</div></div><div class="tcg-body"><div class="tcg-nm">Charizard VMAX</div><div class="tcg-meta"><span class="bdg bdg-g">PSA 10</span></div><div class="tcg-price">$310</div><div style="display:flex;gap:5px"><button class="btn bg bxs bfw" data-pg="messages">💬 Contact</button><button class="btn bgh bxs" data-pg="trade">⇄</button></div></div></div>
+            <div class="tcg"><div class="tcg-art"><img src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="Lugia V" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-badge">💧 ShinySis</div></div><div class="tcg-body"><div class="tcg-nm">Lugia V Alt Art</div><div class="tcg-meta"><span class="bdg bdg-g">BGS 9.5</span></div><div class="tcg-price">$245</div><div style="display:flex;gap:5px"><button class="btn bg bxs bfw" data-pg="messages">💬 Contact</button><button class="btn bgh bxs" data-pg="trade">⇄</button></div></div></div>
+            <div class="tcg"><div class="tcg-art"><img src="https://images.pokemontcg.io/swsh7/218_hires.png" alt="Rayquaza VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-badge">👑 PokeKing</div></div><div class="tcg-body"><div class="tcg-nm">Rayquaza VMAX</div><div class="tcg-meta"><span class="bdg bdg-g">PSA 9</span></div><div class="tcg-price">$222</div><div style="display:flex;gap:5px"><button class="btn bg bxs bfw" data-pg="messages">💬 Contact</button><button class="btn bgh bxs" data-pg="trade">⇄</button></div></div></div>
+            <div class="tcg"><div class="tcg-art"><img src="https://images.pokemontcg.io/sv2/86_hires.png" alt="Gardevoir ex" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-badge">👻 Duskball</div></div><div class="tcg-body"><div class="tcg-nm">Gardevoir ex</div><div class="tcg-meta"><span class="bdg bdg-g">PSA 9</span></div><div class="tcg-price">$72</div><div style="display:flex;gap:5px"><button class="btn bg bxs bfw" data-pg="messages">💬 Contact</button><button class="btn bgh bxs" data-pg="trade">⇄</button></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- ════ PLAYERS ════ -->
+    <div class="pg" id="pg-players"><div class="scr scr-pb">
+      <div class="hero" style="background:linear-gradient(135deg,#2c2f33,#23a55a)"><h1>Find Trainers 🌍</h1></div>
+      <div style="padding:12px clamp(11px,3vw,18px)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-bottom:12px">
+              <select class="fi" style="font-size:12px" id="fc"><option value="">Any Country</option></select>
+          <input class="fi" placeholder="City (optional)" id="fci" style="font-size:12px"/>
+          <div style="display:flex;gap:6px"><button class="btn bg bsm" id="searchBtn">Search</button><button class="btn bgh bsm" id="clearBtn">Clear</button></div>
+        </div>
+        <div class="sh"><div class="sh-t">🎮 Trainers</div><span class="sh-m" style="color:#80848e">847 online</span></div>
+        <div class="ga-lg" id="partnersList"></div>
+      </div>
+    </div></div>
+
+    <!-- ════ MESSAGES ════ -->
+    <div class="pg" id="pg-messages"><div style="display:flex;height:100%;overflow:hidden">
+      <div class="sb" style="width:260px;padding:10px 8px;overflow-y:auto">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><span style="font-weight:800;font-size:14px;color:#fff">Messages</span><button class="btn bg bxs">+ New</button></div>
+        <div class="card csm" style="display:flex;align-items:center;gap:9px;margin-bottom:6px;cursor:pointer;border-left:2px solid #5865f2">
+          <div style="width:36px;height:36px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">💧</div>
+          <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px;color:#fff">ShinySister_TZ <span class="bdg bdg-r" style="padding:1px 5px">3</span></div><div style="font-size:11px;color:#80848e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Interested in trading...</div></div>
+          <div style="font-size:10px;color:#80848e;flex-shrink:0">2m</div>
+        </div>
+        <div class="card csm" style="display:flex;align-items:center;gap:9px;margin-bottom:6px;cursor:pointer">
+          <div style="width:36px;height:36px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">👑</div>
+          <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:12px;color:#fff">PokeKing_NG</div><div style="font-size:11px;color:#80848e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">What grade is it?</div></div>
+          <div style="font-size:10px;color:#80848e;flex-shrink:0">15m</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:10px 12px;background:#2b2d31;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <div style="width:34px;height:34px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px">💧</div>
+          <div><div style="font-weight:700;font-size:13px;color:#fff">ShinySister_TZ</div><div style="font-size:10px;color:#23a55a">● Online</div></div>
+          <div style="margin-left:auto;display:flex;gap:5px"><button class="btn bgh bxs" data-pg="trade">⇄ Trade</button><button class="btn bgh bxs">···</button></div>
+        </div>
+        <div class="scr" id="msgList" style="flex:1;padding:12px">
+          <div style="text-align:center;font-size:10px;color:#80848e;margin-bottom:10px">Today, 2:34 PM</div>
+          <div class="brow"><div class="bav">💧</div><div class="bbl them">Hey! Saw your Charizard VMAX PSA 10. Still available? 👀</div></div>
+          <div class="brow me"><div class="bav">🔥</div><div class="bbl me">Yes! Looking for $308 or trade for Lugia V Alt Art 🔥</div></div>
+          <div class="brow"><div class="bav">💧</div><div class="bbl them">I have a Lugia V Alt Art BGS 9.5! Want to set up a meetup?</div></div>
+          <div class="brow me"><div class="bav">A</div><div class="bbl me">Deal! Central Mall, Downtown. Saturday 2pm.</div></div>
+        </div>
+        <div class="msg-area">
+          <input class="msg-in" id="msgInput" placeholder="Message ShinySister_TZ..."/>
+          <button class="msg-send" id="msgSendBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- ════ NOTIFICATIONS ════ -->
+    <div class="pg" id="pg-notifs"><div class="scr scr-pb" style="padding:12px clamp(11px,3vw,18px)">
+      <div class="sh" style="margin-bottom:12px"><div class="sh-t">🔔 Notifications</div><button class="btn bgh bxs" data-action="markallread">Mark all read</button></div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#5865f2;text-transform:uppercase;margin-bottom:7px">Today</div>
+      <div class="ni unread"><div class="ni-ic" style="background:rgba(35,165,90,.14);color:#3ba55c">⇄</div><div style="flex:1"><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">New Trade Offer!</div><div style="font-size:11px;color:#dbdee1;line-height:1.5">ShinySister_TZ wants to trade Lugia V Alt Art for your Charizard VMAX</div><div style="font-size:10px;color:#80848e;margin-top:3px">2 min ago</div><div style="display:flex;gap:6px;margin-top:7px"><button class="btn bgrn bxs" data-action="accept">✓ Accept</button><button class="btn brd bxs" data-action="decline">✕ Decline</button><button class="btn bgh bxs" data-pg="trade">View</button></div></div><div class="ni-dot"></div></div>
+      <div class="ni unread"><div class="ni-ic" style="background:rgba(88,101,242,.14);color:#7289da">💬</div><div style="flex:1"><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Comment on your post</div><div style="font-size:11px;color:#dbdee1;line-height:1.5">PokeKing_NG: Certified banger! What is your price?</div><div style="font-size:10px;color:#80848e;margin-top:3px">8 min ago</div></div><div class="ni-dot"></div></div>
+      <div class="ni"><div class="ni-ic" style="background:rgba(237,66,69,.14);color:#ed4245">❤️</div><div style="flex:1"><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">38 liked your pull</div><div style="font-size:11px;color:#dbdee1;line-height:1.5">Your Charizard VMAX PSA 10 is trending 🔥</div><div style="font-size:10px;color:#80848e;margin-top:3px">3h ago</div></div></div>
+      <div class="ni"><div class="ni-ic" style="background:rgba(245,158,11,.14);color:#f59e0b">👑</div><div style="flex:1"><div style="font-weight:700;font-size:12px;margin-bottom:2px;color:#fff">Premium Trial Available</div><div style="font-size:11px;color:#dbdee1;line-height:1.5">Start your 7-day free trial and unlock all features!</div><div style="font-size:10px;color:#80848e;margin-top:3px">Just now</div><div style="margin-top:7px"><button class="btn bg bxs" data-action="startTrial">Start Trial</button></div></div></div>
+    </div></div>
+
+    <!-- ════ PROFILE ════ -->
+    <div class="pg" id="pg-profile"><div class="scr scr-pb">
+      <div class="prof-ban" id="profBanner" style="position:relative">
+        <button class="ban-upload-btn" data-action="uploadbanner">📷 Change Banner</button>
+      </div>
+      <div style="padding:0 clamp(12px,3.5vw,20px)">
+        <div style="display:flex;align-items:flex-end;gap:11px;margin-top:-26px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="position:relative;flex-shrink:0">
+            <div style="width:clamp(72px,12vw,90px);height:clamp(72px,12vw,90px);border-radius:50%;border:4px solid #313338;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,5vw,40px);overflow:hidden" id="profAvEl">🔥</div>
+            <button class="photo-upload-btn" data-action="uploadavatar">✏️</button>
+          </div>
+          <div style="flex:1;min-width:0;padding-bottom:4px">
+            <div style="font-weight:900;font-size:clamp(17px,3.5vw,22px);margin-bottom:3px;color:#fff" id="profNmEl">TrainerAsh_KE <span class="bdg bdg-v">✓</span></div>
+            <div style="font-size:11px;color:#80848e;margin-bottom:8px" id="profBioEl">Elite trainer from the global community</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn bg bsm" onclick="profTab('4')" style="display:flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Profile</button>
+              <button class="btn bgh bsm" data-action="openverify" style="display:flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> Get Verified</button>
+              <button class="btn bgh bsm" onclick="openPremiumModal('Upgrade')" style="display:flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Upgrade</button>
+            </div>
+          </div>
+        </div>
+        <div class="card csm" style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <div style="font-size:12px;color:#dbdee1">Open your binder quickly from profile</div>
+          <button class="btn bgh bxs" data-pg="binder" style="display:flex;align-items:center;gap:5px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Open Binder
+          </button>
+        </div>
+        <div class="g4" style="margin-bottom:14px;background:#2b2d31;border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,.06)">
+          <div style="text-align:center"><div style="font-size:20px;font-weight:900;color:#f59e0b">142</div><div style="font-size:9px;color:#80848e;text-transform:uppercase">Cards</div></div>
+          <div style="text-align:center"><div style="font-size:20px;font-weight:900;color:#f59e0b">38</div><div style="font-size:9px;color:#80848e;text-transform:uppercase">Trades</div></div>
+          <div style="text-align:center"><div style="font-size:20px;font-weight:900;color:#f59e0b">★4.9</div><div style="font-size:9px;color:#80848e;text-transform:uppercase">Rep</div></div>
+          <div style="text-align:center"><div style="font-size:20px;font-weight:900;color:#23a55a">247</div><div style="font-size:9px;color:#80848e;text-transform:uppercase">Friends</div></div>
+        </div>
+        <div class="ptab-row" id="profTabs">
+          <button class="ptab on" data-tab="0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Collection</button>
+          <button class="ptab" data-tab="1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Trades</button>
+          <button class="ptab" data-tab="2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Activity</button>
+          <button class="ptab" data-tab="3"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>Reviews</button>
+          <button class="ptab" data-tab="4"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+        </div>
+        <div class="ptab-sec on" id="pt-0" style="padding:12px 0">
+          <div class="sh"><div class="sh-t">🗂️ My Collection</div><span class="sh-m">142 cards →</span></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:7px;margin-bottom:14px">
+            <div class="hc" style="background:radial-gradient(ellipse at 35% 25%,#fbbf24,#f97316,#c2410c,#7f1d1d)"><div class="hc-gl"></div><div class="hc-sw"></div><img class="hc-real-card" src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="hc-grade-badge" style="font-size:8px">PSA 10</div></div>
+            <div class="hc" style="background:radial-gradient(ellipse at 35% 25%,#e0f2fe,#38bdf8,#0284c7,#082f49)"><div class="hc-gl"></div><div class="hc-sw"></div><img class="hc-real-card" src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="Lugia V" loading="lazy" onerror="this.style.display='none'"/><div class="hc-grade-badge" style="font-size:8px">BGS 9.5</div></div>
+            <div class="hc" style="background:radial-gradient(ellipse at 35% 25%,#fef08a,#4ade80,#16a34a,#052e16)"><div class="hc-gl"></div><div class="hc-sw"></div><img class="hc-real-card" src="https://images.pokemontcg.io/swsh7/218_hires.png" alt="Rayquaza VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="hc-grade-badge" style="font-size:8px">PSA 9</div></div>
+            <div class="hc" style="background:radial-gradient(ellipse at 35% 25%,#fefce8,#fde047,#d97706,#713f12)"><div class="hc-gl"></div><div class="hc-sw"></div><img class="hc-real-card" src="https://images.pokemontcg.io/swsh4/44_hires.png" alt="Pikachu VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="hc-grade-badge" style="font-size:8px">BGS 9</div></div>
+          </div>
+        </div>
+        <div class="ptab-sec" id="pt-1" style="padding:12px 0">
+          <div class="lrow"><div style="width:28px;height:28px;border-radius:50%;background:rgba(35,165,90,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🔥</div><div style="flex:1;margin-left:8px"><div style="font-size:12px;font-weight:600;color:#fff">Charizard VMAX to Lugia V Alt Art</div><div style="font-size:10px;color:#80848e">2 days ago</div></div><span class="bdg bdg-grn">Done</span></div>
+        </div>
+        <div class="ptab-sec" id="pt-2" style="padding:12px 0">
+          <div class="lrow"><span style="font-size:14px">🔥</span><div style="flex:1;margin-left:8px"><div style="font-size:12px;font-weight:600;color:#fff">Posted Charizard VMAX PSA 10 pull</div><div style="font-size:10px;color:#80848e">3 min ago</div></div></div>
+        </div>
+        <div class="ptab-sec" id="pt-3" style="padding:12px 0">
+          <div class="sh"><div class="sh-t">✅ Reviews</div><span style="font-weight:800;font-size:14px;color:#f59e0b">★4.9</span></div>
+          <div class="card csm" style="margin-bottom:7px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="width:26px;height:26px;border-radius:50%;background:#383a40;display:flex;align-items:center;justify-content:center;font-size:12px">💧</div><div style="flex:1"><div style="font-weight:700;font-size:12px;color:#fff">ShinySister_TZ</div><div style="font-size:10px;color:#f59e0b">★★★★★</div></div><div style="font-size:10px;color:#80848e">2d ago</div></div><div style="font-size:12px;color:#dbdee1">Excellent trader! Cards as described 🔥</div></div>
+        </div>
+        <div class="ptab-sec" id="pt-4" style="padding:12px 0">
+          <div class="card" style="margin-bottom:10px"><div style="font-weight:700;font-size:13px;margin-bottom:10px;color:#fff">Profile Info</div>
+            <div class="fg"><label class="fl">Display Name</label><input class="fi" id="settName" value="TrainerAsh_KE"/></div>
+            <div class="fg"><label class="fl">Bio</label><textarea class="fi" id="settBio" rows="2">Elite trainer from the global community</textarea></div>
+            <div class="fg"><label class="fl">Country</label><select class="fi" id="settCountry"><option value="">Select country</option></select></div>
+            <button class="btn bg bfw" data-action="saveprofile">Save Changes</button>
+          </div>
+          <div class="card"><div style="font-weight:700;font-size:13px;margin-bottom:10px;color:#fff">Photo & Banner</div>
+            <div style="display:flex;gap:9px;align-items:center;margin-bottom:10px">
+              <div style="position:relative;flex-shrink:0"><div style="width:56px;height:56px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden">A</div><button class="photo-upload-btn" data-action="uploadavatar">✏️</button><input type="file" id="avatarFileInput" accept="image/*" style="display:none"/></div>
+              <div style="flex:1"><div style="font-weight:600;font-size:12px;margin-bottom:3px;color:#fff">Profile Photo</div><div style="font-size:10px;color:#80848e;margin-bottom:4px">Use 1:1 ratio (min 512x512)</div><button class="btn bgh bxs" data-action="uploadavatar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Change</button></div>
+            </div>
+            <div style="font-size:10px;color:#80848e;margin-bottom:5px">Banner ratio: 3:1 (e.g. 1500x500)</div>
+            <button class="btn bgh bsm bfw" data-action="uploadbanner"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> Change Banner</button>
+            <input type="file" id="bannerFileInput" accept="image/*" style="display:none"/>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+  </div><!-- /pages -->
+
+  <!-- ── Bottom Nav ── -->
+  <nav id="gbn"><div id="gbn-row">
+    <button class="gbn on" data-pg="feed">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="gbn-lbl">Feed</span>
+    </button>
+    <button class="gbn" data-pg="binder">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <span class="gbn-lbl">Binder</span>
+    </button>
+    <button class="gbn" data-pg="trade">
+      <span class="gbn-dot"></span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      <span class="gbn-lbl">Trade</span>
+    </button>
+    <button class="gbn" data-pg="shop">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="gbn-lbl">Shop</span>
+    </button>
+    <button class="gbn" data-pg="mart">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="gbn-lbl">Mart</span>
+    </button>
+  </div></nav>
+</div><!-- /shell -->
+
+<!-- MODALS -->
+<div class="modal-bg" id="cardModal"><div class="modal"><button class="mc">✕</button>
+  <div id="mEm" style="margin-bottom:8px"></div>
+  <div style="font-weight:800;font-size:17px;text-align:center;margin-bottom:3px;color:#fff" id="mNm">Charizard VMAX</div>
+  <div style="font-size:11px;color:#80848e;text-align:center;margin-bottom:12px" id="mGr">PSA 10</div>
+  <div class="g2" style="margin-bottom:12px">
+    <div style="background:#383a40;border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;font-size:15px;color:#f59e0b">$310</div><div style="font-size:9px;color:#80848e;margin-top:2px">Market Value</div></div>
+    <div style="background:#383a40;border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;font-size:15px;color:#23a55a" id="mGr2">PSA 10</div><div style="font-size:9px;color:#80848e;margin-top:2px">Grade</div></div>
+  </div>
+  <div style="display:flex;gap:7px"><button class="btn bgrn bfw" id="tradeFromBinder">⇄ Propose Trade</button><button class="btn bgh">Close</button></div>
+</div></div>
+
+<div class="modal-bg" id="commentModal"><div class="modal"><button class="mc">✕</button><div id="commentBody"></div></div></div>
+
+<div class="modal-bg" id="verifyModal"><div class="modal"><button class="mc" data-action="closeverify">✕</button>
+  <div style="font-weight:800;font-size:16px;margin-bottom:4px;color:#fff">✅ Get Verified</div>
+  <div style="font-size:12px;color:#80848e;margin-bottom:14px">Trusted trader badge for your profile</div>
+  <div class="verify-progress"><div class="vp-step active"></div><div class="vp-step"></div><div class="vp-step"></div><div class="vp-step"></div></div>
+  <div class="verify-step on" id="vs-0"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 1: Basic Info</div><div class="fg"><label class="fl">Full Name</label><input class="fi" placeholder="Your real name"/></div><div class="fg"><label class="fl">Country</label><select class="fi" id="verifyCountry"><option value="">Select country</option></select></div><button class="btn bg bfw" data-action="nextstep">Next →</button></div>
+  <div class="verify-step" id="vs-1"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 2: Trade History</div><div style="background:#383a40;border-radius:8px;padding:12px;margin-bottom:12px"><div style="font-size:12px;color:#23a55a">✓ 38 trades completed — eligible!</div></div><div style="display:flex;gap:7px"><button class="btn bgh bsm" data-action="prevstep">← Back</button><button class="btn bg bfw" data-action="nextstep">Next →</button></div></div>
+  <div class="verify-step" id="vs-2"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 3: ID Verification</div><div class="fg"><label class="fl">Upload Government ID</label><button class="btn bgh bfw">📁 Choose File</button></div><div style="display:flex;gap:7px;margin-top:10px"><button class="btn bgh bsm" data-action="prevstep">← Back</button><button class="btn bg bfw" data-action="nextstep">Submit →</button></div></div>
+  <div class="verify-step" id="vs-3"><div style="text-align:center;padding:10px"><div style="font-size:44px;margin-bottom:8px">✅</div><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#fff">Application Submitted!</div><div style="font-size:12px;color:#b5bac1;margin-bottom:16px">Review takes 24-48 hours. You'll be notified.</div></div><button class="btn bg bfw" data-action="closeverify">Done</button></div>
+</div></div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div id="forgotModal" style="position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:linear-gradient(160deg,#1e1f22,#232428);border:1px solid rgba(88,101,242,.32);border-radius:18px;padding:28px 22px;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.75);animation:slideUp .3s ease;position:relative;overflow:hidden">
+    <!-- Step indicator -->
+    <div id="fpStepBar" style="display:flex;gap:6px;margin-bottom:18px">
+      <div class="fp-step-dot fp-dot-active"></div>
+      <div class="fp-step-dot"></div>
+      <div class="fp-step-dot"></div>
+    </div>
+    <button onclick="closeForgotModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.07);border:none;color:#b5bac1;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:1">✕</button>
+
+    <!-- ── Step 1: Enter email ── -->
+    <div id="fpStep1">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:40px;height:40px;background:rgba(88,101,242,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:900;font-size:16px;color:#fff">Reset Password</div>
+          <div style="font-size:11px;color:#80848e">Enter your registered email</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Email Address</label><input class="fi fi-glow" id="forgotEmail" type="email" placeholder="trainer@example.com" autocomplete="email"/></div>
+      <div id="fpEmailErr" style="font-size:11px;color:#ed4245;margin:-8px 0 10px;display:none">Please enter a valid email address</div>
+      <button class="lbtn acc lbtn-pulse" onclick="fpSendOTP()" style="display:flex;align-items:center;justify-content:center;gap:8px" id="fpSendBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send Verification Code
+      </button>
+      <div style="text-align:center;margin-top:10px"><a onclick="closeForgotModal()" style="font-size:11px;color:#5865f2;cursor:pointer">← Back to Login</a></div>
+    </div>
+
+    <!-- ── Step 2: Enter OTP ── -->
+    <div id="fpStep2" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:40px;height:40px;background:rgba(88,101,242,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:900;font-size:16px;color:#fff">Check your email</div>
+          <div style="font-size:11px;color:#80848e" id="fpEmailHint">Code sent to your email</div>
+        </div>
+      </div>
+      <div style="background:rgba(88,101,242,.07);border:1px solid rgba(88,101,242,.2);border-radius:10px;padding:12px;margin-bottom:14px;text-align:center">
+        <div style="font-size:11px;color:#b5bac1;margin-bottom:8px">Enter the 6-digit code</div>
+        <div style="display:flex;gap:7px;justify-content:center" id="fpOtpBoxes">
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+          <input class="fi otp-box fp-otp" maxlength="1" inputmode="numeric"/>
+        </div>
+        <div id="fpOtpHint" style="font-size:10px;color:#80848e;margin-top:8px">Didn't get it? <a id="fpResendLink" onclick="fpResendOTP()" style="color:#5865f2;cursor:pointer">Resend</a> <span id="fpTimer" style="color:#80848e"></span></div>
+        <div id="fpOtpErr" style="font-size:11px;color:#ed4245;margin-top:6px;display:none">Incorrect code — please try again.</div>
+      </div>
+      <button class="lbtn acc" onclick="fpVerifyOTP()" style="display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Verify Code
+      </button>
+      <div style="text-align:center;margin-top:8px"><a onclick="fpGoStep(1)" style="font-size:11px;color:#5865f2;cursor:pointer">← Change email</a></div>
+    </div>
+
+    <!-- ── Step 3: New password ── -->
+    <div id="fpStep3" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:40px;height:40px;background:rgba(35,165,90,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#23a55a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:900;font-size:16px;color:#fff">New Password</div>
+          <div style="font-size:11px;color:#80848e">Choose a strong password</div>
+        </div>
+      </div>
+      <div class="fg" style="position:relative">
+        <label class="fl">New Password</label>
+        <input class="fi fi-glow" id="fpNewPass" type="password" placeholder="Min 8 characters" autocomplete="new-password"/>
+        <button onclick="fpTogglePass('fpNewPass',this)" style="position:absolute;right:10px;top:26px;background:none;border:none;color:#80848e;cursor:pointer;font-size:12px">👁</button>
+      </div>
+      <div class="fg" style="position:relative">
+        <label class="fl">Confirm Password</label>
+        <input class="fi fi-glow" id="fpConfPass" type="password" placeholder="Repeat password" autocomplete="new-password"/>
+        <button onclick="fpTogglePass('fpConfPass',this)" style="position:absolute;right:10px;top:26px;background:none;border:none;color:#80848e;cursor:pointer;font-size:12px">👁</button>
+      </div>
+      <!-- Password strength -->
+      <div id="fpStrengthBar" style="margin:-6px 0 10px;display:none">
+        <div style="height:3px;border-radius:3px;background:#383a40;overflow:hidden">
+          <div id="fpStrengthFill" style="height:100%;width:0;border-radius:3px;transition:width .3s,background .3s"></div>
+        </div>
+        <div id="fpStrengthLbl" style="font-size:9px;color:#80848e;margin-top:3px;text-align:right"></div>
+      </div>
+      <div id="fpPassErr" style="font-size:11px;color:#ed4245;margin:-6px 0 10px;display:none"></div>
+      <button class="lbtn acc lbtn-pulse" onclick="fpSetNewPassword()" style="display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Set New Password
+      </button>
+    </div>
+
+    <!-- ── Step 4: Success ── -->
+    <div id="fpStep4" style="display:none;text-align:center;padding:10px 0">
+      <div style="width:64px;height:64px;background:rgba(35,165,90,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;animation:bounce .6s ease">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#23a55a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div style="font-weight:900;font-size:17px;color:#fff;margin-bottom:6px">Password Updated! 🎉</div>
+      <div style="font-size:12px;color:#b5bac1;margin-bottom:18px;line-height:1.6">Your password has been reset successfully. You can now log in with your new password.</div>
+      <button class="lbtn acc" onclick="fpDone()" style="display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Go to Login
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL SCRIPT -->
+<script>
+var IS_IN=false,IS_ADM=false,CUR='feed',pg=0,TP=5;
+var USER={nm:'TrainerAsh_KE',em:'trainer@mintynex.com',country:'',bio:'Elite trainer from the global community',lv:12,xp:4200,xpmax:6000,cards:142,trades:38,rep:'4.9',friends:247,avatarSrc:'',bannerSrc:''};
+var CARDS=[
+  {em:'🔥',nm:'Charizard VMAX',gr:'PSA 10',img:'https://images.pokemontcg.io/swsh45/19_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#fbbf24,#f97316,#c2410c,#7f1d1d)'},
+  {em:'💧',nm:'Lugia V Alt Art',gr:'BGS 9.5',img:'https://images.pokemontcg.io/swsh10/186_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#e0f2fe,#38bdf8,#0284c7,#082f49)'},
+  {em:'🌿',nm:'Rayquaza VMAX',gr:'PSA 9',img:'https://images.pokemontcg.io/swsh7/218_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#fef08a,#4ade80,#16a34a,#052e16)'},
+  {em:'⚡',nm:'Pikachu VMAX',gr:'BGS 9',img:'https://images.pokemontcg.io/swsh4/44_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#fefce8,#fde047,#d97706,#713f12)'},
+  {em:'🌙',nm:'Umbreon VMAX',gr:'Raw NM',img:'https://images.pokemontcg.io/swsh6/215_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#fbbf24,#78716c,#44403c,#1c1917)'},
+  {em:'👻',nm:'Gardevoir ex',gr:'PSA 9',img:'https://images.pokemontcg.io/sv2/86_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#fdf4ff,#d946ef,#7e22ce,#3b0764)'},
+  {em:'🌿',nm:'Venusaur ex',gr:'Raw NM',img:'https://images.pokemontcg.io/sv1/197_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#dcfce7,#4ade80,#15803d,#052e16)'},
+  {em:'🔮',nm:'Mewtwo V',gr:'Raw NM',img:'https://images.pokemontcg.io/swsh10/172_hires.png',bg:'radial-gradient(ellipse at 35% 25%,#eef2ff,#818cf8,#4338ca,#1e1b4b)'}
+];
+var TRAINERS=[
+  {em:'A',nm:'TrainerAsh_KE',loc:'Metro City, Global',cards:142,trades:38,rep:'4.9',v:true,on:true,bg:'linear-gradient(135deg,rgba(220,38,38,.4),rgba(249,115,22,.3))'},
+  {em:'S',nm:'ShinySister_TZ',loc:'Harbor City, Global',cards:89,trades:12,rep:'5.0',v:true,on:true,bg:'linear-gradient(135deg,rgba(56,189,248,.35),rgba(59,130,246,.25))'},
+  {em:'P',nm:'PokeKing_NG',loc:'Capital City, Global',cards:210,trades:51,rep:'4.9',v:true,on:true,bg:'linear-gradient(135deg,rgba(245,158,11,.3),rgba(249,115,22,.25))'},
+  {em:'C',nm:'CardQueenZA',loc:'Coastline City, Global',cards:315,trades:67,rep:'5.0',v:true,on:false,bg:'linear-gradient(135deg,rgba(22,163,74,.3),rgba(74,222,128,.2))'},
+  {em:'M',nm:'MintFresh_KE',loc:'Island City, Global',cards:45,trades:9,rep:'4.6',v:false,on:true,bg:'linear-gradient(135deg,rgba(250,204,21,.3),rgba(245,158,11,.25))'},
+  {em:'D',nm:'DuskballDave',loc:'North City, Global',cards:88,trades:14,rep:'4.7',v:false,on:false,bg:'linear-gradient(135deg,rgba(107,114,128,.3),rgba(71,85,105,.25))'},
+  {em:'G',nm:'GhostPuller_GH',loc:'West City, Global',cards:56,trades:7,rep:'4.5',v:false,on:true,bg:'linear-gradient(135deg,rgba(30,27,75,.8),rgba(109,40,217,.5))'},
+  {em:'Y',nm:'PsychicPro_TZ',loc:'Central City, Global',cards:73,trades:18,rep:'4.8',v:true,on:false,bg:'linear-gradient(135deg,rgba(30,27,75,.8),rgba(196,181,253,.4))'},
+  {em:'E',nm:'EliteEdge_ZA',loc:'Summit City, Global',cards:198,trades:44,rep:'4.9',v:true,on:true,bg:'linear-gradient(135deg,rgba(113,63,18,.8),rgba(254,240,138,.4))'},
+  {em:'W',nm:'WaveRider_NG',loc:'River City, Global',cards:122,trades:29,rep:'4.7',v:false,on:false,bg:'linear-gradient(135deg,rgba(12,74,110,.8),rgba(56,189,248,.4))'}
+];
+
+function switchMode(m){document.getElementById('trainerForm').style.display=m==='trainer'?'block':'none';document.getElementById('adminForm').style.display=m==='admin'?'block':'none';document.getElementById('registerForm').style.display='none';document.getElementById('trainerTab').className='ltab'+(m==='trainer'?' on':'');document.getElementById('adminTab').className='ltab'+(m==='admin'?' on':'');}
+function showRegister(){document.getElementById('trainerForm').style.display='none';document.getElementById('registerForm').style.display='block';}
+function showLogin(){document.getElementById('registerForm').style.display='none';document.getElementById('trainerForm').style.display='block';}
+function selectPlan(el,plan){document.querySelectorAll('.plan-opt').forEach(function(o){o.classList.remove('selected')});el.classList.add('selected');}
+
+function applyUserToUI(){var nm=USER.nm,el;el=document.getElementById('dName');if(el)el.textContent=nm;el=document.getElementById('profNmEl');if(el)el.innerHTML=nm+' <span class="bdg bdg-v">✓</span>';el=document.getElementById('binderNm');if(el)el.textContent=nm;var av=USER.avatarSrc?'<img src="'+USER.avatarSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""/>':'🔥';el=document.getElementById('avBtn');if(el)el.innerHTML=av;el=document.getElementById('dhAv');if(el)el.innerHTML=av;el=document.getElementById('postAv');if(el)el.innerHTML=av;el=document.getElementById('binderAv');if(el)el.innerHTML=av;}
+
+function renderBinder(){var g=document.getElementById('binderGrid');if(!g)return;var h='';for(var i=0;i<8;i++){var cd=CARDS[i%CARDS.length];var img=cd.img?'<img class="hc-real-card" src="'+cd.img+'" alt="'+cd.nm+'" loading="lazy" onerror="this.style.display=\'none\'"/>':'';h+='<div class="hc" data-card="'+(i%CARDS.length)+'" style="background:'+cd.bg+'"><div class="hc-gl"></div><div class="hc-sw"></div>'+img+'<div class="hc-grade-badge">'+cd.gr+'</div></div>';}h+='<div class="hc hc-e" data-action="addcard"><div style="font-size:22px;color:rgba(88,101,242,.4)">+</div><div style="font-size:9px;color:#80848e">Add Card</div></div>';g.innerHTML=h;var lbl=document.getElementById('pgLbl');if(lbl)lbl.textContent='Page '+(pg+1)+' of '+TP;}
+
+function renderPartners(list){
+  ['partnersList','tradePL'].forEach(function(cid){
+    var c=document.getElementById(cid);if(!c)return;
+    if(!list||!list.length){c.innerHTML='<div style="text-align:center;padding:28px;color:#80848e">No trainers found.</div>';return;}
+    c.innerHTML=list.map(function(t){
+      var od=t.on?'<div style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#23a55a;border:2px solid #2b2d31"></div>':'';
+      var vb=t.v?'<span class="bdg bdg-v">✓</span>':'';
+      var isMe=(typeof USER!=="undefined"&&USER&&USER.nm===t.nm);
+      var actions=isMe
+        ? '<div style="display:flex;gap:5px"><button class="btn bgh bxs bfw" data-pg="profile">View Profile</button></div>'
+        : '<div style="display:flex;gap:5px"><button class="btn bgrn bxs bfw" data-action="friend" data-nm="'+t.nm+'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg>Add</button><button class="btn brd bxs" data-pg="messages"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message</button><button class="btn bgh bxs" data-action="addreview" data-nm="'+t.nm+'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Review</button></div>';
+      return '<div class="tc"><div class="tc-ban" style="background:'+t.bg+'"><span style="position:relative;z-index:1">'+t.em+'</span></div><div class="tc-body"><div class="tc-avrow"><div class="tc-av" style="background:'+t.bg+';position:relative">'+t.em+od+'</div><div>'+vb+'</div></div><div class="tc-nm">'+t.nm+'</div><div class="tc-loc">'+t.loc+'</div><div class="tc-stats"><div class="tcs"><div class="tcsv">'+t.cards+'</div><div class="tcsl">Cards</div></div><div class="tcs"><div class="tcsv">'+t.trades+'</div><div class="tcsl">Trades</div></div><div class="tcs"><div class="tcsv">★'+t.rep+'</div><div class="tcsl">Rep</div></div></div>'+actions+'</div></div>';
+    }).join('');
+  });
+}
+
+function doSearch(prefix){var pfx=prefix||'';var fc=document.getElementById(pfx+'fc');var fci=document.getElementById(pfx+'fci');var country=fc?(fc.value||'').toLowerCase().replace(/[^a-z]/g,''):'';var city=fci?(fci.value||'').toLowerCase().trim():'';var r=TRAINERS.filter(function(t){if(country&&!t.loc.toLowerCase().includes(country))return false;if(city&&!t.loc.toLowerCase().includes(city))return false;return true;});renderPartners(r);showToast(r.length+' trainers found','grn');}
+function clearSearch(prefix){['fc','fci'].forEach(function(id){var e=document.getElementById((prefix||'')+id);if(e)e.value='';});renderPartners(TRAINERS);}
+function sendMessage(){var inp=document.getElementById('msgInput');if(!inp||!inp.value.trim())return;var list=document.getElementById('msgList');if(list){var row=document.createElement('div');row.className='brow me';row.innerHTML='<div class="bav">🔥</div><div class="bbl me">'+inp.value.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';list.appendChild(row);list.scrollTop=list.scrollHeight;}inp.value='';}
+function proposeTrade(){var m=document.getElementById('tradeMeetup');if(!m||!m.value.trim()){showToast('Add a meetup location!','red');if(m)m.focus();return;}showToast('Trade proposal sent! 🤝','grn');tradeTab('active');}
+function saveProfile(){var nm=document.getElementById('settName');var bio=document.getElementById('settBio');if(nm&&nm.value.trim())USER.nm=nm.value.trim();if(bio)USER.bio=bio.value;applyUserToUI();var pb=document.getElementById('profBioEl');if(pb)pb.textContent=USER.bio;showToast('Profile saved! ✓','grn');}
+/* doSendOTP removed — handled by app-connect.js
+function doSendOTP_DISABLED(mode){var dial=document.getElementById(mode==='login'?'tDial':'rDial');var phone=document.getElementById(mode==='login'?'tPhone':'rPhone');if(!phone||!phone.value.trim()){showToast('Enter your phone number first','red');if(phone)phone.focus();return;}var full=(dial?dial.value:'+254')+phone.value.trim();showToast('OTP sent to '+full+' 📲','grn');var row=document.getElementById('otpRow'+(mode.charAt(0).toUpperCase()+mode.slice(1)));if(row){row.style.display='block';var fb=row.querySelector('.otp-box');if(fb)setTimeout(function(){fb.focus();},150);}}
+*/
+/* doVerifyOTP removed — handled by app-connect.js
+function doVerifyOTP_DISABLED(mode){var row=document.getElementById('otpRow'+(mode.charAt(0).toUpperCase()+mode.slice(1)));var boxes=row?row.querySelectorAll('.otp-box'):[];var otp=Array.from(boxes).map(function(b){return b.value;}).join('');if(otp.length<6){showToast('Enter all 6 digits','red');return;}showToast('Phone verified! ✅','grn');if(row)row.style.display='none';if(mode==='register')doRegister();else doLogin();}
+*/function tradeTab(tab){document.querySelectorAll('#tradeTabs .atab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tt')===tab)});document.querySelectorAll('.tt-s').forEach(function(s){s.classList.toggle('on',s.id==='tt-'+tab)});}
+function profTab(tab){document.querySelectorAll('.ptab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tab')===tab)});document.querySelectorAll('.ptab-sec').forEach(function(s){s.classList.toggle('on',s.id==='pt-'+tab)});}
+
+/* OTP wiring and dispute filter buttons handled by app-ui.js */
+
+/* ── Forgot Password — Full Multi-step Flow ── */
+var FP_OTP = '';
+var FP_TIMER = null;
+
+window.showForgotPassword = function() {
+  fpGoStep(1);
+  var m = document.getElementById('forgotModal');
+  if (m) { m.style.display = 'flex'; setTimeout(function(){ m.style.animation=''; }, 10); }
+};
+window.closeForgotModal = function() {
+  var m = document.getElementById('forgotModal');
+  if (m) m.style.display = 'none';
+  fpResetAll();
+};
+window.fpDone = function() {
+  closeForgotModal();
+  showLogin();
+  showToast('Password updated! Log in with your new password 🔐','grn');
+};
+
+function fpGoStep(step) {
+  [1,2,3,4].forEach(function(s){
+    var el = document.getElementById('fpStep'+s);
+    if (el) el.style.display = (s===step)?'block':'none';
+  });
+  // Update step dots
+  var dots = document.querySelectorAll('.fp-step-dot');
+  dots.forEach(function(d,i){
+    d.classList.remove('fp-dot-active','fp-dot-done');
+    if (i+1 < step) d.classList.add('fp-dot-done');
+    else if (i+1 === step) d.classList.add('fp-dot-active');
+  });
+}
+
+window.fpSendOTP = function() {
+  var email = (document.getElementById('forgotEmail')||{}).value || '';
+  var errEl = document.getElementById('fpEmailErr');
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    if (errEl) errEl.style.display = 'block';
+    return;
+  }
+  if (errEl) errEl.style.display = 'none';
+  // Simulate OTP generation (6-digit)
+  FP_OTP = Math.floor(100000 + Math.random()*900000).toString();
+  console.log('[MintyNex DEV] Simulated OTP for '+email+': '+FP_OTP+' (or use 123456)');
+  var hint = document.getElementById('fpEmailHint');
+  if (hint) hint.textContent = 'Code sent to ' + email.replace(/(.{2}).*(@)/, '$1***$2');
+  fpGoStep(2);
+  showToast('Code sent! Check your email 📧','grn');
+  fpStartTimer(60);
+  // Wire up OTP boxes in forgot modal
+  var boxes = document.querySelectorAll('.fp-otp');
+  boxes.forEach(function(box,i,all){
+    box.value = '';
+    box.addEventListener('input',function(){if(box.value&&i<all.length-1)all[i+1].focus();});
+    box.addEventListener('keydown',function(e){if(e.key==='Backspace'&&!box.value&&i>0)all[i-1].focus();});
+  });
+  setTimeout(function(){ var f=document.querySelector('.fp-otp'); if(f)f.focus(); }, 150);
+};
+
+window.fpResendOTP = function() {
+  FP_OTP = Math.floor(100000 + Math.random()*900000).toString();
+  console.log('[MintyNex DEV] Resent OTP: '+FP_OTP+' (or use 123456)');
+  var errEl = document.getElementById('fpOtpErr');
+  if (errEl) errEl.style.display = 'none';
+  document.querySelectorAll('.fp-otp').forEach(function(b){ b.value=''; });
+  var f=document.querySelector('.fp-otp'); if(f)f.focus();
+  showToast('New code sent!','grn');
+  fpStartTimer(60);
+};
+
+function fpStartTimer(secs) {
+  if (FP_TIMER) clearInterval(FP_TIMER);
+  var lnk = document.getElementById('fpResendLink');
+  var tmr = document.getElementById('fpTimer');
+  if (lnk) { lnk.style.pointerEvents='none'; lnk.style.opacity='.4'; }
+  var remaining = secs;
+  function tick(){
+    if(tmr) tmr.textContent = '('+remaining+'s)';
+    if(remaining<=0){
+      clearInterval(FP_TIMER);
+      if(lnk){lnk.style.pointerEvents='';lnk.style.opacity='';}
+      if(tmr)tmr.textContent='';
+    }
+    remaining--;
+  }
+  tick();
+  FP_TIMER = setInterval(tick,1000);
+}
+
+window.fpVerifyOTP = function() {
+  var boxes = document.querySelectorAll('.fp-otp');
+  var entered = Array.from(boxes).map(function(b){return b.value;}).join('');
+  var errEl = document.getElementById('fpOtpErr');
+  if (entered.length < 6) { showToast('Enter all 6 digits','red'); return; }
+  // Accept real OTP or demo code 123456
+  if (entered === FP_OTP || entered === '123456') {
+    if (errEl) errEl.style.display = 'none';
+    fpGoStep(3);
+    showToast('Code verified! ✅','grn');
+    // Wire strength meter
+    var newPass = document.getElementById('fpNewPass');
+    if (newPass) {
+      newPass.addEventListener('input', function(){ fpCheckStrength(this.value); });
+    }
+    setTimeout(function(){ var f=document.getElementById('fpNewPass'); if(f)f.focus(); },150);
+  } else {
+    if (errEl) errEl.style.display = 'block';
+    boxes.forEach(function(b){ b.style.borderColor='#ed4245'; setTimeout(function(){b.style.borderColor='';},1500); });
+  }
+};
+
+function fpCheckStrength(pw) {
+  var bar = document.getElementById('fpStrengthBar');
+  var fill = document.getElementById('fpStrengthFill');
+  var lbl = document.getElementById('fpStrengthLbl');
+  if (!bar||!fill||!lbl) return;
+  bar.style.display = pw.length ? 'block' : 'none';
+  var score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  var colors = ['#ed4245','#f59e0b','#3ba55c','#23a55a'];
+  var labels = ['Weak','Fair','Good','Strong'];
+  var widths = ['25%','50%','75%','100%'];
+  fill.style.width = widths[score-1]||'10%';
+  fill.style.background = colors[score-1]||'#383a40';
+  lbl.textContent = labels[score-1]||'';
+  lbl.style.color = colors[score-1]||'#80848e';
+}
+
+window.fpTogglePass = function(id, btn) {
+  var inp = document.getElementById(id);
+  if (!inp) return;
+  if (inp.type==='password') { inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+};
+
+window.fpSetNewPassword = function() {
+  var np = document.getElementById('fpNewPass');
+  var cp = document.getElementById('fpConfPass');
+  var errEl = document.getElementById('fpPassErr');
+  if (!np||!cp) return;
+  var pw = np.value, conf = cp.value;
+  if (pw.length < 8) { if(errEl){errEl.textContent='Password must be at least 8 characters';errEl.style.display='block';} return; }
+  if (pw !== conf) { if(errEl){errEl.textContent='Passwords do not match';errEl.style.display='block';} return; }
+  if(errEl) errEl.style.display='none';
+  // In a real app: API call here
+  fpGoStep(4);
+};
+
+function fpResetAll() {
+  if (FP_TIMER) clearInterval(FP_TIMER);
+  FP_OTP = '';
+  fpGoStep(1);
+  var e=document.getElementById('forgotEmail'); if(e)e.value='';
+  var err=document.getElementById('fpEmailErr'); if(err)err.style.display='none';
+  document.querySelectorAll('.fp-otp').forEach(function(b){b.value='';});
+  var oe=document.getElementById('fpOtpErr'); if(oe)oe.style.display='none';
+  var np=document.getElementById('fpNewPass'); if(np)np.value='';
+  var cp=document.getElementById('fpConfPass'); if(cp)cp.value='';
+  var pe=document.getElementById('fpPassErr'); if(pe)pe.style.display='none';
+  var sb=document.getElementById('fpStrengthBar'); if(sb)sb.style.display='none';
+}
+</script>
+
+<script src="app-feed.js"></script>
+<script src="app-api.js"></script>
+<script src="app-ui.js"></script>
+<script src="app-connect.js"></script>
+
+<style>
+/* ── Login page: animated background ── */
+#login-screen {
+  position: fixed !important; inset: 0 !important;
+  overflow-y: auto !important; -webkit-overflow-scrolling: touch !important;
+  background: #1e1f22 !important;
+  display: flex !important; align-items: flex-start !important; justify-content: center !important;
+  min-height: 100dvh !important;
+  padding: 20px 16px !important;
+}
+#login-screen::before {
+  content:''; position:fixed; top:-30%; left:-20%; width:70vw; height:70vw;
+  background:radial-gradient(circle,rgba(88,101,242,0.3) 0%,transparent 70%);
+  border-radius:50%; animation:lOrb1 9s ease-in-out infinite; pointer-events:none; z-index:0;
+}
+#login-screen::after {
+  content:''; position:fixed; bottom:-30%; right:-20%; width:60vw; height:60vw;
+  background:radial-gradient(circle,rgba(0,210,255,0.25) 0%,transparent 70%);
+  border-radius:50%; animation:lOrb2 11s ease-in-out infinite; pointer-events:none; z-index:0;
+}
+@keyframes lOrb1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(6%,10%) scale(1.12)} }
+@keyframes lOrb2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-6%,-10%) scale(1.09)} }
+.lbox { position:relative; z-index:1; width:100%; max-width:380px; padding:16px; }
+.lcard { background:rgba(43,45,49,0.9) !important; backdrop-filter:blur(24px) !important; -webkit-backdrop-filter:blur(24px) !important; border:1px solid rgba(255,255,255,0.08) !important; }
+
+/* ── Banner white line fix ── */
+.prof-ban { border:none !important; outline:none !important; box-shadow:none !important; display:block !important; line-height:0 !important; height:clamp(160px,22vw,280px) !important; background-size:cover !important; background-position:center !important; }
+
+/* ── Keyboard gap fix ── */
+.msg-area { flex-shrink:0 !important; padding-bottom:max(8px,env(safe-area-inset-bottom,0px)) !important; }
+
+/* ── Admin: force sections hidden unless .on ── */
+.adm-sec { display:none !important; }
+.adm-sec.on { display:block !important; }
+.admbody { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px; min-height:0; }
+
+/* ── Profile binder cards ── */
+.hc { cursor:pointer; }
+</style>
+
+<script>
+window.admShowSec = function(sec) { if(typeof showSec==='function') showSec(sec); };
+
+document.addEventListener('DOMContentLoaded', function() {
+  /* Admin tab clicks */
+  document.querySelectorAll('.atab[data-as]').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var sec = this.getAttribute('data-as');
+      if (sec && typeof showSec === 'function') showSec(sec);
+    });
+  });
+  /* Prevent scroll on input focus iOS */
+  document.querySelectorAll('input,select,textarea').forEach(function(el) {
+    el.addEventListener('focus', function(){ this.scrollIntoView({behavior:'smooth',block:'center'}); }, {passive:true});
+  });
+});
+</script>
+
+
+
+<!-- ── Image Crop Modal ─────────────────────────────── -->
+<div id="cropModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;align-items:center;justify-content:center;padding:12px;box-sizing:border-box">
+  <div style="background:#1e2124;border-radius:16px;padding:18px;width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,.8)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <span style="font-weight:800;font-size:15px;color:#fff" id="cropTitle">Adjust Photo</span>
+      <button onclick="closeCropModal()" style="background:none;border:none;color:#80848e;cursor:pointer;font-size:20px;padding:2px 8px;line-height:1">✕</button>
+    </div>
+    <div style="position:relative;border-radius:10px;overflow:hidden;background:#111;touch-action:none">
+      <canvas id="cropCanvas" style="display:block;width:100%;cursor:grab;touch-action:none"></canvas>
+      <div id="cropOverlay" style="position:absolute;inset:0;pointer-events:none"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px">🔍</span>
+      <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1" style="flex:1;accent-color:#5865f2" oninput="MXCrop.draw()">
+    </div>
+    <p style="font-size:11px;color:#4e5058;text-align:center;margin:6px 0 10px">Drag to reposition · Slider to zoom</p>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeCropModal()" style="flex:1;padding:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#dbdee1;cursor:pointer;font-size:13px">Cancel</button>
+      <button onclick="MXCrop.apply()" style="flex:2;padding:11px;background:#5865f2;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:700">✓ Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var MXCrop = (function(){
+  var S = { type:'avatar',img:null,scale:1,ox:0,oy:0,lox:0,loy:0,drag:false,sx:0,sy:0,cw:0,ch:0 };
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+  function draw(){
+    var cv=document.getElementById('cropCanvas');
+    var ctx=cv.getContext('2d');
+    var img=S.img; if(!img)return;
+    S.scale=parseFloat(document.getElementById('cropZoom').value);
+    var base=Math.max(S.cw/img.width,S.ch/img.height);
+    var dw=img.width*base*S.scale, dh=img.height*base*S.scale;
+    S.ox=clamp(S.ox,S.cw-dw,0); S.oy=clamp(S.oy,S.ch-dh,0);
+    ctx.clearRect(0,0,S.cw,S.ch);
+    ctx.drawImage(img,S.ox,S.oy,dw,dh);
+  }
+
+  function open(file,type){
+    S.type=type; S.scale=1; S.ox=0; S.oy=0;
+    document.getElementById('cropZoom').value=1;
+    document.getElementById('cropTitle').textContent=type==='avatar'?'Adjust Profile Photo':'Adjust Banner';
+    var isAv=(type==='avatar');
+    var maxW=Math.min(424,window.innerWidth-48);
+    S.cw=maxW; S.ch=isAv?maxW:Math.round(maxW/3);
+    var cv=document.getElementById('cropCanvas');
+    cv.width=S.cw; cv.height=S.ch;
+    // Overlay
+    var ov=document.getElementById('cropOverlay');
+    if(isAv){
+      var r=S.cw/2;
+      ov.innerHTML='<svg width="'+S.cw+'" height="'+S.ch+'" style="position:absolute;inset:0;display:block"><defs><mask id="mx"><rect width="100%" height="100%" fill="white"/><circle cx="'+r+'" cy="'+r+'" r="'+(r-1)+'" fill="black"/></mask></defs><rect width="100%" height="100%" fill="rgba(0,0,0,.6)" mask="url(#mx)"/><circle cx="'+r+'" cy="'+r+'" r="'+(r-1)+'" fill="none" stroke="#5865f2" stroke-width="2" stroke-dasharray="6 3"/></svg>';
+    } else {
+      ov.innerHTML='<div style="position:absolute;inset:0;border:2px dashed #5865f2;border-radius:4px"></div>';
+    }
+    // Drag events
+    cv.onmousedown=function(e){S.drag=true;S.sx=e.clientX;S.sy=e.clientY;S.lox=S.ox;S.loy=S.oy;cv.style.cursor='grabbing';e.preventDefault();};
+    cv.ontouchstart=function(e){if(e.touches.length===1){S.drag=true;S.sx=e.touches[0].clientX;S.sy=e.touches[0].clientY;S.lox=S.ox;S.loy=S.oy;}e.preventDefault();};
+    window.onmousemove=function(e){if(!S.drag)return;S.ox=S.lox+(e.clientX-S.sx);S.oy=S.loy+(e.clientY-S.sy);draw();};
+    window.ontouchmove=function(e){if(!S.drag||e.touches.length!==1)return;S.ox=S.lox+(e.touches[0].clientX-S.sx);S.oy=S.loy+(e.touches[0].clientY-S.sy);draw();e.preventDefault();};
+    window.onmouseup=window.ontouchend=function(){S.drag=false;cv.style.cursor='grab';};
+    // Load image
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var img=new Image();
+      img.onload=function(){S.img=img;draw();document.getElementById('cropModal').style.display='flex';};
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function apply(){
+    var cv=document.getElementById('cropCanvas');
+    var type=S.type;
+    // High-res output
+    var out=document.createElement('canvas');
+    out.width=(type==='avatar')?400:1200; out.height=(type==='avatar')?400:400;
+    out.getContext('2d').drawImage(cv,0,0,out.width,out.height);
+    var url=out.toDataURL('image/jpeg',0.92);
+    // Apply to UI
+    if(type==='avatar'){
+      var html='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
+      ['avBtn','dhAv','postAv','binderAv','profAvEl'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el){el.innerHTML=html;el.style.background='transparent';el.style.fontSize='0';}
+      });
+      if(typeof USER!=='undefined')USER.avatarSrc=url;
+    } else {
+      var ban=document.getElementById('profBanner');
+      if(ban){ban.style.backgroundImage='url('+url+')';ban.style.backgroundSize='cover';ban.style.backgroundPosition='center';ban.style.backgroundRepeat='no-repeat';}
+      if(typeof USER!=='undefined')USER.bannerSrc=url;
+    }
+    closeCropModal();
+    if(typeof showToast==='function')showToast('Uploading…','');
+    // Backend upload (best-effort)
+    out.toBlob(function(blob){
+      if(!blob)return;
+      var fd=new FormData(); fd.append('file',blob,type+'.jpg');
+      var fn=(type==='avatar')?AppApi.users.uploadAvatar:AppApi.users.uploadBanner;
+      fn(fd).then(function(r){if(typeof showToast==='function')showToast(r.ok?(type==='avatar'?'Photo updated! ✓':'Banner updated! ✓'):'Saved locally','grn');}).catch(function(){});
+    },'image/jpeg',0.92);
+  }
+
+  return {draw:draw,open:open,apply:apply};
+})();
+
+window.closeCropModal=function(){
+  document.getElementById('cropModal').style.display='none';
+  window.onmousemove=null;window.ontouchmove=null;window.onmouseup=null;window.ontouchend=null;
+};
+
+window.handlePhotoUpload=function(input,type){
+  var file=input.files[0]; if(!file)return;
+  input.value='';
+  if(!file.type.startsWith('image/')){if(typeof showToast==='function')showToast('Select an image','red');return;}
+  if(file.size>20*1024*1024){if(typeof showToast==='function')showToast('Max 20MB','red');return;}
+  MXCrop.open(file,type);
+};
+</script>
+
+</body>
+</html>

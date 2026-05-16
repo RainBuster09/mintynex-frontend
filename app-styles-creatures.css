@@ -1,0 +1,95 @@
+/* ============================================================
+   MINTYNEX — ORIGINAL CREATURE MASCOTS (app-styles-creatures.css)
+   Custom SVG-based elemental creatures: Zaplet, Embyr, Wavuu
+   No third-party IP. All characters original designs.
+   ============================================================ */
+
+/* ── Floating creature keyframes ── */
+@keyframes creatureFloat  { 0%,100%{transform:translateY(0)   rotate(-2deg)} 50%{transform:translateY(-14px) rotate(2deg)} }
+@keyframes creatureFloatB { 0%,100%{transform:translateY(0)   rotate(2deg)}  50%{transform:translateY(-18px) rotate(-3deg)} }
+@keyframes creatureFloatC { 0%,100%{transform:translateY(0)   rotate(-1deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+@keyframes creatureWiggle { 0%,100%{transform:scaleX(1)}  25%{transform:scaleX(1.08)} 75%{transform:scaleX(0.93)} }
+@keyframes creatureBlink  { 0%,90%,100%{scaleY:1} 92%,98%{transform:scaleY(0.05)} }
+@keyframes creatureTailWag{ 0%,100%{transform:rotate(-10deg) translateX(0)} 50%{transform:rotate(10deg) translateX(2px)} }
+@keyframes creatureShock  { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.6) saturate(2)} }
+@keyframes creaturePulse  { 0%,100%{transform:scale(1)}  50%{transform:scale(1.04)} }
+@keyframes creatureGlow   { 0%,100%{opacity:.55} 50%{opacity:1} }
+@keyframes creatureSpin   { to{transform:rotate(360deg)} }
+@keyframes creatureOrbit  { to{transform:rotate(360deg) translateX(14px) rotate(-360deg)} }
+@keyframes bgCreatureFloat{ 0%,100%{transform:translateY(0) rotate(-3deg);opacity:.13} 50%{transform:translateY(-20px) rotate(3deg);opacity:.18} }
+@keyframes bgCreatureFloatB{0%,100%{transform:translateY(0) rotate(2deg);opacity:.10} 50%{transform:translateY(-16px) rotate(-2deg);opacity:.16} }
+
+/* ── Background creature layer ── */
+#creature-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.bg-creature {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+.bg-creature svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Animated creature wrapper used in hero / CTA sections ── */
+.creature-mascot {
+  display: inline-block;
+  position: relative;
+  animation: creatureFloat 5s ease-in-out infinite;
+}
+.creature-mascot.b { animation-name: creatureFloatB; }
+.creature-mascot.c { animation-name: creatureFloatC; }
+.creature-mascot svg { overflow: visible; }
+
+/* Eye blink layers */
+.eye-lid {
+  transform-origin: center 50%;
+  animation: creatureBlink 4s ease-in-out infinite;
+}
+/* Tail / appendage wag */
+.tail-part {
+  transform-origin: 0% 50%;
+  animation: creatureTailWag 1.6s ease-in-out infinite;
+}
+/* Spark / glow orbs around electric creature */
+.spark-orb {
+  animation: creatureOrbit 2.4s linear infinite;
+  transform-origin: 0 0;
+}
+.spark-orb:nth-child(2) { animation-duration: 3.1s; animation-direction: reverse; }
+.spark-orb:nth-child(3) { animation-duration: 2s; }
+
+/* Fire creature flame flicker */
+.flame-tip {
+  transform-origin: 50% 100%;
+  animation: creatureWiggle 0.9s ease-in-out infinite;
+}
+.flame-inner {
+  transform-origin: 50% 100%;
+  animation: creatureWiggle 0.7s ease-in-out infinite reverse;
+}
+
+/* Water creature shimmer */
+.water-shine {
+  animation: creatureGlow 2.2s ease-in-out infinite;
+}
+
+/* Login screen creature animations */
+.login-creature {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.18;
+  animation: bgCreatureFloat 5s ease-in-out infinite;
+  filter: blur(0.5px);
+}
+.login-creature:nth-child(2) { animation-name: bgCreatureFloatB; animation-duration: 6s; animation-delay: -1.5s; }
+.login-creature:nth-child(3) { animation-duration: 7s; animation-delay: -3s; }
+.login-creature:nth-child(4) { animation-name: bgCreatureFloatB; animation-duration: 4.5s; animation-delay: -2s; }

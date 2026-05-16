@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0d0e11">
+<title>MintyNex — Global TCG Trading Community</title>
+<meta name="description" content="Buy, sell and trade Pokémon TCG cards with verified trainers worldwide. MintyNex is the safest, most trusted TCG community on the continent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+<!-- ░░ FLOATING POKEMON BACKGROUND ░░ -->
+<div id="pokemon-bg"></div>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+<nav class="mnav" id="mnav">
+  <div class="mnav-inner">
+    <a href="#" class="mnav-logo">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 10px rgba(0,210,255,0.55));flex-shrink:0">
+  <circle cx="40" cy="40" r="40" fill="url(#idxPb1)"/>
+  <circle cx="40" cy="40" r="40" fill="url(#idxPb2)" opacity="0.5"/>
+  <line x1="6" y1="40" x2="74" y2="40" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+  <circle cx="40" cy="40" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.95)" stroke-width="4"/>
+  <circle cx="40" cy="40" r="7" fill="white"/>
+  <circle cx="40" cy="40" r="4" fill="url(#idxPb1)"/>
+  <defs>
+    <linearGradient id="idxPb1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00f5a0"/>
+      <stop offset="0.5" stop-color="#00d2ff"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="idxPb2" x1="80" y1="0" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00f5a0" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#0ea5e9" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+</svg>
+      <span class="logo-text">Minty<span class="gold">Nex</span></span>
+    </a>
+    <div class="mnav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#trust">Trust & Safety</a>
+      <a href="#community">Community</a>
+    </div>
+    <div class="mnav-cta">
+      <a href="app.html" class="btn-ghost">Log In</a>
+      <a href="app.html" class="btn-primary">🚀 Join Free</a>
+    </div>
+    <button class="mnav-burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mnav-mobile" id="mobileMenu">
+    <a href="#features" onclick="closeMobile()">Features</a>
+    <a href="#how" onclick="closeMobile()">How It Works</a>
+    <a href="#trust" onclick="closeMobile()">Trust & Safety</a>
+    <a href="#community" onclick="closeMobile()">Community</a>
+    <a href="app.html" class="btn-primary" style="margin-top:8px;justify-content:center">🚀 Join Free</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section style="padding-top:0">
+  <div class="hero-sec">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        🌍 8,420+ Trainers Across MintyNex
+      </div>
+      <h1 class="hero-title">
+        Trade Cards.<br>
+        <span class="gradient-text">Build Legends.</span>
+      </h1>
+      <p class="hero-sub">
+        MintyNex is a Pokémon TCG trading community. Connect with verified trainers, showcase your binder, and trade safely — face to face.
+      </p>
+      <div class="hero-actions">
+        <a href="app.html" class="btn-primary btn-xl">⚡ Enter the Arena</a>
+        <a href="#how" class="btn-ghost btn-xl">How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat">
+          <span class="hstat-val">8,420</span>
+          <span class="hstat-lbl">Trainers</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">3,412</span>
+          <span class="hstat-lbl">Listings</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">1,247</span>
+          <span class="hstat-lbl">Trades Done</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">★4.9</span>
+          <span class="hstat-lbl">Avg Rep</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating card showcase -->
+    <div class="hero-cards-showcase">
+      <div class="showcase-card card-1" data-depth="0.3" style="background:radial-gradient(ellipse at 35% 25%,#fbbf24,#f97316,#c2410c,#7f1d1d)">
+        <div class="sc-inner">
+          <img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="sc-label">Charizard VMAX · PSA 10</div>
+        </div>
+      </div>
+      <div class="showcase-card card-2" data-depth="0.2" style="background:radial-gradient(ellipse at 35% 25%,#e0f2fe,#38bdf8,#0284c7,#082f49)">
+        <div class="sc-inner">
+          <img src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="Lugia V" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="sc-label">Lugia V Alt Art · BGS 9.5</div>
+        </div>
+      </div>
+      <div class="showcase-card card-3" data-depth="0.25" style="background:radial-gradient(ellipse at 35% 25%,#fef08a,#4ade80,#16a34a,#052e16)">
+        <div class="sc-inner">
+          <img src="https://images.pokemontcg.io/swsh7/218_hires.png" alt="Rayquaza VMAX" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="sc-label">Rayquaza VMAX · PSA 9</div>
+        </div>
+      </div>
+      <div class="showcase-card card-4" data-depth="0.15" style="background:radial-gradient(ellipse at 35% 25%,#fdf4ff,#d946ef,#7e22ce,#3b0764)">
+        <div class="sc-inner">
+          <img src="https://images.pokemontcg.io/swsh6/215_hires.png" alt="Umbreon VMAX" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="sc-label">Umbreon VMAX Alt Art</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FEATURES
+══════════════════════════════════════ -->
+<section class="features-sec" id="features">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+    <div class="sec-header">
+      <div class="sec-tag">✦ Platform Features</div>
+      <h2 class="sec-title">Everything a Trainer Needs</h2>
+      <p class="sec-sub">From your first pull to your hundredth trade — MintyNex has you covered.</p>
+    </div>
+    <div class="features-grid">
+
+      <!-- Large: Binder -->
+      <div class="feat-card feat-large">
+        <div class="feat-icon">🗂️</div>
+        <h3>Digital Binder</h3>
+        <p>Showcase your entire TCG collection with real card artwork. Track PSA/BGS grades, market values, and wishlist items all in one place.</p>
+        <div class="feat-tags">
+          <span class="ftag ftag-grn">PSA Grades</span>
+          <span class="ftag ftag-blue">Live Prices</span>
+          <span class="ftag ftag-gold">Wishlist</span>
+        </div>
+        <div class="binder-preview">
+          <div class="mini-card mc1"><img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="" loading="lazy" onerror="this.style.display='none'"/></div>
+          <div class="mini-card mc2"><img src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="" loading="lazy" onerror="this.style.display='none'"/></div>
+          <div class="mini-card mc3"><img src="https://images.pokemontcg.io/swsh7/218_hires.png" alt="" loading="lazy" onerror="this.style.display='none'"/></div>
+          <div class="mini-card mc4"><img src="https://images.pokemontcg.io/swsh6/215_hires.png" alt="" loading="lazy" onerror="this.style.display='none'"/></div>
+        </div>
+      </div>
+
+      <!-- In-Person Trading -->
+      <div class="feat-card">
+        <div class="feat-icon">🤝</div>
+        <h3>In-Person Trading</h3>
+        <p>Propose trades, agree on terms in chat, then meet face-to-face. No money through the app — 100% safe and transparent.</p>
+        <div class="feat-tags">
+          <span class="ftag ftag-grn">Zero Scam</span>
+          <span class="ftag ftag-blue">Meet IRL</span>
+        </div>
+      </div>
+
+      <!-- Social Feed -->
+      <div class="feat-card">
+        <div class="feat-icon">📣</div>
+        <h3>Community Feed</h3>
+        <p>Share your latest pulls, flex your slabs, and react to other trainers' finds. live and loud.</p>
+        <div class="feat-tags">
+          <span class="ftag ftag-gold">Pulls</span>
+          <span class="ftag ftag-blue">Comments</span>
+          <span class="ftag ftag-grn">Share</span>
+        </div>
+      </div>
+
+      <!-- Marketplace -->
+      <div class="feat-card">
+        <div class="feat-icon">🏪</div>
+        <h3>MintyMart</h3>
+        <p>Browse 3,400+ listings from trainers worldwide. Filter by type, grade, and location.</p>
+        <div class="feat-tags">
+          <span class="ftag ftag-gold">3,412 Listings</span>
+          <span class="ftag ftag-grn">All on MintyNex</span>
+        </div>
+      </div>
+
+      <!-- Ranking -->
+      <div class="feat-card">
+        <div class="feat-icon">🏆</div>
+        <h3>Trainer Rankings</h3>
+        <p>Climb from Rookie to Elite. Every completed trade, review, and verified listing earns you XP and reputation points.</p>
+        <div class="rank-preview">
+          <div class="rank-row r1"><span>PokeKing_NG</span> <span style="font-size:10px;color:#80848e">Global</span> <span class="rank-pts">★4.9</span></div>
+          <div class="rank-row r2"><span>TrainerAsh_KE</span> <span style="font-size:10px;color:#80848e">Global</span> <span class="rank-pts">★4.9</span></div>
+          <div class="rank-row r3"><span>CardQueenZA</span> <span style="font-size:10px;color:#80848e">Global</span> <span class="rank-pts">★5.0</span></div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <h3>Direct Messages</h3>
+        <p>Chat directly with any trainer. Negotiate trades, agree on meetup spots, and build lasting connections in the community.</p>
+        <div class="feat-tags">
+          <span class="ftag ftag-blue">Real-Time</span>
+          <span class="ftag ftag-grn">Trade Chat</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════ -->
+<section class="how-sec" id="how">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+    <div class="sec-header">
+      <div class="sec-tag">⚡ Simple Process</div>
+      <h2 class="sec-title">Trade in 4 Easy Steps</h2>
+      <p class="sec-sub">No middlemen, no shipping risk. Just trainers meeting trainers.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">STEP 1</div>
+        <div class="step-icon">🔍</div>
+        <h4>Find a Trainer</h4>
+        <p>Search by country, city or card type. Browse verified profiles with real trade histories.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">STEP 2</div>
+        <div class="step-icon">⇄</div>
+        <h4>Send Proposal</h4>
+        <p>Pick your card, pick what you want, add a meetup area and send the trade proposal.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">STEP 3</div>
+        <div class="step-icon">🤝</div>
+        <h4>Meet & Swap</h4>
+        <p>Meet in person, inspect both cards face to face, then make the swap safely.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">STEP 4</div>
+        <div class="step-icon">⭐</div>
+        <h4>Rate & Level Up</h4>
+        <p>Both trainers confirm completion and leave a star rating. Your rep grows with every trade.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a href="app.html" class="btn-primary btn-xl">🚀 Start Trading Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TRUST & SAFETY
+══════════════════════════════════════ -->
+<section class="trust-sec" id="trust">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+    <div class="trust-inner">
+      <div class="trust-text">
+        <div class="sec-tag">🛡️ Trust & Safety</div>
+        <h2 class="sec-title">Built for Safe Trading</h2>
+        <p class="trust-p">Every feature on MintyNex is designed to protect trainers and keep the community honest.</p>
+        <ul class="trust-list">
+          <li>
+            <div class="tl-icon">✅</div>
+            <div><strong>Verified Trainer Badges</strong><div>Apply for verification after 5+ completed trades and ID check. Verified trainers get a badge visible on all listings.</div></div>
+          </li>
+          <li>
+            <div class="tl-icon">⭐</div>
+            <div><strong>Star Rating System</strong><div>Every trade leaves a rating. Build your reputation over time — bad actors get flagged fast.</div></div>
+          </li>
+          <li>
+            <div class="tl-icon">🚩</div>
+            <div><strong>Report & Dispute System</strong><div>Flag suspicious listings or file a dispute. Our admin team reviews every case within 24 hours.</div></div>
+          </li>
+          <li>
+            <div class="tl-icon">🔒</div>
+            <div><strong>In-Person Only Trades</strong><div>No money moves through MintyNex. All trades are done face to face — eliminating shipping scams entirely.</div></div>
+          </li>
+        </ul>
+        <div class="trust-badges">
+          <div class="tb">🔒 No Shipping Scams</div>
+          <div class="tb">✅ ID Verified</div>
+          <div class="tb">⭐ Rep System</div>
+          <div class="tb">⚖️ Dispute Centre</div>
+          <div class="tb">📲 OTP Login</div>
+        </div>
+      </div>
+      <div class="trust-visual">
+        <div class="verify-card">
+          <div class="vc-top">
+            <div class="vc-av">🔥</div>
+            <div>
+              <div class="vc-nm">TrainerAsh_KE <span class="vc-badge">✓ Verified</span></div>
+              <div class="vc-loc">Global City · Worldwide</div>
+            </div>
+          </div>
+          <div class="vc-stats">
+            <div class="vcs"><span>142</span><small>Cards</small></div>
+            <div class="vcs"><span>38</span><small>Trades</small></div>
+            <div class="vcs"><span>★4.9</span><small>Rep</small></div>
+            <div class="vcs"><span>247</span><small>Friends</small></div>
+          </div>
+          <div class="vc-rep-bar"><div class="vc-rep-fill"></div></div>
+          <div class="vc-actions">
+            <button class="vc-btn-trade">⇄ Propose Trade</button>
+            <button class="vc-btn-msg">✉ Message</button>
+          </div>
+        </div>
+        <div class="trust-badges" style="margin-top:12px">
+          <div class="tb">📜 38 trades</div>
+          <div class="tb">🏅 Elite Rank</div>
+          <div class="tb">🌟 Top Rated</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     COMMUNITY FEED
+══════════════════════════════════════ -->
+<section class="community-sec" id="community">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+    <div class="sec-header">
+      <div class="sec-tag">📣 Live Community</div>
+      <h2 class="sec-title">Trainers Are Pulling Right Now</h2>
+      <p class="sec-sub">Join thousands of trainers sharing their latest pulls worldwide.</p>
+    </div>
+    <div class="community-feed">
+
+      <div class="cf-post">
+        <div class="cf-head">
+          <div class="cf-av">🔥</div>
+          <div>
+            <div class="cf-nm">TrainerAsh_KE <span class="verified-tag">✓</span></div>
+            <div class="cf-loc">Global City · Just now</div>
+          </div>
+        </div>
+        <div class="cf-img" style="background:radial-gradient(ellipse at 35% 25%,#fbbf24,#f97316,#c2410c,#7f1d1d)">
+          <img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX" loading="lazy" onerror="this.style.display='none'"/>
+        </div>
+        <div class="cf-cap">Just pulled this BEAST from Dark Ablaze! Charizard VMAX PSA 10 🔥 Anyone trade for Lugia V Alt Art? #GlobalPulls</div>
+        <div class="cf-acts">
+          <span>❤️ 143</span>
+          <span>💬 12</span>
+          <span>🔗 Share</span>
+        </div>
+      </div>
+
+      <div class="cf-post">
+        <div class="cf-head">
+          <div class="cf-av">💧</div>
+          <div>
+            <div class="cf-nm">ShinySister_TZ <span class="verified-tag">✓</span></div>
+            <div class="cf-loc">Global Coast · 2m ago</div>
+          </div>
+        </div>
+        <div class="cf-img" style="background:radial-gradient(ellipse at 35% 25%,#e0f2fe,#38bdf8,#0284c7,#082f49)">
+          <img src="https://images.pokemontcg.io/swsh10/186_hires.png" alt="Lugia V" loading="lazy" onerror="this.style.display='none'"/>
+        </div>
+        <div class="cf-cap">Finally got the Irida SAR I've been hunting for months 💙 Been looking since Silver Tempest dropped! #AltArt #MintyNex</div>
+        <div class="cf-acts">
+          <span>❤️ 87</span>
+          <span>💬 5</span>
+          <span>🔗 Share</span>
+        </div>
+      </div>
+
+      <div class="cf-post">
+        <div class="cf-head">
+          <div class="cf-av">👑</div>
+          <div>
+            <div class="cf-nm">PokeKing_NG <span class="verified-tag">✓</span></div>
+            <div class="cf-loc">Global Capital · 5m ago</div>
+          </div>
+        </div>
+        <div class="cf-img" style="background:radial-gradient(ellipse at 35% 25%,#1e1b4b,#4338ca,#818cf8)">
+          <img src="https://images.pokemontcg.io/swsh7/218_hires.png" alt="Rayquaza VMAX" loading="lazy" onerror="this.style.display='none'"/>
+        </div>
+        <div class="cf-cap">BGS 9.5 on this Rayquaza VMAX. Might be the cleanest slab on MintyNex</div>
+        <div class="cf-acts">
+          <span>❤️ 204</span>
+          <span>💬 11</span>
+          <span>🔗 Share</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CTA
+══════════════════════════════════════ -->
+<section class="cta-sec">
+  <div class="cta-pokemon-bg"></div>
+  <div style="position:relative;z-index:1;max-width:700px;margin:0 auto">
+    <div class="cta-emoji-row">🎴 ⚡ 🏆 🌍 🔥</div>
+    <h2 class="cta-title">Ready to Join worldwide TCG Arena?</h2>
+    <p class="cta-sub">8,420 trainers are already trading. Your binder is waiting.</p>
+    <div class="cta-actions">
+      <a href="app.html" class="btn-primary btn-xl">⚡ Enter the Arena — Free</a>
+      <a href="#features" class="btn-ghost btn-xl">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo-wrapper">
+        <div class="pokeball-logo pokeball-logo-lg"></div>
+        <span class="logo-text" style="font-size:22px">Minty<span class="gold">Nex</span></span>
+      </a>
+      <p>Pokémon TCG trading community. Connect, collect and trade with verified trainers across the continent.</p>
+    </div>
+    <div class="footer-links">
+      <div class="fl-col">
+        <div class="fl-head">Platform</div>
+        <a href="app.html">Feed</a>
+        <a href="app.html">Binder</a>
+        <a href="app.html">Trade</a>
+        <a href="app.html">MintyMart</a>
+        <a href="app.html">MintyShop</a>
+      </div>
+      <div class="fl-col">
+        <div class="fl-head">Community</div>
+        <a href="app.html">Find Trainers</a>
+        <a href="app.html">Leaderboard</a>
+        <a href="app.html">Get Verified</a>
+        <a href="app.html">Messages</a>
+      </div>
+      <div class="fl-col">
+        <div class="fl-head">Support</div>
+        <a href="#">How It Works</a>
+        <a href="#">Safety Guide</a>
+        <a href="#">Dispute Help</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="fl-col">
+        <div class="fl-head">Global</div>
+        <a href="#">All Regions</a>
+        <a href="#">Community Guide</a>
+        <a href="#">Safety Center</a>
+        <a href="#">Partner Program</a>
+        <a href="#">Updates</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 MintyNex. TCG Community.</span>
+    <span>Built with ❤️ for Trainers</span>
+    <span>🌍 · 🔒 Safe Trading · ⚡ TCG</span>
+  </div>
+</footer>
+
+<script src="landing.js"></script>
+</body>
+</html>
