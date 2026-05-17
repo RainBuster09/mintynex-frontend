@@ -679,56 +679,135 @@ input.otp-box { font-size: 18px !important; }
 
     <!-- ══ DISPUTES ══ -->
     <div class="adm-sec" id="as-disputes">
-      <div style="font-weight:800;font-size:14px;margin-bottom:4px;color:#fff;display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ed4245" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Dispute Centre
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-weight:800;font-size:14px;color:#fff;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ed4245" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Dispute Centre
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn bgh bxs dsp-filter on" data-filter="all" onclick="filterDisputes('all')" style="font-size:10px">All</button>
+          <button class="btn bgh bxs dsp-filter" data-filter="open" onclick="filterDisputes('open')" style="font-size:10px">Open</button>
+          <button class="btn bgh bxs dsp-filter" data-filter="review" onclick="filterDisputes('review')" style="font-size:10px">In Review</button>
+          <button class="btn bgh bxs dsp-filter" data-filter="resolved" onclick="filterDisputes('resolved')" style="font-size:10px">Resolved</button>
+        </div>
       </div>
-      <div style="font-size:11px;color:#80848e;margin-bottom:12px">Review and mediate trade disputes</div>
-      <div class="g4" style="margin-bottom:12px">
-        <div class="stat-b"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Open</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#f59e0b">5</div><div class="stat-l">In Review</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#23a55a">41</div><div class="stat-l">Resolved</div></div>
+      <!-- Stats row -->
+      <div class="g4" style="margin-bottom:14px">
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('open')"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Open</div></div>
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('review')"><div class="stat-v" style="color:#f59e0b">5</div><div class="stat-l">In Review</div></div>
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('resolved')"><div class="stat-v" style="color:#23a55a">41</div><div class="stat-l">Resolved</div></div>
         <div class="stat-b"><div class="stat-v" style="color:#7289da">2</div><div class="stat-l">Escalated</div></div>
       </div>
-      <div class="card" style="margin-bottom:9px;border-left:3px solid #ed4245">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+
+      <!-- Dispute #1 — Open -->
+      <div class="dsp-card card" data-status="open" style="margin-bottom:10px;border-left:3px solid #ed4245">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
           <div>
             <div style="font-size:12px;font-weight:800;color:#f59e0b">#DSP-0014</div>
-            <div style="font-size:10px;color:#80848e">Opened 1h ago · Trade #TXN-4819</div>
+            <div style="font-size:10px;color:#80848e;margin-top:2px">Opened 1h ago · Trade #TXN-4819 · <span style="color:#ed4245">High Priority</span></div>
           </div>
           <span class="bdg bdg-r" style="font-size:9px">Open</span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:center;margin-bottom:10px">
-          <div style="background:#383a40;border-radius:7px;padding:8px;text-align:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <div style="font-size:11px;font-weight:700;margin-top:2px">TrainerAsh_KE</div>
-            <div style="font-size:10px;color:#80848e">Claimant</div>
+        <!-- Parties -->
+        <div style="display:grid;grid-template-columns:1fr 28px 1fr;gap:8px;align-items:center;margin-bottom:10px">
+          <div style="background:#2b2d31;border-radius:8px;padding:10px;text-align:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;margin:0 auto 4px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#fff">TrainerAsh_KE</div>
+            <div style="font-size:9px;color:#5865f2;margin-top:2px">Claimant</div>
           </div>
-          <div style="text-align:center;color:#80848e;font-size:18px">↔</div>
-          <div style="background:#383a40;border-radius:7px;padding:8px;text-align:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ed4245" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <div style="font-size:11px;font-weight:700;margin-top:2px">GhostPuller_GH</div>
-            <div style="font-size:10px;color:#80848e">Respondent</div>
+          <div style="text-align:center;font-size:16px;color:#80848e">⚖️</div>
+          <div style="background:#2b2d31;border-radius:8px;padding:10px;text-align:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7f1d1d,#c2410c);display:flex;align-items:center;justify-content:center;margin:0 auto 4px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#fff">GhostPuller_GH</div>
+            <div style="font-size:9px;color:#ed4245;margin-top:2px">Respondent</div>
           </div>
         </div>
-        <div style="background:#383a40;border-radius:7px;padding:9px;margin-bottom:10px;font-size:12px;color:#dbdee1;line-height:1.5">
-          <span style="color:#f59e0b;font-weight:700">Issue:</span> Card received was not as described. Rayquaza VMAX listed as PSA 9 but appears raw/ungraded.
+        <!-- Issue -->
+        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:4px">⚠ Issue Reported</div>
+          <div style="font-size:12px;color:#dbdee1;line-height:1.5">Card received was not as described. Rayquaza VMAX listed as PSA 9 but appears raw/ungraded.</div>
         </div>
+        <!-- Evidence -->
+        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:6px">EVIDENCE</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📷 photo_001.jpg</span>
+            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📷 photo_002.jpg</span>
+            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📄 receipt.pdf</span>
+          </div>
+        </div>
+        <!-- Timeline -->
+        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:6px">TIMELINE</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#23a55a;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">2h ago</span><span style="font-size:11px;color:#dbdee1">Trade completed</span></div>
+            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">1h ago</span><span style="font-size:11px;color:#dbdee1">Dispute filed by TrainerAsh_KE</span></div>
+            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#5865f2;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">45m ago</span><span style="font-size:11px;color:#dbdee1">Admin notified</span></div>
+          </div>
+        </div>
+        <!-- Admin Notes -->
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:4px">ADMIN NOTES</div>
+          <textarea class="fi" placeholder="Add internal notes about this dispute..." style="height:60px;font-size:12px;resize:none;width:100%;box-sizing:border-box"></textarea>
+        </div>
+        <!-- Actions -->
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn bgrn bxs" style="font-size:11px" data-action="resolvedispute">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Resolve
+          <button class="btn bgrn bxs" style="font-size:11px" onclick="resolveDispute('DSP-0014','buyer')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Buyer Wins
           </button>
-          <button class="btn brd bxs" style="font-size:11px" data-action="escalatedispute">
+          <button class="btn" style="font-size:11px;background:rgba(88,101,242,.2);border:1px solid #5865f2;color:#5865f2" onclick="resolveDispute('DSP-0014','seller')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Seller Wins
+          </button>
+          <button class="btn brd bxs" style="font-size:11px" onclick="escalateDispute('DSP-0014')">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="12 19 12 5"/><polyline points="5 12 12 5 19 12"/></svg>Escalate
           </button>
           <button class="btn bgh bxs" style="font-size:11px" data-pg="messages">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Mediate
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Mediate Chat
           </button>
+          <button class="btn bgh bxs" style="font-size:11px" onclick="refundDispute('DSP-0014')">
+            💰 Refund
+          </button>
+        </div>
+      </div>
+
+      <!-- Dispute #2 — In Review -->
+      <div class="dsp-card card" data-status="review" style="margin-bottom:10px;border-left:3px solid #f59e0b">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+          <div>
+            <div style="font-size:12px;font-weight:800;color:#f59e0b">#DSP-0013</div>
+            <div style="font-size:10px;color:#80848e;margin-top:2px">Opened 4h ago · Trade #TXN-4801 · <span style="color:#f59e0b">Medium Priority</span></div>
+          </div>
+          <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">In Review</span>
+        </div>
+        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:4px">⚠ Issue Reported</div>
+          <div style="font-size:12px;color:#dbdee1;line-height:1.5">Item never received. Seller claims shipped but no tracking provided.</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn bgrn bxs" style="font-size:11px" onclick="resolveDispute('DSP-0013','buyer')">Buyer Wins</button>
+          <button class="btn bgh bxs" style="font-size:11px" onclick="resolveDispute('DSP-0013','seller')">Seller Wins</button>
+          <button class="btn brd bxs" style="font-size:11px" onclick="escalateDispute('DSP-0013')">Escalate</button>
+        </div>
+      </div>
+
+      <!-- Resolved example -->
+      <div class="dsp-card card" data-status="resolved" style="margin-bottom:10px;border-left:3px solid #23a55a;opacity:0.7">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:12px;font-weight:800;color:#23a55a">#DSP-0012 <span style="font-weight:400;color:#80848e;font-size:10px">— Resolved in favor of buyer</span></div>
+            <div style="font-size:10px;color:#80848e;margin-top:2px">Closed 2d ago · Trade #TXN-4790</div>
+          </div>
+          <span class="bdg" style="background:rgba(35,165,90,.15);color:#23a55a;font-size:9px">✓ Resolved</span>
         </div>
       </div>
     </div>
 
     <!-- ══ REPORTS ══ -->
+
     <div class="adm-sec" id="as-reports">
       <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
@@ -1586,12 +1665,8 @@ function clearSearch(prefix){['fc','fci'].forEach(function(id){var e=document.ge
 function sendMessage(){var inp=document.getElementById('msgInput');if(!inp||!inp.value.trim())return;var list=document.getElementById('msgList');if(list){var row=document.createElement('div');row.className='brow me';row.innerHTML='<div class="bav">🔥</div><div class="bbl me">'+inp.value.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';list.appendChild(row);list.scrollTop=list.scrollHeight;}inp.value='';}
 function proposeTrade(){var m=document.getElementById('tradeMeetup');if(!m||!m.value.trim()){showToast('Add a meetup location!','red');if(m)m.focus();return;}showToast('Trade proposal sent! 🤝','grn');tradeTab('active');}
 function saveProfile(){var nm=document.getElementById('settName');var bio=document.getElementById('settBio');if(nm&&nm.value.trim())USER.nm=nm.value.trim();if(bio)USER.bio=bio.value;applyUserToUI();var pb=document.getElementById('profBioEl');if(pb)pb.textContent=USER.bio;showToast('Profile saved! ✓','grn');}
-/* doSendOTP removed — handled by app-connect.js
-function doSendOTP_DISABLED(mode){var dial=document.getElementById(mode==='login'?'tDial':'rDial');var phone=document.getElementById(mode==='login'?'tPhone':'rPhone');if(!phone||!phone.value.trim()){showToast('Enter your phone number first','red');if(phone)phone.focus();return;}var full=(dial?dial.value:'+254')+phone.value.trim();showToast('OTP sent to '+full+' 📲','grn');var row=document.getElementById('otpRow'+(mode.charAt(0).toUpperCase()+mode.slice(1)));if(row){row.style.display='block';var fb=row.querySelector('.otp-box');if(fb)setTimeout(function(){fb.focus();},150);}}
-*/
-/* doVerifyOTP removed — handled by app-connect.js
-function doVerifyOTP_DISABLED(mode){var row=document.getElementById('otpRow'+(mode.charAt(0).toUpperCase()+mode.slice(1)));var boxes=row?row.querySelectorAll('.otp-box'):[];var otp=Array.from(boxes).map(function(b){return b.value;}).join('');if(otp.length<6){showToast('Enter all 6 digits','red');return;}showToast('Phone verified! ✅','grn');if(row)row.style.display='none';if(mode==='register')doRegister();else doLogin();}
-*/function tradeTab(tab){document.querySelectorAll('#tradeTabs .atab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tt')===tab)});document.querySelectorAll('.tt-s').forEach(function(s){s.classList.toggle('on',s.id==='tt-'+tab)});}
+/* OTP handled by app-connect.js */
+function tradeTab(tab){document.querySelectorAll('#tradeTabs .atab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tt')===tab)});document.querySelectorAll('.tt-s').forEach(function(s){s.classList.toggle('on',s.id==='tt-'+tab)});}
 function profTab(tab){document.querySelectorAll('.ptab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tab')===tab)});document.querySelectorAll('.ptab-sec').forEach(function(s){s.classList.toggle('on',s.id==='pt-'+tab)});}
 
 /* OTP wiring and dispute filter buttons handled by app-ui.js */
@@ -1731,8 +1806,10 @@ function fpCheckStrength(pw) {
 window.fpTogglePass = function(id, btn) {
   var inp = document.getElementById(id);
   if (!inp) return;
-  if (inp.type==='password') { inp.type='text'; btn.textContent='🙈'; }
-  else { inp.type='password'; btn.textContent='👁'; }
+  var eyeOn='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var eyeOff='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  if(inp.type==='password'){inp.type='text';btn.innerHTML=eyeOff;btn.style.color='#5865f2';}
+  else{inp.type='password';btn.innerHTML=eyeOn;btn.style.color='#80848e';}
 };
 
 window.fpSetNewPassword = function() {
@@ -1828,56 +1905,85 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+<!-- ── Dispute + Banner + Crop System ────────────────── -->
+<script>
+/* Dispute filter */
+window.filterDisputes = function(status) {
+  document.querySelectorAll('.dsp-filter').forEach(function(b){
+    b.classList.toggle('on', b.dataset.filter === status);
+  });
+  document.querySelectorAll('.dsp-card').forEach(function(c){
+    c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
+  });
+};
+window.resolveDispute = function(id, winner) {
+  showToast('Dispute ' + id + ' resolved — ' + (winner==='buyer'?'Buyer':'Seller') + ' wins ✓', 'grn');
+};
+window.escalateDispute = function(id) {
+  showToast('Dispute ' + id + ' escalated to senior admin', '');
+};
+window.refundDispute = function(id) {
+  showToast('Refund initiated for dispute ' + id, 'grn');
+};
+
+/* Eye toggle — SVG version */
+window.togglePwVis = function(id, btn) {
+  var inp = document.getElementById(id);
+  if (!inp) return;
+  var eyeOn  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var eyeOff = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  if (inp.type === 'password') { inp.type = 'text';     btn.innerHTML = eyeOff; btn.style.color = '#5865f2'; }
+  else                          { inp.type = 'password'; btn.innerHTML = eyeOn;  btn.style.color = '#80848e'; }
+};
+</script>
+
 <!-- ── Image Crop Modal ─────────────────────────────── -->
 <div id="cropModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;align-items:center;justify-content:center;padding:12px;box-sizing:border-box">
   <div style="background:#1e2124;border-radius:16px;padding:18px;width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,.8)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <span style="font-weight:800;font-size:15px;color:#fff" id="cropTitle">Adjust Photo</span>
-      <button onclick="closeCropModal()" style="background:none;border:none;color:#80848e;cursor:pointer;font-size:20px;padding:2px 8px;line-height:1">✕</button>
+      <button onclick="closeCropModal()" style="background:none;border:none;color:#80848e;cursor:pointer;font-size:20px;padding:2px 8px;line-height:1">&#x2715;</button>
     </div>
     <div style="position:relative;border-radius:10px;overflow:hidden;background:#111;touch-action:none">
       <canvas id="cropCanvas" style="display:block;width:100%;cursor:grab;touch-action:none"></canvas>
       <div id="cropOverlay" style="position:absolute;inset:0;pointer-events:none"></div>
     </div>
     <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px">🔍</span>
+      <span style="font-size:13px">&#x1F50D;</span>
       <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1" style="flex:1;accent-color:#5865f2" oninput="MXCrop.draw()">
     </div>
-    <p style="font-size:11px;color:#4e5058;text-align:center;margin:6px 0 10px">Drag to reposition · Slider to zoom</p>
+    <p style="font-size:11px;color:#4e5058;text-align:center;margin:6px 0 10px">Drag to reposition &middot; Slider to zoom</p>
     <div style="display:flex;gap:8px">
       <button onclick="closeCropModal()" style="flex:1;padding:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#dbdee1;cursor:pointer;font-size:13px">Cancel</button>
-      <button onclick="MXCrop.apply()" style="flex:2;padding:11px;background:#5865f2;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:700">✓ Apply</button>
+      <button onclick="MXCrop.apply()" style="flex:2;padding:11px;background:#5865f2;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:700">&#x2713; Apply</button>
     </div>
   </div>
 </div>
 
 <script>
-var MXCrop = (function(){
-  var S = { type:'avatar',img:null,scale:1,ox:0,oy:0,lox:0,loy:0,drag:false,sx:0,sy:0,cw:0,ch:0 };
+var MXCrop=(function(){
+  var S={type:'avatar',img:null,scale:1,ox:0,oy:0,lox:0,loy:0,drag:false,sx:0,sy:0,cw:0,ch:0};
   function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-
   function draw(){
     var cv=document.getElementById('cropCanvas');
     var ctx=cv.getContext('2d');
     var img=S.img; if(!img)return;
     S.scale=parseFloat(document.getElementById('cropZoom').value);
     var base=Math.max(S.cw/img.width,S.ch/img.height);
-    var dw=img.width*base*S.scale, dh=img.height*base*S.scale;
-    S.ox=clamp(S.ox,S.cw-dw,0); S.oy=clamp(S.oy,S.ch-dh,0);
+    var dw=img.width*base*S.scale,dh=img.height*base*S.scale;
+    S.ox=clamp(S.ox,S.cw-dw,0);S.oy=clamp(S.oy,S.ch-dh,0);
     ctx.clearRect(0,0,S.cw,S.ch);
     ctx.drawImage(img,S.ox,S.oy,dw,dh);
   }
-
   function open(file,type){
-    S.type=type; S.scale=1; S.ox=0; S.oy=0;
+    S.type=type;S.scale=1;S.ox=0;S.oy=0;
     document.getElementById('cropZoom').value=1;
     document.getElementById('cropTitle').textContent=type==='avatar'?'Adjust Profile Photo':'Adjust Banner';
     var isAv=(type==='avatar');
     var maxW=Math.min(424,window.innerWidth-48);
-    S.cw=maxW; S.ch=isAv?maxW:Math.round(maxW/3);
+    S.cw=maxW;S.ch=isAv?maxW:Math.round(maxW/3);
     var cv=document.getElementById('cropCanvas');
-    cv.width=S.cw; cv.height=S.ch;
-    // Overlay
+    cv.width=S.cw;cv.height=S.ch;
     var ov=document.getElementById('cropOverlay');
     if(isAv){
       var r=S.cw/2;
@@ -1885,13 +1991,11 @@ var MXCrop = (function(){
     } else {
       ov.innerHTML='<div style="position:absolute;inset:0;border:2px dashed #5865f2;border-radius:4px"></div>';
     }
-    // Drag events
     cv.onmousedown=function(e){S.drag=true;S.sx=e.clientX;S.sy=e.clientY;S.lox=S.ox;S.loy=S.oy;cv.style.cursor='grabbing';e.preventDefault();};
     cv.ontouchstart=function(e){if(e.touches.length===1){S.drag=true;S.sx=e.touches[0].clientX;S.sy=e.touches[0].clientY;S.lox=S.ox;S.loy=S.oy;}e.preventDefault();};
     window.onmousemove=function(e){if(!S.drag)return;S.ox=S.lox+(e.clientX-S.sx);S.oy=S.loy+(e.clientY-S.sy);draw();};
     window.ontouchmove=function(e){if(!S.drag||e.touches.length!==1)return;S.ox=S.lox+(e.touches[0].clientX-S.sx);S.oy=S.loy+(e.touches[0].clientY-S.sy);draw();e.preventDefault();};
     window.onmouseup=window.ontouchend=function(){S.drag=false;cv.style.cursor='grab';};
-    // Load image
     var reader=new FileReader();
     reader.onload=function(e){
       var img=new Image();
@@ -1900,16 +2004,14 @@ var MXCrop = (function(){
     };
     reader.readAsDataURL(file);
   }
-
   function apply(){
     var cv=document.getElementById('cropCanvas');
     var type=S.type;
-    // High-res output
     var out=document.createElement('canvas');
-    out.width=(type==='avatar')?400:1200; out.height=(type==='avatar')?400:400;
+    out.width=(type==='avatar')?400:1200;
+    out.height=(type==='avatar')?400:400;
     out.getContext('2d').drawImage(cv,0,0,out.width,out.height);
     var url=out.toDataURL('image/jpeg',0.92);
-    // Apply to UI
     if(type==='avatar'){
       var html='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
       ['avBtn','dhAv','postAv','binderAv','profAvEl'].forEach(function(id){
@@ -1917,32 +2019,38 @@ var MXCrop = (function(){
         if(el){el.innerHTML=html;el.style.background='transparent';el.style.fontSize='0';}
       });
       if(typeof USER!=='undefined')USER.avatarSrc=url;
+      if(typeof showToast==='function')showToast('Profile photo updated! ✓','grn');
     } else {
-      var ban=document.getElementById('profBanner');
-      if(ban){ban.style.backgroundImage='url('+url+')';ban.style.backgroundSize='cover';ban.style.backgroundPosition='center';ban.style.backgroundRepeat='no-repeat';}
+      /* Banner — find by ID first, then fallback to class */
+      var ban=document.getElementById('profBanner')||document.querySelector('.prof-ban');
+      if(ban){
+        ban.style.backgroundImage='url('+url+')';
+        ban.style.backgroundSize='cover';
+        ban.style.backgroundPosition='center';
+        ban.style.backgroundRepeat='no-repeat';
+        ban.style.minHeight='';
+      }
       if(typeof USER!=='undefined')USER.bannerSrc=url;
+      if(typeof showToast==='function')showToast('Banner updated! ✓','grn');
     }
     closeCropModal();
-    if(typeof showToast==='function')showToast('Uploading…','');
-    // Backend upload (best-effort)
+    /* Best-effort backend upload */
     out.toBlob(function(blob){
-      if(!blob)return;
-      var fd=new FormData(); fd.append('file',blob,type+'.jpg');
+      if(!blob||typeof AppApi==='undefined')return;
+      var fd=new FormData();fd.append('file',blob,type+'.jpg');
       var fn=(type==='avatar')?AppApi.users.uploadAvatar:AppApi.users.uploadBanner;
-      fn(fd).then(function(r){if(typeof showToast==='function')showToast(r.ok?(type==='avatar'?'Photo updated! ✓':'Banner updated! ✓'):'Saved locally','grn');}).catch(function(){});
+      if(fn)fn(fd).catch(function(){});
     },'image/jpeg',0.92);
   }
-
-  return {draw:draw,open:open,apply:apply};
+  return{draw:draw,open:open,apply:apply};
 })();
 
 window.closeCropModal=function(){
   document.getElementById('cropModal').style.display='none';
   window.onmousemove=null;window.ontouchmove=null;window.onmouseup=null;window.ontouchend=null;
 };
-
 window.handlePhotoUpload=function(input,type){
-  var file=input.files[0]; if(!file)return;
+  var file=input.files[0];if(!file)return;
   input.value='';
   if(!file.type.startsWith('image/')){if(typeof showToast==='function')showToast('Select an image','red');return;}
   if(file.size>20*1024*1024){if(typeof showToast==='function')showToast('Max 20MB','red');return;}

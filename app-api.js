@@ -15,7 +15,7 @@
        2. Auto-detect: if page is on localhost → use local backend
        3. Fallback: your Railway production URL (update this!)
   ─────────────────────────────────────────────────────────── */
-  const PROD_URL  = 'https://YOUR-APP.up.railway.app/api'; // ← change when deployed
+  const PROD_URL  = 'https://mintynex-backend.up.railway.app/api'; // Railway production URL
   const LOCAL_URL = 'http://localhost:8080/api';
 
   function detectBaseUrl() {
