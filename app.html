@@ -1507,7 +1507,7 @@ input.otp-box { font-size: 18px !important; }
     </div>
     <button onclick="closeForgotModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.07);border:none;color:#b5bac1;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:1">✕</button>
 
-    <!-- ── Step 1: Enter email ── -->
+    <!-- ── Step 1: Enter phone ── -->
     <div id="fpStep1">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
         <div style="width:40px;height:40px;background:rgba(88,101,242,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -1515,11 +1515,11 @@ input.otp-box { font-size: 18px !important; }
         </div>
         <div>
           <div style="font-weight:900;font-size:16px;color:#fff">Reset Password</div>
-          <div style="font-size:11px;color:#80848e">Enter your registered email</div>
+          <div style="font-size:11px;color:#80848e">Enter your registered phone number</div>
         </div>
       </div>
-      <div class="fg"><label class="fl">Email Address</label><input class="fi fi-glow" id="forgotEmail" type="email" placeholder="trainer@example.com" autocomplete="email"/></div>
-      <div id="fpEmailErr" style="font-size:11px;color:#ed4245;margin:-8px 0 10px;display:none">Please enter a valid email address</div>
+      <div class="fg"><label class="fl">Phone Number (E.164 format e.g. +254712345678)</label><input class="fi fi-glow" id="forgotPhone" type="tel" placeholder="+254712345678" autocomplete="tel"/></div>
+      <div id="fpEmailErr" style="font-size:11px;color:#ed4245;margin:-8px 0 10px;display:none">Please enter a valid phone number with country code (e.g. +254...)</div>
       <button class="lbtn acc lbtn-pulse" onclick="fpSendOTP()" style="display:flex;align-items:center;justify-content:center;gap:8px" id="fpSendBtn">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         Send Verification Code
@@ -1534,8 +1534,8 @@ input.otp-box { font-size: 18px !important; }
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
         </div>
         <div>
-          <div style="font-weight:900;font-size:16px;color:#fff">Check your email</div>
-          <div style="font-size:11px;color:#80848e" id="fpEmailHint">Code sent to your email</div>
+          <div style="font-weight:900;font-size:16px;color:#fff">Check your phone</div>
+          <div style="font-size:11px;color:#80848e" id="fpEmailHint">Code sent to your phone</div>
         </div>
       </div>
       <div style="background:rgba(88,101,242,.07);border:1px solid rgba(88,101,242,.2);border-radius:10px;padding:12px;margin-bottom:14px;text-align:center">
@@ -1555,7 +1555,7 @@ input.otp-box { font-size: 18px !important; }
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         Verify Code
       </button>
-      <div style="text-align:center;margin-top:8px"><a onclick="fpGoStep(1)" style="font-size:11px;color:#5865f2;cursor:pointer">← Change email</a></div>
+      <div style="text-align:center;margin-top:8px"><a onclick="fpGoStep(1)" style="font-size:11px;color:#5865f2;cursor:pointer">← Change phone</a></div>
     </div>
 
     <!-- ── Step 3: New password ── -->
@@ -1706,20 +1706,20 @@ function fpGoStep(step) {
 }
 
 window.fpSendOTP = function() {
-  var email = (document.getElementById('forgotEmail')||{}).value || '';
+  var phone = (document.getElementById('forgotPhone')||{}).value.trim() || '';
   var errEl = document.getElementById('fpEmailErr');
-  if (!email || !email.includes('@') || !email.includes('.')) {
+  if (!phone || !phone.startsWith('+') || phone.length < 8) {
     if (errEl) errEl.style.display = 'block';
     return;
   }
   if (errEl) errEl.style.display = 'none';
   // Simulate OTP generation (6-digit)
   FP_OTP = Math.floor(100000 + Math.random()*900000).toString();
-  console.log('[MintyNex DEV] Simulated OTP for '+email+': '+FP_OTP+' (or use 123456)');
+  console.log('[MintyNex DEV] Simulated OTP for '+phone+': '+FP_OTP+' (or use 123456)');
   var hint = document.getElementById('fpEmailHint');
-  if (hint) hint.textContent = 'Code sent to ' + email.replace(/(.{2}).*(@)/, '$1***$2');
+  if (hint) hint.textContent = 'Code sent to ' + phone.replace(/(\+\d{2})\d+(\d{3})/, '$1***$2');
   fpGoStep(2);
-  showToast('Code sent! Check your email 📧','grn');
+  showToast('Code sent! Check your phone 📲','grn');
   fpStartTimer(60);
   // Wire up OTP boxes in forgot modal
   var boxes = document.querySelectorAll('.fp-otp');
@@ -1829,7 +1829,7 @@ function fpResetAll() {
   if (FP_TIMER) clearInterval(FP_TIMER);
   FP_OTP = '';
   fpGoStep(1);
-  var e=document.getElementById('forgotEmail'); if(e)e.value='';
+  var e=document.getElementById('forgotPhone'); if(e)e.value='';
   var err=document.getElementById('fpEmailErr'); if(err)err.style.display='none';
   document.querySelectorAll('.fp-otp').forEach(function(b){b.value='';});
   var oe=document.getElementById('fpOtpErr'); if(oe)oe.style.display='none';

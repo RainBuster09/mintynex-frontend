@@ -111,11 +111,23 @@ window.doRegister = async function () {
 
   if (!res.ok) { apiErr(res, 'Registration failed'); return; }
 
-  showToast('Account created! Check your phone for OTP 📲', 'grn');
+  // DEV: backend returns the OTP code in the message for easy testing (no SMS needed)
+  const devMsg  = res.data?.message || '';
+  const devCode = devMsg.match(/\[DEV CODE: (\d+)\]/)?.[1];
+  const toastMsg = devCode
+    ? `Account created! Dev OTP: ${devCode} 📲`
+    : 'Account created! Check your phone for OTP 📲';
+  showToast(toastMsg, 'grn');
+
   // Show OTP row so user can verify phone right away
   const otpRow = document.getElementById('otpRowRegister');
   if (otpRow) {
     otpRow.style.display = 'block';
+    // Auto-fill the OTP boxes if we have the dev code
+    if (devCode) {
+      const boxes = otpRow.querySelectorAll('.otp-box');
+      devCode.split('').forEach((digit, i) => { if (boxes[i]) boxes[i].value = digit; });
+    }
     otpRow.querySelector('.otp-box')?.focus();
   }
 };
@@ -147,12 +159,20 @@ window.doSendOTP = async function (mode) {
 
   if (!res.ok) { apiErr(res, 'Failed to send OTP'); return; }
 
-  showToast('OTP sent to ' + phone + ' 📲', 'grn');
+  // DEV: backend returns the OTP code in the message
+  const devMsg  = res.data?.message || '';
+  const devCode = devMsg.match(/\[DEV CODE: (\d+)\]/)?.[1];
+  showToast(devCode ? `OTP sent — Dev code: ${devCode} 📲` : 'OTP sent to ' + phone + ' 📲', 'grn');
 
   const rowId  = isLogin ? 'otpRowLogin' : 'otpRowRegister';
   const otpRow = document.getElementById(rowId);
   if (otpRow) {
     otpRow.style.display = 'block';
+    // Auto-fill boxes with dev code
+    if (devCode) {
+      const boxes = otpRow.querySelectorAll('.otp-box');
+      devCode.split('').forEach((digit, i) => { if (boxes[i]) boxes[i].value = digit; });
+    }
     otpRow.querySelector('.otp-box')?.focus();
   }
 
@@ -251,36 +271,32 @@ window.doLogout = async function (forced) {
    FORGOT PASSWORD — fpSendOTP (step 1)
 ───────────────────────────────────────────────────────────── */
 window.fpSendOTP = async function () {
-  const emailEl = document.getElementById('forgotEmail');
-  const email   = emailEl?.value?.trim();
+  const phoneEl = document.getElementById('forgotPhone');
+  const phone   = phoneEl?.value?.trim();
   const errEl   = document.getElementById('fpEmailErr');
 
-  if (!email || !email.includes('@') || !email.includes('.')) {
+  if (!phone || !phone.startsWith('+') || phone.length < 8) {
     if (errEl) errEl.style.display = 'block';
     return;
   }
   if (errEl) errEl.style.display = 'none';
 
-  // We need to send OTP to phone — but user entered email.
-  // Backend must support sending OTP by email OR we look up phone from email first.
-  // For now: store email, tell backend to find the account and send SMS to registered phone.
-  // POST /auth/send-otp accepts { email, purpose: "RESET" } — add this to backend if needed.
-  // Until backend supports email lookup, we use phone fallback UX:
-  window._fpEmail = email;
+  window._fpPhone = phone;
 
   const btn     = document.getElementById('fpSendBtn');
   const restore = btnLoading(btn, 'Sending…');
 
-  // Try sending OTP via email field (backend needs to support this lookup)
-  const res = await AppApi.auth.sendOtp({ email, purpose: 'RESET' });
+  const res = await AppApi.auth.sendOtp({ phone, purpose: 'RESET' });
   restore();
 
-  if (!res.ok) { apiErr(res, 'No account found with that email'); return; }
+  if (!res.ok) { apiErr(res, 'No account found with that phone number'); return; }
 
   const hint = document.getElementById('fpEmailHint');
-  if (hint) hint.textContent = 'Code sent to your registered phone — ' + (res.data?.maskedPhone || 'check your phone');
+  // DEV: backend includes the OTP code in the message — display it for easy testing
+  const devMsg = res.data?.message || '';
+  if (hint) hint.textContent = 'Code sent to ' + phone + (devMsg.includes('DEV CODE') ? ' — ' + devMsg.match(/\[DEV CODE: (\d+)\]/)?.[1] : '');
   if (typeof fpGoStep === 'function') fpGoStep(2);
-  showToast('OTP sent! Check your phone 📲', 'grn');
+  showToast('OTP sent! ' + (devMsg.includes('DEV CODE') ? '(Dev: ' + devMsg.match(/\[DEV CODE: (\d+)\]/)?.[1] + ')' : 'Check your phone 📲'), 'grn');
   if (typeof fpStartTimer === 'function') fpStartTimer(60);
 
   // Wire OTP boxes
@@ -300,9 +316,29 @@ window.fpVerifyOTP = async function () {
   const boxes   = document.querySelectorAll('.fp-otp');
   const code    = Array.from(boxes).map(b => b.value).join('');
   const errEl   = document.getElementById('fpOtpErr');
-  const email   = window._fpEmail || '';
+  const phone   = window._fpPhone || '';
 
   if (code.length < 6) { showToast('Enter all 6 digits', 'red'); return; }
+  if (!phone) { showToast('Phone missing — please go back and re-enter your phone', 'red'); return; }
+
+  const btn     = document.querySelector('#fpStep2 .lbtn');
+  const restore = btnLoading(btn, 'Checking…');
+
+  const res = await AppApi.auth.verifyOtp({ phone, code, purpose: 'RESET' });
+  restore();
+
+  if (!res.ok) {
+    if (errEl) errEl.style.display = 'block';
+    boxes.forEach(b => { b.style.borderColor = '#ed4245'; setTimeout(() => { b.style.borderColor = ''; }, 1500); });
+    return;
+  }
+
+  if (errEl) errEl.style.display = 'none';
+  window._fpResetToken = code;
+  if (typeof fpGoStep === 'function') fpGoStep(3);
+  showToast('Code verified ✅', 'grn');
+  setTimeout(() => { document.getElementById('fpNewPass')?.focus(); }, 150);
+};
 
   const btn     = document.querySelector('#fpStep2 .lbtn');
   const restore = btnLoading(btn, 'Checking…');
@@ -332,7 +368,7 @@ window.fpSetNewPassword = async function () {
   const np    = document.getElementById('fpNewPass')?.value;
   const cp    = document.getElementById('fpConfPass')?.value;
   const errEl = document.getElementById('fpPassErr');
-  const email = window._fpEmail || '';
+  const phone = window._fpPhone || '';
   const otp   = window._fpResetToken || '';
 
   if (!np || np.length < 8) {
@@ -348,7 +384,7 @@ window.fpSetNewPassword = async function () {
   const btn     = document.querySelector('#fpStep3 .lbtn');
   const restore = btnLoading(btn, 'Saving…');
 
-  const res = await AppApi.auth.resetPassword({ email, otp, newPassword: np });
+  const res = await AppApi.auth.resetPassword({ phone, otp, newPassword: np });
   restore();
 
   if (!res.ok) { apiErr(res, 'Password reset failed'); return; }
