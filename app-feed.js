@@ -80,16 +80,16 @@ function buildPostEl(post, idx) {
       </button>
     </div>
 
-    <!-- Card image -->
+    <!-- Caption (top) -->
+    <p class="post-cap" style="padding:10px 14px 4px;margin:0">${escHtml(post.caption)}</p>
+    <div class="post-tags" style="padding:0 14px 8px">${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}</div>
+
+    <!-- Media (below caption) -->
     <div class="post-img" style="background:${post.bg}">
       <img class="card-art" src="${post.cardImg}" alt="${escHtml(post.label)}" loading="lazy"
         onerror="this.style.display='none'" />
       <div class="post-bdg">${escHtml(post.label)}</div>
     </div>
-
-    <!-- Caption -->
-    <p class="post-cap">${escHtml(post.caption)}</p>
-    <div class="post-tags">${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}</div>
 
     <!-- Actions -->
     <div class="post-acts">
