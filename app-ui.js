@@ -702,7 +702,7 @@ window.triggerUpload = function(type) {
   };
 })();
 
-async function populateGlobalCountryData() {
+window.populateGlobalCountryData = async function() {
   const dialSelects = [document.getElementById('tDial'), document.getElementById('rDial')].filter(Boolean);
   const countrySelects = [document.getElementById('rCountry'), document.getElementById('fc'), document.getElementById('tfc'), document.getElementById('settCountry'), document.getElementById('verifyCountry')].filter(Boolean);
   const fallback = [
@@ -749,6 +749,10 @@ async function populateGlobalCountryData() {
     sel.innerHTML = `<option value="">${first}</option>` + rows.map(r => `<option value="${r.n}">${r.n}</option>`).join('');
     if (current && rows.some(r => r.n === current)) sel.value = current;
   });
+
+  // Notify app-connect.js custom dropdowns with the loaded data
+  if (typeof window._initDialData    === 'function') window._initDialData(rows);
+  if (typeof window._initCountryData === 'function') window._initCountryData(rows);
 }
 
 function initButtonAnimations() {

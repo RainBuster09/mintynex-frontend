@@ -417,22 +417,7 @@ window.doRegister = async function () {
   };
 })();
 
-/* ─────────────────────────────────────────────────────────────
-   Patch populateGlobalCountryData to also call _initCountryData
-───────────────────────────────────────────────────────────── */
-(function () {
-  const _origPopulate = window.populateGlobalCountryData;
-  window.populateGlobalCountryData = async function () {
-    await _origPopulate?.();
-    // After original runs, the country data is in sessionStorage
-    try {
-      const cached = sessionStorage.getItem('mintynex_countries');
-      if (cached && window._initCountryData) {
-        window._initCountryData(JSON.parse(cached));
-      }
-    } catch (_) {}
-  };
-})();
+/* populateGlobalCountryData now calls _initDialData and _initCountryData directly in app-ui.js */
 
 /* ─────────────────────────────────────────────────────────────
    ADMIN LOGIN
@@ -910,6 +895,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Wire OTP boxes that already exist in the DOM
   document.querySelectorAll('.otp-row').forEach(row => wireOtpBoxes(row));
+
+  // Re-run country/dial population so _initDialData and _initCountryData are ready
+  if (typeof populateGlobalCountryData === 'function') populateGlobalCountryData();
 
   // Notification polling
   setInterval(async () => {
