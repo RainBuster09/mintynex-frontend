@@ -244,9 +244,12 @@ if (typeof checkPremiumGate === "function") {
   document.querySelectorAll('.dta').forEach(b => b.classList.toggle('on', b.getAttribute('data-pg') === id));
   document.querySelectorAll('.sni[data-pg]').forEach(b => b.classList.toggle('on', b.getAttribute('data-pg') === id));
 
-  if (id === 'feed') renderFeed();
+  if (id === 'feed') { if(typeof loadFeed==='function') loadFeed(false); else renderFeed(); }
   if (id === 'binder') renderBinder();
+  if (id === 'messages') { if(window.MXMessages) window.MXMessages.loadInbox(); }
   if (id === 'players' || id === 'trade') { if (typeof renderPartners === 'function') renderPartners(TRAINERS); }
+  // Dispatch event for new modules
+  document.dispatchEvent(new CustomEvent('pageChange', { detail: id }));
 };
 
 /* ─────────────────────────────────────────────
@@ -798,18 +801,14 @@ document.addEventListener('click', function(e) {
       return;
     }
 
-    if (act==='like' && idx>=0 && POSTS[idx]) {
-      actEl.classList.toggle('liked');
-      POSTS[idx].liked=actEl.classList.contains('liked');
-      POSTS[idx].likes+=POSTS[idx].liked?1:-1;
-      const span=actEl.querySelector('span'); if(span) span.textContent=POSTS[idx].likes;
-      const svg=actEl.querySelector('svg');
-      if(svg){svg.style.animation='none';void svg.offsetWidth;svg.style.animation='';svg.setAttribute('fill',POSTS[idx].liked?'currentColor':'none');}
-      if(POSTS[idx].liked) showToast('❤️ Liked!','');
+    if (act==='like' && idx>=0) {
+      // BUG FIX: route through API-connected toggleLike()
+      if (typeof toggleLike === 'function') { toggleLike(idx); }
     }
-    if (act==='opencomments' && idx>=0) openComments(idx);
-    if (act==='submitcomment') submitComment();
-    if (act==='submitpost') submitPost();
+    if (act==='opencomments' && idx>=0) { if(typeof openComments==='function') openComments(idx); }
+    if (act==='submitcomment') { if(typeof submitComment==='function') submitComment(); }
+    if (act==='submitpost') { if(typeof submitPost==='function') submitPost(); }
+    if (act==='postphoto') { if(typeof triggerPostPhoto==='function') triggerPostPhoto(); }
     if (act==='share' && idx>=0) openShareSheet(idx);
     if (act==='proposetrade') { proposeTrade(); }
     if (act==='friend') showToast('Friend request sent to '+(nm||'trainer')+'!','grn');
@@ -856,7 +855,7 @@ document.addEventListener('click', function(e) {
     if (act==='nextstep') nextVerifyStep();
     if (act==='prevstep') showVerifyStep(Math.max(0,VERIFY_STEP-1));
     if (act==='saveprofile') saveProfile();
-    if (act==='sendmsg') sendMessage();
+    if (act==='sendmsg') { if(typeof sendMessage==='function') sendMessage(); }
     if (act==='filtertrainers') doSearch('');
     if (act==='clearfilters') clearSearch('');
     if (act==='resolvedispute') { showToast('Dispute resolved ✓','grn'); actEl.closest('.card').style.opacity='0.5'; }
@@ -905,8 +904,8 @@ document.addEventListener('click', function(e) {
   if (e.target.id==='msgSendBtn') sendMessage();
   if (e.target.id==='commentSendBtn') submitComment();
   if (e.target.id==='postBtn') submitPost();
-  if (e.target.id==='prevBtn') { if(pg>0){pg--;renderBinder();} }
-  if (e.target.id==='nextBtn') { if(pg<TP-1){pg++;renderBinder();} }
+  if (e.target.id==='prevBtn') { if(window.MXBinder){/* handled by app-binder.js */}else if(pg>0){pg--;renderBinder();} }
+  if (e.target.id==='nextBtn') { if(window.MXBinder){/* handled by app-binder.js */}else if(pg<TP-1){pg++;renderBinder();} }
 });
 
 document.addEventListener('keydown', e => {

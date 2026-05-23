@@ -1,21 +1,11 @@
 /* ============================================================
    MINTYNEX — API LAYER  (app-api.js)
    Full production API layer for Spring Boot backend.
-
-   HOW TO POINT AT YOUR BACKEND:
-     Change BASE_URL below to your Railway URL when deployed.
-     During local dev it uses localhost:8080 automatically.
    ============================================================ */
 
 (function () {
 
-  /* ── Base URL ───────────────────────────────────────────────
-     Priority order:
-       1. Value saved in localStorage (set by admin dev tool)
-       2. Auto-detect: if page is on localhost → use local backend
-       3. Fallback: your Railway production URL (update this!)
-  ─────────────────────────────────────────────────────────── */
-  const PROD_URL  = 'https://mintynex-backend.up.railway.app/api'; // Railway production URL
+  const PROD_URL  = 'https://mintynex-backend.up.railway.app/api';
   const LOCAL_URL = 'http://localhost:8080/api';
 
   function detectBaseUrl() {
@@ -28,30 +18,23 @@
 
   const CFG = { baseUrl: detectBaseUrl() };
 
-  /* ── Token storage ───────────────────────────────────────────
-     Access token: kept in memory only (not localStorage) for security.
-     Refresh token: kept in localStorage (backend should use httpOnly
-     cookie in production — for now localStorage is fine for dev).
-  ─────────────────────────────────────────────────────────── */
-  let _accessToken  = null;
-  let _refreshing   = null; // prevents parallel refresh calls
+  let _accessToken = null;
+  let _refreshing  = null;
 
-  function getRefreshToken()        { return localStorage.getItem('mx_refresh'); }
-  function saveTokens(at, rt)       { _accessToken = at; if (rt) localStorage.setItem('mx_refresh', rt); }
-  function clearTokens()            { _accessToken = null; localStorage.removeItem('mx_refresh'); localStorage.removeItem('mx_user'); }
-  function getStoredUser()          { try { return JSON.parse(localStorage.getItem('mx_user') || 'null'); } catch(_) { return null; } }
-  function saveUser(user)           { localStorage.setItem('mx_user', JSON.stringify(user)); }
+  function getRefreshToken()  { return localStorage.getItem('mx_refresh'); }
+  function saveTokens(at, rt) { _accessToken = at; if (rt) localStorage.setItem('mx_refresh', rt); }
+  function clearTokens()      { _accessToken = null; localStorage.removeItem('mx_refresh'); localStorage.removeItem('mx_user'); }
+  function getStoredUser()    { try { return JSON.parse(localStorage.getItem('mx_user') || 'null'); } catch(_) { return null; } }
+  function saveUser(user)     { localStorage.setItem('mx_user', JSON.stringify(user)); }
 
-  /* ── Refresh access token silently ──────────────────────── */
   async function refreshAccessToken() {
     if (_refreshing) return _refreshing;
     _refreshing = (async () => {
       const rt = getRefreshToken();
       if (!rt) throw new Error('No refresh token');
       const res = await fetch(CFG.baseUrl + '/auth/refresh', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ refreshToken: rt })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: rt })
       });
       if (!res.ok) { clearTokens(); throw new Error('Session expired'); }
       const data = await res.json();
@@ -62,13 +45,11 @@
     return _refreshing;
   }
 
-  /* ── Core request function ───────────────────────────────── */
   async function request(path, opts = {}) {
-    const url     = CFG.baseUrl + path;
-    const method  = opts.method || 'GET';
-    const isForm  = opts.formData instanceof FormData;
+    const url    = CFG.baseUrl + path;
+    const method = opts.method || 'GET';
+    const isForm = opts.formData instanceof FormData;
 
-    // Build headers
     const headers = {};
     if (!isForm) headers['Content-Type'] = 'application/json';
     if (_accessToken) headers['Authorization'] = 'Bearer ' + _accessToken;
@@ -81,15 +62,13 @@
 
     let res = await fetch(url, fetchOpts);
 
-    // 401 → try silent refresh once
     if (res.status === 401 && !opts._retried) {
       try {
         await refreshAccessToken();
         headers['Authorization'] = 'Bearer ' + _accessToken;
-        res = await fetch(url, { ...fetchOpts, headers, _retried: true });
+        res = await fetch(url, { ...fetchOpts, headers });
       } catch (_) {
         clearTokens();
-        // Kick user back to login
         if (typeof doLogout === 'function') doLogout(true);
         return { ok: false, status: 401, data: { message: 'Session expired. Please log in again.' } };
       }
@@ -99,18 +78,12 @@
     return { ok: res.ok, status: res.status, data };
   }
 
-  /* ── Public API surface ─────────────────────────────────── */
   window.AppApi = {
 
-    /* Dev helper: override base URL */
     setBaseUrl(url) { CFG.baseUrl = url; localStorage.setItem('mx_api_base', url); },
     getBaseUrl()    { return CFG.baseUrl; },
 
-    /* Token helpers used by app-connect.js */
-    saveTokens,
-    clearTokens,
-    getStoredUser,
-    saveUser,
+    saveTokens, clearTokens, getStoredUser, saveUser,
     get accessToken() { return _accessToken; },
 
     /* ── Auth ── */
@@ -122,59 +95,70 @@
       refresh:       (body) => request('/auth/refresh',        { method: 'POST', body }),
       resetPassword: (body) => request('/auth/reset-password', { method: 'POST', body }),
       logout:        ()     => request('/auth/logout',         { method: 'POST' }),
-      adminLogin:    (body) => request('/admin/login',         { method: 'POST', body }),
     },
 
     /* ── Users ── */
     users: {
-      me:         ()     => request('/users/me'),
-      update:     (body) => request('/users/me',    { method: 'PUT', body }),
-      getById:    (id)   => request('/users/' + id),
-      search:     (q)    => request('/users/search?q=' + encodeURIComponent(q || '')),
-      uploadAvatar: (fd) => request('/users/avatar', { method: 'POST', formData: fd }),
-      uploadBanner: (fd) => request('/users/banner', { method: 'POST', formData: fd }),
+      me:           ()       => request('/users/me'),
+      update:       (body)   => request('/users/me',     { method: 'PUT', body }),
+      getById:      (id)     => request('/users/' + id),
+      search:       (q)      => request('/users/search?q=' + encodeURIComponent(q || '')),
+      uploadAvatar: (fd)     => request('/users/avatar', { method: 'POST', formData: fd }),
+      // BUG FIX: was pointing to missing endpoint — now /users/banner exists on backend
+      uploadBanner: (fd)     => request('/users/banner', { method: 'POST', formData: fd }),
     },
 
     /* ── Posts ── */
     posts: {
-      feed:       (page = 0, size = 20) => request('/posts?page=' + page + '&size=' + size),
-      create:     (body) => request('/posts',            { method: 'POST', body }),
-      delete:     (id)   => request('/posts/' + id,      { method: 'DELETE' }),
-      like:       (id)   => request('/posts/' + id + '/like', { method: 'POST' }),
-      getComments:(id)   => request('/posts/' + id + '/comments'),
-      addComment: (id, body) => request('/posts/' + id + '/comments', { method: 'POST', body }),
+      feed:          (page = 0, size = 20) => request('/posts?page=' + page + '&size=' + size),
+      byUser:        (userId, page = 0)    => request('/posts/user/' + userId + '?page=' + page),
+      create:        (body)                => request('/posts', { method: 'POST', body }),
+      // BUG FIX: photo upload for posts — was missing
+      createWithImage: (fd)                => request('/posts/with-image', { method: 'POST', formData: fd }),
+      delete:        (id)                  => request('/posts/' + id,      { method: 'DELETE' }),
+      like:          (id)                  => request('/posts/' + id + '/like',     { method: 'POST' }),
+      getComments:   (id, page = 0)        => request('/posts/' + id + '/comments?page=' + page),
+      addComment:    (id, body)            => request('/posts/' + id + '/comments', { method: 'POST', body }),
     },
 
     /* ── Binder ── */
     binder: {
-      get:    (page = 0, size = 18) => request('/binder?page=' + page + '&size=' + size),
-      add:    (body) => request('/binder',       { method: 'POST', body }),
-      remove: (id)   => request('/binder/' + id, { method: 'DELETE' }),
-    },
-
-    /* ── Trades ── */
-    trades: {
-      list:     ()     => request('/trades'),
-      propose:  (body) => request('/trades',              { method: 'POST', body }),
-      accept:   (id)   => request('/trades/' + id + '/accept',   { method: 'PUT' }),
-      reject:   (id)   => request('/trades/' + id + '/reject',   { method: 'PUT' }),
-      complete: (id)   => request('/trades/' + id + '/complete', { method: 'PUT' }),
-      flag:     (id, body) => request('/trades/' + id + '/flag', { method: 'POST', body }),
-    },
-
-    /* ── Listings ── */
-    listings: {
-      browse:  (params) => request('/listings?' + new URLSearchParams(params || {}).toString()),
-      create:  (body)   => request('/listings',       { method: 'POST', body }),
-      update:  (id, body) => request('/listings/' + id, { method: 'PUT', body }),
-      delete:  (id)     => request('/listings/' + id, { method: 'DELETE' }),
+      get:         (page = 0, size = 18) => request('/binder?page=' + page + '&size=' + size),
+      stats:       ()                    => request('/binder/stats'),
+      add:         (body)                => request('/binder',           { method: 'POST', body }),
+      update:      (id, body)            => request('/binder/' + id,     { method: 'PUT', body }),
+      remove:      (id)                  => request('/binder/' + id,     { method: 'DELETE' }),
+      uploadImage: (fd)                  => request('/binder/upload-image', { method: 'POST', formData: fd }),
     },
 
     /* ── Messages ── */
     messages: {
-      conversation: (userId, page = 0) => request('/messages/' + userId + '?page=' + page),
-      send:         (userId, body)     => request('/messages/' + userId, { method: 'POST', body }),
-      markRead:     (userId)           => request('/messages/' + userId + '/read', { method: 'PUT' }),
+      inbox:        ()                    => request('/messages/inbox'),
+      conversation: (userId, page = 0)   => request('/messages/' + userId + '?page=' + page),
+      send:         (userId, body)        => request('/messages/' + userId, { method: 'POST', body }),
+      // BUG FIX: edit and react were completely missing
+      edit:         (msgId, body)         => request('/messages/' + msgId + '/edit', { method: 'PUT', body }),
+      react:        (msgId, body)         => request('/messages/' + msgId + '/react', { method: 'POST', body }),
+      delete:       (msgId)               => request('/messages/' + msgId, { method: 'DELETE' }),
+      markRead:     (userId)              => request('/messages/' + userId + '/read', { method: 'PUT' }),
+    },
+
+    /* ── Trades ── */
+    trades: {
+      list:     ()         => request('/trades'),
+      propose:  (body)     => request('/trades',                        { method: 'POST', body }),
+      accept:   (id)       => request('/trades/' + id + '/accept',      { method: 'PUT' }),
+      reject:   (id)       => request('/trades/' + id + '/reject',      { method: 'PUT' }),
+      complete: (id)       => request('/trades/' + id + '/complete',    { method: 'PUT' }),
+      flag:     (id, body) => request('/trades/' + id + '/flag',        { method: 'POST', body }),
+    },
+
+    /* ── Listings ── */
+    listings: {
+      browse:  (params)     => request('/listings?' + new URLSearchParams(params || {}).toString()),
+      create:  (body)       => request('/listings',       { method: 'POST', body }),
+      update:  (id, body)   => request('/listings/' + id, { method: 'PUT', body }),
+      delete:  (id)         => request('/listings/' + id, { method: 'DELETE' }),
     },
 
     /* ── Notifications ── */
@@ -186,20 +170,15 @@
 
     /* ── Admin ── */
     admin: {
-      stats:              ()     => request('/admin/stats'),
-      users:              (params) => request('/admin/users?' + new URLSearchParams(params || {}).toString()),
-      banUser:            (id)   => request('/admin/users/' + id + '/ban', { method: 'PUT' }),
-      posts:              (params) => request('/admin/posts?' + new URLSearchParams(params || {}).toString()),
-      deletePost:         (id)   => request('/admin/posts/' + id, { method: 'DELETE' }),
-      trades:             ()     => request('/admin/trades'),
-      listings:           ()     => request('/admin/listings'),
-      createListing:      (body) => request('/admin/listings',       { method: 'POST', body }),
-      deleteListing:      (id)   => request('/admin/listings/' + id, { method: 'DELETE' }),
-      verifications:      ()     => request('/admin/verifications'),
-      approveVerify:      (id)   => request('/admin/verifications/' + id + '/approve', { method: 'PUT' }),
-      rejectVerify:       (id)   => request('/admin/verifications/' + id + '/reject',  { method: 'PUT' }),
-      reports:            ()     => request('/admin/reports'),
-      resolveReport:      (id)   => request('/admin/reports/' + id + '/resolve', { method: 'PUT' }),
+      stats:         ()          => request('/admin/stats'),
+      users:         (params)    => request('/admin/users?' + new URLSearchParams(params || {}).toString()),
+      banUser:       (id)        => request('/admin/users/' + id + '/ban', { method: 'PUT' }),
+      posts:         (params)    => request('/admin/posts?' + new URLSearchParams(params || {}).toString()),
+      deletePost:    (id)        => request('/admin/posts/' + id, { method: 'DELETE' }),
+      trades:        ()          => request('/admin/trades'),
+      listings:      ()          => request('/admin/listings'),
+      createListing: (body)      => request('/admin/listings',       { method: 'POST', body }),
+      deleteListing: (id)        => request('/admin/listings/' + id, { method: 'DELETE' }),
     },
   };
 
