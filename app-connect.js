@@ -256,26 +256,34 @@ window.doRegister = async function () {
 
   if (!res.ok) { apiErr(res, 'Registration failed'); return; }
 
-  const devMsg  = res.data?.message || '';
-  const devCode = (devMsg.match(/\[DEV CODE: (\d+)\]/) || [])[1];
-  showToast(
-    devCode ? `Account created! Dev OTP: ${devCode} 📲` : 'Account created! Check your phone for OTP 📲',
-    'grn'
-  );
-
-  // Store phone so verify step can use it
+  // Store phone+purpose for verify step
   window._otpPhone   = phone;
   window._otpPurpose = 'REGISTER';
+
+  // Auto-send OTP immediately — no second button needed
+  const otpRestore = btnLoading(btn, 'Sending OTP…');
+  const otpRes = await AppApi.auth.sendOtp({ phone, purpose: 'REGISTER' });
+  otpRestore();
+
+  const devMsg  = otpRes.data?.message || res.data?.message || '';
+  const devCode = (devMsg.match(/\[DEV CODE: (\d+)\]/) || [])[1];
+
+  showToast(
+    devCode ? `OTP sent! Dev code: ${devCode} 📲` : 'Account created! OTP sent to your phone 📲',
+    'grn'
+  );
 
   const otpRow = document.getElementById('otpRowRegister');
   if (otpRow) {
     otpRow.style.display = 'block';
+    otpRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     if (devCode) {
       const boxes = otpRow.querySelectorAll('.otp-box');
       devCode.split('').forEach((digit, i) => { if (boxes[i]) boxes[i].value = digit; });
     }
     wireOtpBoxes(otpRow);
-    otpRow.querySelector('.otp-box')?.focus();
+    const firstEmpty = [...otpRow.querySelectorAll('.otp-box')].find(b => !b.value);
+    (firstEmpty || otpRow.querySelector('.otp-box'))?.focus();
   }
 };
 

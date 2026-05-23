@@ -362,23 +362,6 @@ input.otp-box { font-size: 18px !important; }
   .lfoot { font-size: 11px !important; margin-top: 4px !important; }
   .otp-row { padding: 9px !important; margin-bottom: 7px !important; }
 }
-
-/* ── Binder slot (app-binder.js) ── */
-.binder-slot .card-actions { opacity:0; transition:opacity .15s; }
-.binder-slot:hover .card-actions { opacity:1; }
-/* Reaction pills in messages */
-.msg-reactions { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
-.msg-reaction-pill {
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);
-  border-radius:20px; padding:2px 7px; font-size:13px; cursor:pointer;
-  transition:background .1s; display:inline-flex; align-items:center; gap:3px;
-}
-.msg-reaction-pill:hover { background:rgba(88,101,242,.2); }
-/* Edit bar */
-#msgEditBar { animation:fadeUp .2s ease; }
-/* Post photo preview */
-#postPhotoPreview img { border-radius:10px; }
-
 </style>
 </head>
 <body>
@@ -527,8 +510,7 @@ input.otp-box { font-size: 18px !important; }
           <select class="fi fi-glow" id="rCountry"><option value="">Select country</option></select>
         </div>
         <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="rPass" type="password" placeholder="Min 8 chars" style="padding-right:40px"/><button type="button" onclick="togglePwVis('rPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_rPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Join MintyNex</button>
-        <button class="lbtn lbtn-otp" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Verify Phone with OTP</button>
+        <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
         <div id="otpRowRegister" class="otp-row" style="display:none">
           <label class="fl">Enter OTP sent to your phone</label>
           <div class="otp-inputs">
@@ -1219,17 +1201,13 @@ input.otp-box { font-size: 18px !important; }
                 <div class="composer-avatar-ring"><div class="composer-inner-av" id="postAv">🔥</div></div>
                 <input class="fi composer-input" id="postInput" placeholder="Share your latest pull, Trainer! 🔥" style="flex:1"/>
               </div>
-              <!-- BUG FIX: Photo preview area (was missing entirely) -->
-              <div id="postPhotoPreview" style="display:none;margin-bottom:8px"></div>
               <div class="composer-btn-row">
                 <div class="composer-media-btns">
-                  <!-- BUG FIX: Photo button was not wired to any handler -->
-                  <button class="btn bgh bxs" id="postPhotoBtn" data-action="postphoto">📷 Photo</button>
+                  <button class="btn bgh bxs">📷 Photo</button>
                   <button class="btn bgh bxs" data-pg="trade">⇄ Trade</button>
                   <button class="btn bgh bxs" data-action="addlocation"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location</button>
                 </div>
-                <!-- BUG FIX: postBtn had no onclick — now wired to submitPost() -->
-                <button class="btn bg bxs" id="postSubmitBtn" onclick="submitPost()" style="background:linear-gradient(135deg,#5865f2,#4752c4);box-shadow:0 2px 12px rgba(88,101,242,.4)">✦ Post Pull</button>
+                <button class="btn bg bxs" id="postBtn" style="background:linear-gradient(135deg,#5865f2,#4752c4);box-shadow:0 2px 12px rgba(88,101,242,.4)">✦ Post Pull</button>
               </div>
             </div>
             <div id="feedCards"></div>
@@ -1755,21 +1733,7 @@ function selectPlan(el,plan){document.querySelectorAll('.plan-opt').forEach(func
 
 function applyUserToUI(){var nm=USER.nm,el;el=document.getElementById('dName');if(el)el.textContent=nm;el=document.getElementById('profNmEl');if(el)el.innerHTML=nm+' <span class="bdg bdg-v">✓</span>';el=document.getElementById('binderNm');if(el)el.textContent=nm;var av=USER.avatarSrc?'<img src="'+USER.avatarSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""/>':'🔥';el=document.getElementById('avBtn');if(el)el.innerHTML=av;el=document.getElementById('dhAv');if(el)el.innerHTML=av;el=document.getElementById('postAv');if(el)el.innerHTML=av;el=document.getElementById('binderAv');if(el)el.innerHTML=av;}
 
-function renderBinder(){
-  // BUG FIX: Delegate to app-binder.js module (was static demo only)
-  if(window.MXBinder&&window.MXBinder.load){window.MXBinder.load(true);return;}
-  // Fallback demo render
-  var g=document.getElementById('binderGrid');if(!g)return;
-  var h='';
-  for(var i=0;i<CARDS.length;i++){
-    var cd=CARDS[i];
-    var img=cd.img?'<img class="hc-real-card" src="'+cd.img+'" alt="'+cd.nm+'" loading="lazy" onerror="this.style.display=\'none\'"/>':'';
-    h+='<div class="hc" data-card="'+i+'" style="background:'+cd.bg+'"><div class="hc-gl"></div><div class="hc-sw"></div>'+img+'<div class="hc-grade-badge">'+cd.gr+'</div></div>';
-  }
-  h+='<div class="hc hc-e" onclick="openAddCardModal()"><div style="font-size:22px;color:rgba(88,101,242,.4)">+</div><div style="font-size:9px;color:#80848e">Add Card</div></div>';
-  g.innerHTML=h;
-  var lbl=document.getElementById('pgLbl');if(lbl)lbl.textContent='Page 1 of 1';
-}
+function renderBinder(){var g=document.getElementById('binderGrid');if(!g)return;var h='';for(var i=0;i<8;i++){var cd=CARDS[i%CARDS.length];var img=cd.img?'<img class="hc-real-card" src="'+cd.img+'" alt="'+cd.nm+'" loading="lazy" onerror="this.style.display=\'none\'"/>':'';h+='<div class="hc" data-card="'+(i%CARDS.length)+'" style="background:'+cd.bg+'"><div class="hc-gl"></div><div class="hc-sw"></div>'+img+'<div class="hc-grade-badge">'+cd.gr+'</div></div>';}h+='<div class="hc hc-e" data-action="addcard"><div style="font-size:22px;color:rgba(88,101,242,.4)">+</div><div style="font-size:9px;color:#80848e">Add Card</div></div>';g.innerHTML=h;var lbl=document.getElementById('pgLbl');if(lbl)lbl.textContent='Page '+(pg+1)+' of '+TP;}
 
 function renderPartners(list){
   ['partnersList','tradePL'].forEach(function(cid){
@@ -1789,7 +1753,7 @@ function renderPartners(list){
 
 function doSearch(prefix){var pfx=prefix||'';var fc=document.getElementById(pfx+'fc');var fci=document.getElementById(pfx+'fci');var country=fc?(fc.value||'').toLowerCase().replace(/[^a-z]/g,''):'';var city=fci?(fci.value||'').toLowerCase().trim():'';var r=TRAINERS.filter(function(t){if(country&&!t.loc.toLowerCase().includes(country))return false;if(city&&!t.loc.toLowerCase().includes(city))return false;return true;});renderPartners(r);showToast(r.length+' trainers found','grn');}
 function clearSearch(prefix){['fc','fci'].forEach(function(id){var e=document.getElementById((prefix||'')+id);if(e)e.value='';});renderPartners(TRAINERS);}
-function sendMessage(){if(window.MXMessages&&typeof window.sendMessage==='function'&&window.sendMessage!==sendMessage){window.sendMessage();return;}var inp=document.getElementById('msgInput');if(!inp||!inp.value.trim())return;var list=document.getElementById('msgList');if(list){var row=document.createElement('div');row.className='brow me';row.innerHTML='<div class="bav">🔥</div><div class="bbl me">'+inp.value.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';list.appendChild(row);list.scrollTop=list.scrollHeight;}inp.value='';}
+function sendMessage(){var inp=document.getElementById('msgInput');if(!inp||!inp.value.trim())return;var list=document.getElementById('msgList');if(list){var row=document.createElement('div');row.className='brow me';row.innerHTML='<div class="bav">🔥</div><div class="bbl me">'+inp.value.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';list.appendChild(row);list.scrollTop=list.scrollHeight;}inp.value='';}
 function proposeTrade(){var m=document.getElementById('tradeMeetup');if(!m||!m.value.trim()){showToast('Add a meetup location!','red');if(m)m.focus();return;}showToast('Trade proposal sent! 🤝','grn');tradeTab('active');}
 function saveProfile(){var nm=document.getElementById('settName');var bio=document.getElementById('settBio');if(nm&&nm.value.trim())USER.nm=nm.value.trim();if(bio)USER.bio=bio.value;applyUserToUI();var pb=document.getElementById('profBioEl');if(pb)pb.textContent=USER.bio;showToast('Profile saved! ✓','grn');}
 /* OTP handled by app-connect.js */
@@ -1973,8 +1937,6 @@ function fpResetAll() {
 <script src="app-ui.js"></script>
 <script src="app-init.js"></script>
 <script src="app-connect.js"></script>
-<script src="app-messages.js"></script>
-<script src="app-binder.js"></script>
 
 <style>
 /* ── Login page: animated background ── */
@@ -2307,7 +2269,7 @@ window.handlePhotoUpload=function(input,type){
       var purpose = purposeMap[mode]||'LOGIN';
       window._otpPurpose = purpose;
       // Send OTP directly
-      var btn = document.querySelector(mode==='login'?'#trainerForm .lbtn.acc':'#registerForm .lbtn-otp, #registerForm .lbtn.acc');
+      var btn = document.querySelector(mode==='login'?'#trainerForm .lbtn.acc':'#registerForm .lbtn.acc');
       var restore = window.btnLoading ? window.btnLoading(btn,'Sending…') : function(){};
       var res = await AppApi.auth.sendOtp({phone, purpose});
       if(restore) restore();
@@ -2394,130 +2356,6 @@ window.confirmAddCard = function(){
 document.getElementById('addCardModal').addEventListener('click',function(e){
   if(e.target===this) closeAddCardModal();
 });
-</script>
-
-<script>
-/* ── MintyNex Patch Layer ──────────────────────────────────
-   Wires up new modules (app-binder, app-messages, app-feed)
-   by intercepting showPg and fixing outstanding event gaps.
-─────────────────────────────────────────────────────────── */
-(function(){
-
-  /* Patch showPg to dispatch pageChange events for new modules */
-  var _origShowPg = window.showPg;
-  window.showPg = function(id) {
-    if (_origShowPg) _origShowPg(id);
-    document.dispatchEvent(new CustomEvent('pageChange', { detail: id }));
-  };
-
-  /* Fix like button — route through new toggleLike() */
-  document.addEventListener('click', function(e) {
-    var likeBtn = e.target.closest('[data-action="like"]');
-    if (likeBtn) {
-      var idx = parseInt(likeBtn.getAttribute('data-idx') || '-1', 10);
-      if (idx >= 0 && typeof window.toggleLike === 'function') {
-        e.stopImmediatePropagation();
-        window.toggleLike(idx);
-      }
-    }
-
-    /* Post menu */
-    var menuBtn = e.target.closest('[data-action="postmenu"]');
-    if (menuBtn) {
-      var idx2 = parseInt(menuBtn.getAttribute('data-idx') || '-1', 10);
-      if (idx2 >= 0 && typeof window.showPostMenu === 'function') window.showPostMenu(idx2);
-    }
-
-    /* Photo button in post composer */
-    if (e.target.closest('[data-action="postphoto"]')) {
-      if (typeof window.triggerPostPhoto === 'function') window.triggerPostPhoto();
-    }
-  }, true);  /* capture phase so it fires before old delegator */
-
-  /* Override old binder prevBtn/nextBtn: delegate to MXBinder */
-  document.addEventListener('click', function(e) {
-    if (e.target.id === 'prevBtn' || e.target.closest('#prevBtn')) {
-      if (window.MXBinder) { e.stopImmediatePropagation(); /* handled by app-binder.js */ }
-    }
-    if (e.target.id === 'nextBtn' || e.target.closest('#nextBtn')) {
-      if (window.MXBinder) { e.stopImmediatePropagation(); }
-    }
-  }, true);
-
-  /* Override old addcard action */
-  document.addEventListener('click', function(e) {
-    var el = e.target.closest('[data-action="addcard"]');
-    if (el && typeof window.openAddCardModal === 'function') {
-      e.stopImmediatePropagation();
-      window.openAddCardModal();
-    }
-  }, true);
-
-  /* Patch saveProfile to also call API */
-  var _origSaveProfile = window.saveProfile;
-  window.saveProfile = async function() {
-    if (_origSaveProfile) _origSaveProfile();
-    try {
-      if (typeof AppApi === 'undefined') return;
-      var body = {};
-      var nm = document.getElementById('settName');
-      var bio = document.getElementById('settBio');
-      var city = document.getElementById('settCity');
-      var country = document.getElementById('settCountry');
-      if (nm && nm.value.trim())   body.displayName = nm.value.trim();
-      if (bio)                      body.bio = bio.value;
-      if (city && city.value)       body.city = city.value;
-      if (country && country.value) body.country = country.value;
-      if (Object.keys(body).length > 0) await AppApi.users.update(body);
-    } catch(e) { console.warn('saveProfile API error', e); }
-  };
-
-  /* Fix banner: after crop-apply, also push bannerUrl to backend */
-  var _origApply = window.MXCrop && window.MXCrop.apply;
-  if (window.MXCrop) {
-    var __origApply = window.MXCrop.apply.bind(window.MXCrop);
-    window.MXCrop.apply = function() {
-      __origApply();
-      /* The crop modal apply already calls AppApi.users.uploadBanner via FormData.
-         No extra patch needed here — just ensure the banner DOM update sticks. */
-    };
-  }
-
-  /* Init: load binder + inbox on first show */
-  document.addEventListener('DOMContentLoaded', function() {
-    /* When messages page first shown, load inbox */
-    document.addEventListener('pageChange', function(e) {
-      if (e.detail === 'messages' && window.MXMessages) window.MXMessages.loadInbox();
-    });
-
-    /* Wire post photo picker button if it exists */
-    var postPhotoBtn = document.getElementById('postPhotoBtn');
-    if (postPhotoBtn) postPhotoBtn.onclick = function() {
-      if (typeof window.triggerPostPhoto === 'function') window.triggerPostPhoto();
-    };
-
-  /* Override renderFeed to call loadFeed when API available */
-  var _origRenderFeed = window.renderFeed;
-  window.renderFeed = function(reset) {
-    if (typeof window.loadFeed === 'function') {
-      window.loadFeed(reset !== false);
-    } else if (_origRenderFeed) {
-      _origRenderFeed();
-    }
-  };
-
-  /* Wire msgSendBtn dynamically (it may be rebuilt by app-messages.js) */
-  document.addEventListener('click', function(e) {
-    if (e.target.id === 'msgSendBtn' || e.target.closest('#msgSendBtn')) {
-      if (typeof window.sendMessage === 'function') {
-        e.stopImmediatePropagation();
-        window.sendMessage();
-      }
-    }
-  }, true);
-  });
-
-})();
 </script>
 </body>
 </html>
