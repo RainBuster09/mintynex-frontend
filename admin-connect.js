@@ -13,6 +13,10 @@
 const AdminApi = (() => {
   async function req(method, path, body) {
     try {
+      // BUG FIX: use AppApi baseUrl so it works on any host (Railway, localhost, etc.)
+      const baseUrl = (typeof AppApi !== 'undefined' && AppApi.getBaseUrl)
+        ? AppApi.getBaseUrl().replace(/\/api$/, '')
+        : '';
       const opts = {
         method,
         headers: {
@@ -21,7 +25,7 @@ const AdminApi = (() => {
         },
       };
       if (body !== undefined) opts.body = JSON.stringify(body);
-      const res = await fetch('/api/admin' + path, opts);
+      const res = await fetch(baseUrl + '/api/admin' + path, opts);
       let data;
       try { data = await res.json(); } catch (_) { data = {}; }
       return { ok: res.ok, status: res.status, data };
@@ -392,6 +396,7 @@ window.admCancelTrade = async function (id) {
 ───────────────────────────────────────────────────────────── */
 let _disputePage = 0;
 let _disputeFilter = 'all';
+window._adminDisputeFilter = true; // flag for app.html stub to detect admin-connect.js is loaded
 
 async function loadDisputes(reset) {
   if (reset) _disputePage = 0;
@@ -990,6 +995,7 @@ window.admChangeAdminPass = async function () {
 ───────────────────────────────────────────────────────────── */
 window.filterDisputes = function (filter) {
   _disputeFilter = filter;
+  window._adminDisputeFilter = true;
   document.querySelectorAll('.dsp-filter').forEach(btn => {
     btn.classList.toggle('on', btn.dataset.filter === filter);
     if (filter === 'all') btn.classList.add('on');
@@ -1017,11 +1023,18 @@ const _sectionLoaders = {
   settings:  loadSettings,
 };
 
-/* Hook into existing admShowSec */
+window._sectionLoaders = _sectionLoaders;
+/* Expose section loaders globally for admShowSec (defined in app.html) */
+window._sectionLoaders = _sectionLoaders;
+
+/* Hook into existing admShowSec — if app.html already defined it, wrap it */
 (function () {
   const origShowSec = window.admShowSec;
   window.admShowSec = function (sec) {
-    if (typeof origShowSec === 'function') origShowSec(sec);
+    // Show/hide sections
+    document.querySelectorAll('.adm-sec').forEach(function(s){ s.classList.toggle('on', s.id === 'as-' + sec); });
+    document.querySelectorAll('#admTabs .atab[data-as]').forEach(function(b){ b.classList.toggle('on', b.dataset.as === sec); });
+    // Load data
     const loader = _sectionLoaders[sec];
     if (loader) loader();
   };
@@ -1089,16 +1102,15 @@ window.initAdminPanel = function () {
   }, 30000);
 };
 
-/* Patch doAdminLogin to call initAdminPanel */
+/* Patch doAdminLogin to call initAdminPanel after successful login */
 (function () {
   const origLogin = window.doAdminLogin;
   window.doAdminLogin = async function () {
-    await origLogin.apply(this, arguments);
-    // Wait a tick so AppApi.accessToken is set
-    setTimeout(() => {
-      if (document.getElementById('adm')?.classList.contains('on')) {
+    if (typeof origLogin === 'function') await origLogin.apply(this, arguments);
+    setTimeout(function() {
+      if (document.getElementById('adm') && document.getElementById('adm').classList.contains('on')) {
         window.initAdminPanel();
       }
-    }, 200);
+    }, 300);
   };
 })();

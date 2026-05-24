@@ -362,6 +362,19 @@ input.otp-box { font-size: 18px !important; }
   .lfoot { font-size: 11px !important; margin-top: 4px !important; }
   .otp-row { padding: 9px !important; margin-bottom: 7px !important; }
 }
+
+/* ── Binder slot card actions (app-binder.js) ── */
+.binder-slot .card-actions { opacity: 0; transition: opacity .15s; }
+.binder-slot:hover .card-actions { opacity: 1; }
+/* ── Message reaction pills ── */
+.msg-reactions { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.msg-reaction-pill { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:2px 7px; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+.msg-reaction-pill:hover { background:rgba(88,101,242,.2); }
+/* ── Trade type buttons ── */
+.trade-type-btn { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:6px; padding:5px 12px; font-size:11px; color:#b5bac1; cursor:pointer; transition:all .15s; }
+.trade-type-btn.active, .trade-type-btn:hover { background:rgba(88,101,242,.2); color:#fff; border-color:#5865f2; }
+/* ── Admin user filter btn ── */
+.adm-user-filter-btn.active { background:#5865f2 !important; color:#fff !important; border-color:#5865f2 !important; }
 </style>
 </head>
 <body>
@@ -510,8 +523,7 @@ input.otp-box { font-size: 18px !important; }
           <select class="fi fi-glow" id="rCountry"><option value="">Select country</option></select>
         </div>
         <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="rPass" type="password" placeholder="Min 8 chars" style="padding-right:40px"/><button type="button" onclick="togglePwVis('rPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_rPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
-        <button class="lbtn lbtn-otp" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Verify Phone with OTP</button>
+        <button class="lbtn acc lbtn-pulse" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
         <div id="otpRowRegister" class="otp-row" style="display:none">
           <label class="fl">Enter OTP sent to your phone</label>
           <div class="otp-inputs">
@@ -1717,6 +1729,8 @@ function fpResetAll() {
 <script src="app-ui.js"></script>
 <script src="app-init.js"></script>
 <script src="app-connect.js"></script>
+<script src="app-messages.js"></script>
+<script src="app-binder.js"></script>
 
 <style>
 /* ── Login page: animated background ── */
@@ -1759,15 +1773,52 @@ function fpResetAll() {
 </style>
 
 <script>
-window.admShowSec = function(sec) { if(typeof showSec==='function') showSec(sec); };
+window.admShowSec = function(sec) {
+  // Show correct section in DOM
+  document.querySelectorAll('.adm-sec').forEach(function(s){ s.classList.toggle('on', s.id === 'as-' + sec); });
+  document.querySelectorAll('#admTabs .atab[data-as]').forEach(function(b){ b.classList.toggle('on', b.dataset.as === sec); });
+  // Fire admin-connect.js data loader if available
+  if (window._sectionLoaders && window._sectionLoaders[sec]) window._sectionLoaders[sec]();
+};
 
 document.addEventListener('DOMContentLoaded', function() {
-  /* Admin tab clicks */
+  /* Admin tab clicks — route through admShowSec which loads data */
   document.querySelectorAll('.atab[data-as]').forEach(function(tab) {
     tab.addEventListener('click', function() {
       var sec = this.getAttribute('data-as');
-      if (sec && typeof showSec === 'function') showSec(sec);
+      if (sec && typeof admShowSec === 'function') admShowSec(sec);
     });
+  });
+  /* Wire trade tabs */
+  document.querySelectorAll('#tradeTabs .atab[data-tt]').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var tt = this.getAttribute('data-tt');
+      document.querySelectorAll('#tradeTabs .atab').forEach(function(b){ b.classList.remove('on'); });
+      this.classList.add('on');
+      document.querySelectorAll('.tt-s').forEach(function(s){ s.classList.toggle('on', s.id === 'tt-' + tt); });
+      if (tt === 'active' && typeof loadActiveTrades === 'function') loadActiveTrades();
+    });
+  });
+  /* Admin logout / back buttons */
+  var admLogout = document.getElementById('admLogoutBtn');
+  var admBack   = document.getElementById('admBackBtn');
+  if (admLogout) admLogout.onclick = function(){ if(typeof doLogout==='function') doLogout(false); };
+  if (admBack)   admBack.onclick   = function(){
+    document.getElementById('adm')?.classList.remove('on');
+    document.getElementById('shell')?.classList.add('on');
+  };
+
+  /* Wire post photo button */
+  var postPhotoBtn = document.getElementById('postPhotoBtn') || document.querySelector('[data-action="postphoto"]');
+  if (postPhotoBtn && typeof triggerPostPhoto === 'function') postPhotoBtn.onclick = triggerPostPhoto;
+  /* Wire post submit button */
+  var postSubmitBtn = document.getElementById('postSubmitBtn') || document.getElementById('postBtn');
+  if (postSubmitBtn && typeof submitPost === 'function') postSubmitBtn.onclick = submitPost;
+  /* Wire trade page load */
+  document.addEventListener('pageChange', function(e){
+    if (e.detail === 'trade' && typeof loadActiveTrades === 'function') loadActiveTrades();
+    if (e.detail === 'messages' && window.MXMessages) window.MXMessages.loadInbox();
+    if (e.detail === 'binder' && window.MXBinder) window.MXBinder.load(true);
   });
   /* Prevent scroll on input focus iOS */
   document.querySelectorAll('input,select,textarea').forEach(function(el) {
@@ -1781,23 +1832,25 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ── Dispute + Banner + Crop System ────────────────── -->
 <script>
 /* Dispute filter */
+/* Dispute stubs — real logic in admin-connect.js (loaded after this script).
+   These forward to the real functions once available. */
 window.filterDisputes = function(status) {
-  document.querySelectorAll('.dsp-filter').forEach(function(b){
-    b.classList.toggle('on', b.dataset.filter === status);
-  });
-  document.querySelectorAll('.dsp-card').forEach(function(c){
-    c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
-  });
+  if (window._adminDisputeFilter !== undefined) {
+    // admin-connect.js loaded — let it handle
+    if (typeof loadDisputes === 'function') { window._disputeFilter = status; loadDisputes(true); }
+  } else {
+    // fallback: simple DOM filter
+    document.querySelectorAll('.dsp-filter').forEach(function(b){
+      b.classList.toggle('on', b.dataset.filter === status);
+    });
+    document.querySelectorAll('.dsp-card').forEach(function(c){
+      c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
+    });
+  }
 };
-window.resolveDispute = function(id, winner) {
-  showToast('Dispute ' + id + ' resolved — ' + (winner==='buyer'?'Buyer':'Seller') + ' wins ✓', 'grn');
-};
-window.escalateDispute = function(id) {
-  showToast('Dispute ' + id + ' escalated to senior admin', '');
-};
-window.refundDispute = function(id) {
-  showToast('Refund initiated for dispute ' + id, 'grn');
-};
+window.resolveDispute   = function(id, w) { if(typeof admResolveDispute==='function') admResolveDispute(id, w==='buyer'?'CLAIMANT':'RESPONDENT'); else showToast('Resolving…','grn'); };
+window.escalateDispute  = function(id)    { if(typeof admEscalateDispute==='function') admEscalateDispute(id); else showToast('Escalating…',''); };
+window.refundDispute    = function(id)    { if(typeof admRefundDispute==='function') admRefundDispute(id); else showToast('Refunding…','grn'); };
 
 /* Eye toggle — SVG version */
 window.togglePwVis = function(id, btn) {
@@ -2125,7 +2178,7 @@ window.confirmAddCard = function(){
   if(typeof CARDS!=='undefined'){
     CARDS.unshift({em:'🃏',nm:name,gr:grade,img:img,bg:bg});
   }
-  if(typeof renderBinder==='function') renderBinder();
+  if(window.MXBinder && typeof window.MXBinder.load==='function') { window.MXBinder.load(true); } else if(typeof renderBinder==='function') renderBinder();
 
   showToast(name+' added to binder! 🎉','grn');
   closeAddCardModal();
@@ -2141,5 +2194,119 @@ document.getElementById('addCardModal').addEventListener('click',function(e){
 <!-- ══ ADMIN PANEL CONNECTOR ══ -->
 <!-- Place admin-connect.js next to app.html and app-connect.js -->
 <script src="admin-connect.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MINTYNEX MASTER GLUE — loads after ALL scripts
+   Fixes any remaining wiring issues between modules
+══════════════════════════════════════════════════════════════ */
+(function() {
+
+  /* ── 1. Override renderFeed to use API-connected loadFeed ── */
+  window.renderFeed = function(reset) {
+    if (typeof loadFeed === 'function') loadFeed(reset !== false);
+  };
+
+  /* ── 2. Override old sendMessage to use app-messages.js ── */
+  if (!window.MXMessages) {
+    // app-messages.js not loaded yet — wait
+    window.sendMessage = window.sendMessage || function() {
+      var inp = document.getElementById('msgInput');
+      if (!inp || !inp.value.trim()) return;
+      var list = document.getElementById('msgList');
+      if (list) {
+        var row = document.createElement('div');
+        row.className = 'brow me';
+        row.innerHTML = '<div class="bav">🔥</div><div class="bbl me">' + inp.value.replace(/</g,'&lt;') + '</div>';
+        list.appendChild(row);
+        list.scrollTop = list.scrollHeight;
+      }
+      inp.value = '';
+    };
+  }
+
+  /* ── 3. showPg → dispatch pageChange for new modules ── */
+  var _origShowPg = window.showPg;
+  window.showPg = function(id) {
+    if (_origShowPg) _origShowPg(id);
+    document.dispatchEvent(new CustomEvent('pageChange', { detail: id }));
+  };
+
+  /* ── 4. Global click delegator additions ── */
+  document.addEventListener('click', function(e) {
+    // Photo button for posts
+    if (e.target.closest('[data-action="postphoto"]')) {
+      if (typeof triggerPostPhoto === 'function') { e.stopImmediatePropagation(); triggerPostPhoto(); }
+    }
+    // Like button — route to toggleLike
+    var likeBtn = e.target.closest('[data-action="like"]');
+    if (likeBtn) {
+      var idx = parseInt(likeBtn.dataset.idx);
+      if (!isNaN(idx) && typeof toggleLike === 'function') { e.stopImmediatePropagation(); toggleLike(idx); }
+    }
+    // Share button
+    var shareBtn = e.target.closest('[data-action="share"]');
+    if (shareBtn) {
+      var idx2 = parseInt(shareBtn.dataset.idx);
+      if (!isNaN(idx2) && typeof openShareSheet === 'function') { e.stopImmediatePropagation(); openShareSheet(idx2); }
+    }
+    // Open comments
+    var cmtBtn = e.target.closest('[data-action="opencomments"]');
+    if (cmtBtn) {
+      var idx3 = parseInt(cmtBtn.dataset.idx);
+      if (!isNaN(idx3) && typeof openComments === 'function') { e.stopImmediatePropagation(); openComments(idx3); }
+    }
+    // Add card
+    if (e.target.closest('[data-action="addcard"]')) {
+      if (typeof openAddCardModal === 'function') { e.stopImmediatePropagation(); openAddCardModal(); }
+    }
+    // msgSendBtn
+    if (e.target.closest('#msgSendBtn')) {
+      if (typeof sendMessage === 'function') { e.stopImmediatePropagation(); sendMessage(); }
+    }
+    // Admin logout
+    if (e.target.id === 'admLogoutBtn') {
+      if (typeof doLogout === 'function') doLogout(false);
+    }
+    // Admin back to app
+    if (e.target.id === 'admBackBtn') {
+      document.getElementById('adm')?.classList.remove('on');
+      document.getElementById('shell')?.classList.add('on');
+      if (typeof showPg === 'function') showPg('feed');
+    }
+  }, true);
+
+  /* ── 5. Wire Enter key on msgInput ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    var msgInput = document.getElementById('msgInput');
+    if (msgInput) {
+      msgInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (typeof sendMessage === 'function') sendMessage(); }
+      });
+    }
+    var msgSendBtn = document.getElementById('msgSendBtn');
+    if (msgSendBtn) msgSendBtn.onclick = function() { if (typeof sendMessage === 'function') sendMessage(); };
+  });
+
+  /* ── 6. Trade tab switching (if not already wired) ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('#tradeTabs .atab[data-tt]').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var tt = this.getAttribute('data-tt');
+        document.querySelectorAll('#tradeTabs .atab').forEach(function(b){ b.classList.remove('on'); });
+        this.classList.add('on');
+        document.querySelectorAll('.tt-s').forEach(function(s){ s.classList.toggle('on', s.id === 'tt-' + tt); });
+        if (tt === 'active' && typeof loadActiveTrades === 'function') loadActiveTrades();
+      });
+    });
+  });
+
+  /* ── 7. On initial load, start feed ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof loadFeed === 'function') loadFeed(true);
+  });
+
+})();
+</script>
 </body>
 </html>
