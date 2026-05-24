@@ -511,6 +511,7 @@ input.otp-box { font-size: 18px !important; }
         </div>
         <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="rPass" type="password" placeholder="Min 8 chars" style="padding-right:40px"/><button type="button" onclick="togglePwVis('rPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_rPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
         <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
+        <button class="lbtn lbtn-otp" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Verify Phone with OTP</button>
         <div id="otpRowRegister" class="otp-row" style="display:none">
           <label class="fl">Enter OTP sent to your phone</label>
           <div class="otp-inputs">
@@ -617,27 +618,26 @@ input.otp-box { font-size: 18px !important; }
     <!-- ══ OVERVIEW ══ -->
     <div class="adm-sec on" id="as-overview">
       <div class="g4" style="margin-bottom:12px">
-        <div class="stat-b"><div class="stat-v">8,420</div><div class="stat-l">Users</div></div>
-        <div class="stat-b"><div class="stat-v">3,412</div><div class="stat-l">Listings</div></div>
-        <div class="stat-b"><div class="stat-v">1,247</div><div class="stat-l">Trades</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#23a55a">$16.2K</div><div class="stat-l">Volume</div></div>
+        <div class="stat-b"><div class="stat-v">—</div><div class="stat-l">Users</div></div>
+        <div class="stat-b"><div class="stat-v">—</div><div class="stat-l">Listings</div></div>
+        <div class="stat-b"><div class="stat-v">—</div><div class="stat-l">Trades</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#23a55a">—</div><div class="stat-l">Volume</div></div>
       </div>
       <div class="card" style="margin-bottom:10px">
         <div style="font-weight:800;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Live Activity
         </div>
-        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#23a55a;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">New trade: TrainerAsh_KE ↔ ShinySister_TZ</span><span class="bdg bdg-g">Now</span></div>
-        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#5865f2;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">New signup: CardBoss_GH</span><span class="bdg bdg-b">2m</span></div>
-        <div class="lrow" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">Verify request: PokeKing_NG</span><span class="bdg bdg-v">5m</span></div>
-        <div class="lrow" style="padding:8px 0"><div style="width:7px;height:7px;border-radius:50%;background:#ed4245;flex-shrink:0"></div><span style="font-size:12px;flex:1;margin-left:8px">Dispute opened: #DSP-0014</span><span class="bdg bdg-r">8m</span></div>
+        <div id="adm-activity-list">
+          <div style="text-align:center;padding:20px;color:#80848e;font-size:12px">Loading activity…</div>
+        </div>
       </div>
       <div class="g2" style="margin-bottom:10px">
         <div class="card" style="text-align:center;padding:14px 10px">
-          <div style="font-size:22px;font-weight:900;color:#23a55a">94%</div>
+          <div id="adm-success-rate" style="font-size:22px;font-weight:900;color:#23a55a">—</div>
           <div style="font-size:11px;color:#80848e;margin-top:2px">Trade Success Rate</div>
         </div>
         <div class="card" style="text-align:center;padding:14px 10px">
-          <div style="font-size:22px;font-weight:900;color:#5865f2">847</div>
+          <div id="adm-online-now" style="font-size:22px;font-weight:900;color:#5865f2">—</div>
           <div style="font-size:11px;color:#80848e;margin-top:2px">Online Now</div>
         </div>
       </div>
@@ -649,67 +649,22 @@ input.otp-box { font-size: 18px !important; }
         <div style="font-weight:800;font-size:14px;color:#fff;display:flex;align-items:center;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5865f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> User Management
         </div>
-        <div style="font-size:11px;color:#80848e">8,420 total</div>
+        <div id="adm-users-total" style="font-size:11px;color:#80848e">Loading…</div>
       </div>
       <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-        <button class="trade-type-btn active" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">All</button>
-        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Verified</button>
-        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Sanctioned</button>
-        <button class="trade-type-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Premium</button>
+        <button class="trade-type-btn adm-user-filter-btn active" data-filter="all">All</button>
+        <button class="trade-type-btn adm-user-filter-btn" data-filter="verified">Verified</button>
+        <button class="trade-type-btn adm-user-filter-btn" data-filter="banned">Banned</button>
+        <button class="trade-type-btn adm-user-filter-btn" data-filter="premium">Premium</button>
       </div>
       <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;background:#1e1f22;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 12px">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#80848e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input style="background:none;border:none;color:#fff;font-size:12px;flex:1;outline:none;font-family:inherit" placeholder="Search users..."/>
+        <input id="adm-user-search-input" style="background:none;border:none;color:#fff;font-size:12px;flex:1;outline:none;font-family:inherit" placeholder="Search users by name, email…"/>
       </div>
-      <div class="card csm" style="margin-bottom:7px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#5865f2,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style="flex:1;min-width:100px">
-            <div style="font-weight:700;font-size:12px;color:#fff">TrainerAsh_KE</div>
-            <div style="font-size:10px;color:#80848e">Global · Elite · 142 cards · 38 trades</div>
-          </div>
-          <span class="bdg bdg-grn" style="font-size:9px">Verified</span>
-          <div style="display:flex;gap:4px">
-            <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Viewing profile...','')">View</button>
-            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
-          </div>
-        </div>
+      <div id="adm-users-list">
+        <div style="text-align:center;padding:30px;color:#80848e">Loading users…</div>
       </div>
-      <div class="card csm" style="margin-bottom:7px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#082f49,#0284c7);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style="flex:1;min-width:100px">
-            <div style="font-weight:700;font-size:12px;color:#fff">ShinySister_TZ</div>
-            <div style="font-size:10px;color:#80848e">Global · Trainer · 89 cards · 12 trades</div>
-          </div>
-          <span class="bdg bdg-grn" style="font-size:9px">Verified</span>
-          <div style="display:flex;gap:4px">
-            <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Viewing profile...','')">View</button>
-            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
-          </div>
-        </div>
-      </div>
-      <div class="card csm" style="margin-bottom:7px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style="flex:1;min-width:100px">
-            <div style="font-weight:700;font-size:12px;color:#fff">PokeKing_NG</div>
-            <div style="font-size:10px;color:#80848e">Global · Master · 210 cards · 51 trades</div>
-          </div>
-          <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Pending</span>
-          <div style="display:flex;gap:4px">
-            <button class="btn bgrn bxs" style="font-size:10px;padding:4px 8px" data-action="approve">Verify</button>
-            <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="applysanction">Ban</button>
-          </div>
-        </div>
-      </div>
-      <button class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Loading more users...','')">
+      <button id="adm-users-loadmore" class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:none;align-items:center;justify-content:center;gap:5px" onclick="admLoadMoreUsers()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         Load More
       </button>
@@ -722,43 +677,25 @@ input.otp-box { font-size: 18px !important; }
         Trade Monitoring
       </div>
       <div class="g4" style="margin-bottom:12px">
-        <div class="stat-b"><div class="stat-v" style="color:#23a55a">1,190</div><div class="stat-l">Completed</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#5865f2">57</div><div class="stat-l">Active</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#f59e0b">12</div><div class="stat-l">Pending</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Disputed</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#23a55a">—</div><div class="stat-l">Completed</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#5865f2">—</div><div class="stat-l">Active</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#f59e0b">—</div><div class="stat-l">Pending</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#ed4245">—</div><div class="stat-l">Disputed</div></div>
       </div>
-      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #23a55a">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4821</span>
-          <span class="bdg bdg-grn" style="font-size:9px">Completed</span>
-        </div>
-        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">TrainerAsh_KE ↔ ShinySister_TZ · Charizard VMAX for Irida SAR</div>
-        <div style="display:flex;gap:5px">
-          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Trade details coming soon','')">Details</button>
-          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" data-pg="messages">Message</button>
-        </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="trade-type-btn adm-trade-filter-btn active" data-filter="all">All</button>
+        <button class="trade-type-btn adm-trade-filter-btn" data-filter="active">Active</button>
+        <button class="trade-type-btn adm-trade-filter-btn" data-filter="pending">Pending</button>
+        <button class="trade-type-btn adm-trade-filter-btn" data-filter="disputed">Disputed</button>
+        <button class="trade-type-btn adm-trade-filter-btn" data-filter="completed">Completed</button>
       </div>
-      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #5865f2">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4820</span>
-          <span class="bdg bdg-b" style="font-size:9px">Active</span>
-        </div>
-        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">PokeKing_NG ↔ CardQueenZA · Rayquaza VMAX + $38</div>
-        <div style="display:flex;gap:5px">
-          <button class="btn bgh bxs" style="font-size:10px;padding:4px 8px" onclick="showToast('Trade details coming soon','')">Details</button>
-          <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" data-action="flagtrade">Flag</button>
-        </div>
+      <div id="adm-trades-list">
+        <div style="text-align:center;padding:30px;color:#80848e">Loading trades…</div>
       </div>
-      <div class="card csm" style="margin-bottom:7px;border-left:3px solid #ed4245">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:11px;font-weight:800;color:#f59e0b">#TXN-4819</span>
-          <span class="bdg bdg-r" style="font-size:9px">Disputed</span>
-        </div>
-        <div style="font-size:12px;color:#dbdee1;margin-bottom:6px">TrainerAsh_KE ↔ GhostPuller_GH · Rayquaza VMAX PSA 9</div>
-        <div style="display:flex;gap:5px">
-          <button class="btn brd bxs" style="font-size:10px;padding:4px 8px" onclick="admShowSec('disputes')">View Dispute</button>
-        </div>
-      </div>
+      <button id="adm-trades-loadmore" class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:none;align-items:center;justify-content:center;gap:5px" onclick="admLoadMoreTrades()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Load More
+      </button>
     </div>
 
     <!-- ══ DISPUTES ══ -->
@@ -777,150 +714,29 @@ input.otp-box { font-size: 18px !important; }
       </div>
       <!-- Stats row -->
       <div class="g4" style="margin-bottom:14px">
-        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('open')"><div class="stat-v" style="color:#ed4245">3</div><div class="stat-l">Open</div></div>
-        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('review')"><div class="stat-v" style="color:#f59e0b">5</div><div class="stat-l">In Review</div></div>
-        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('resolved')"><div class="stat-v" style="color:#23a55a">41</div><div class="stat-l">Resolved</div></div>
-        <div class="stat-b"><div class="stat-v" style="color:#7289da">2</div><div class="stat-l">Escalated</div></div>
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('open')"><div class="stat-v" style="color:#ed4245">—</div><div class="stat-l">Open</div></div>
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('review')"><div class="stat-v" style="color:#f59e0b">—</div><div class="stat-l">In Review</div></div>
+        <div class="stat-b" style="cursor:pointer" onclick="filterDisputes('resolved')"><div class="stat-v" style="color:#23a55a">—</div><div class="stat-l">Resolved</div></div>
+        <div class="stat-b"><div class="stat-v" style="color:#7289da">—</div><div class="stat-l">Escalated</div></div>
       </div>
-
-      <!-- Dispute #1 — Open -->
-      <div class="dsp-card card" data-status="open" style="margin-bottom:10px;border-left:3px solid #ed4245">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-          <div>
-            <div style="font-size:12px;font-weight:800;color:#f59e0b">#DSP-0014</div>
-            <div style="font-size:10px;color:#80848e;margin-top:2px">Opened 1h ago · Trade #TXN-4819 · <span style="color:#ed4245">High Priority</span></div>
-          </div>
-          <span class="bdg bdg-r" style="font-size:9px">Open</span>
-        </div>
-        <!-- Parties -->
-        <div style="display:grid;grid-template-columns:1fr 28px 1fr;gap:8px;align-items:center;margin-bottom:10px">
-          <div style="background:#2b2d31;border-radius:8px;padding:10px;text-align:center">
-            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;margin:0 auto 4px">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div style="font-size:11px;font-weight:700;color:#fff">TrainerAsh_KE</div>
-            <div style="font-size:9px;color:#5865f2;margin-top:2px">Claimant</div>
-          </div>
-          <div style="text-align:center;font-size:16px;color:#80848e">⚖️</div>
-          <div style="background:#2b2d31;border-radius:8px;padding:10px;text-align:center">
-            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7f1d1d,#c2410c);display:flex;align-items:center;justify-content:center;margin:0 auto 4px">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div style="font-size:11px;font-weight:700;color:#fff">GhostPuller_GH</div>
-            <div style="font-size:9px;color:#ed4245;margin-top:2px">Respondent</div>
-          </div>
-        </div>
-        <!-- Issue -->
-        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
-          <div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:4px">⚠ Issue Reported</div>
-          <div style="font-size:12px;color:#dbdee1;line-height:1.5">Card received was not as described. Rayquaza VMAX listed as PSA 9 but appears raw/ungraded.</div>
-        </div>
-        <!-- Evidence -->
-        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
-          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:6px">EVIDENCE</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📷 photo_001.jpg</span>
-            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📷 photo_002.jpg</span>
-            <span style="background:#383a40;border-radius:4px;padding:3px 8px;font-size:10px;color:#dbdee1">📄 receipt.pdf</span>
-          </div>
-        </div>
-        <!-- Timeline -->
-        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
-          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:6px">TIMELINE</div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#23a55a;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">2h ago</span><span style="font-size:11px;color:#dbdee1">Trade completed</span></div>
-            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">1h ago</span><span style="font-size:11px;color:#dbdee1">Dispute filed by TrainerAsh_KE</span></div>
-            <div style="display:flex;gap:8px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#5865f2;flex-shrink:0"></div><span style="font-size:10px;color:#80848e">45m ago</span><span style="font-size:11px;color:#dbdee1">Admin notified</span></div>
-          </div>
-        </div>
-        <!-- Admin Notes -->
-        <div style="margin-bottom:10px">
-          <div style="font-size:10px;color:#80848e;font-weight:700;margin-bottom:4px">ADMIN NOTES</div>
-          <textarea class="fi" placeholder="Add internal notes about this dispute..." style="height:60px;font-size:12px;resize:none;width:100%;box-sizing:border-box"></textarea>
-        </div>
-        <!-- Actions -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn bgrn bxs" style="font-size:11px" onclick="resolveDispute('DSP-0014','buyer')">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Buyer Wins
-          </button>
-          <button class="btn" style="font-size:11px;background:rgba(88,101,242,.2);border:1px solid #5865f2;color:#5865f2" onclick="resolveDispute('DSP-0014','seller')">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg>Seller Wins
-          </button>
-          <button class="btn brd bxs" style="font-size:11px" onclick="escalateDispute('DSP-0014')">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="12 19 12 5"/><polyline points="5 12 12 5 19 12"/></svg>Escalate
-          </button>
-          <button class="btn bgh bxs" style="font-size:11px" data-pg="messages">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Mediate Chat
-          </button>
-          <button class="btn bgh bxs" style="font-size:11px" onclick="refundDispute('DSP-0014')">
-            💰 Refund
-          </button>
-        </div>
+      <div id="adm-disputes-list">
+        <div style="text-align:center;padding:30px;color:#80848e">Loading disputes…</div>
       </div>
-
-      <!-- Dispute #2 — In Review -->
-      <div class="dsp-card card" data-status="review" style="margin-bottom:10px;border-left:3px solid #f59e0b">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-          <div>
-            <div style="font-size:12px;font-weight:800;color:#f59e0b">#DSP-0013</div>
-            <div style="font-size:10px;color:#80848e;margin-top:2px">Opened 4h ago · Trade #TXN-4801 · <span style="color:#f59e0b">Medium Priority</span></div>
-          </div>
-          <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">In Review</span>
-        </div>
-        <div style="background:#2b2d31;border-radius:8px;padding:10px;margin-bottom:10px">
-          <div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:4px">⚠ Issue Reported</div>
-          <div style="font-size:12px;color:#dbdee1;line-height:1.5">Item never received. Seller claims shipped but no tracking provided.</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn bgrn bxs" style="font-size:11px" onclick="resolveDispute('DSP-0013','buyer')">Buyer Wins</button>
-          <button class="btn bgh bxs" style="font-size:11px" onclick="resolveDispute('DSP-0013','seller')">Seller Wins</button>
-          <button class="btn brd bxs" style="font-size:11px" onclick="escalateDispute('DSP-0013')">Escalate</button>
-        </div>
-      </div>
-
-      <!-- Resolved example -->
-      <div class="dsp-card card" data-status="resolved" style="margin-bottom:10px;border-left:3px solid #23a55a;opacity:0.7">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div style="font-size:12px;font-weight:800;color:#23a55a">#DSP-0012 <span style="font-weight:400;color:#80848e;font-size:10px">— Resolved in favor of buyer</span></div>
-            <div style="font-size:10px;color:#80848e;margin-top:2px">Closed 2d ago · Trade #TXN-4790</div>
-          </div>
-          <span class="bdg" style="background:rgba(35,165,90,.15);color:#23a55a;font-size:9px">✓ Resolved</span>
-        </div>
-      </div>
+      <button id="adm-disputes-loadmore" class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:none;align-items:center;justify-content:center;gap:5px" onclick="admLoadMoreDisputes()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Load More
+      </button>
     </div>
 
     <!-- ══ REPORTS ══ -->
-
     <div class="adm-sec" id="as-reports">
       <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
         Content Reports
-        <span class="bdg bdg-r" style="font-size:10px">2 pending</span>
+        <span class="bdg bdg-r" style="font-size:10px">Loading…</span>
       </div>
-      <div class="card csm" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:12px;font-weight:700;color:#fff">Suspicious listing · Charizard VMAX</div>
-          <span class="bdg bdg-r" style="font-size:9px">Listing</span>
-        </div>
-        <div style="font-size:11px;color:#80848e;margin-bottom:8px">Reported by MintFresh_KE · Price mismatch vs market rate</div>
-        <div style="display:flex;gap:6px">
-          <button class="btn bgrn bxs" style="font-size:10px" data-action="keeppost">Keep</button>
-          <button class="btn brd bxs" style="font-size:10px" data-action="removepost">Remove</button>
-          <button class="btn bgh bxs" style="font-size:10px" data-action="dismissreport">Dismiss</button>
-        </div>
-      </div>
-      <div class="card csm" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:12px;font-weight:700;color:#fff">Inappropriate post · CardBoss_GH</div>
-          <span class="bdg bdg-r" style="font-size:9px">Post</span>
-        </div>
-        <div style="font-size:11px;color:#80848e;margin-bottom:8px">Reported by 3 users · Spam content</div>
-        <div style="display:flex;gap:6px">
-          <button class="btn bgrn bxs" style="font-size:10px" data-action="keeppost">Keep</button>
-          <button class="btn brd bxs" style="font-size:10px" data-action="removepost">Remove</button>
-          <button class="btn bgh bxs" style="font-size:10px" data-action="dismissreport">Dismiss</button>
-        </div>
+      <div id="adm-reports-list">
+        <div style="text-align:center;padding:30px;color:#80848e">Loading reports…</div>
       </div>
     </div>
 
@@ -929,41 +745,10 @@ input.otp-box { font-size: 18px !important; }
       <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:6px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#23a55a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
         Verify Queue
-        <span class="bdg" style="background:rgba(35,165,90,.2);color:#23a55a;font-size:10px">3 pending</span>
+        <span class="bdg" style="background:rgba(35,165,90,.2);color:#23a55a;font-size:10px">Loading…</span>
       </div>
-      <div class="card csm" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style="flex:1;min-width:80px">
-            <div style="font-weight:700;font-size:13px;color:#fff">PokeKing_NG</div>
-            <div style="font-size:10px;color:#80848e">51 trades · ★4.9 · Global</div>
-            <div style="font-size:10px;color:#80848e">ID submitted · 2h ago</div>
-          </div>
-          <div style="display:flex;gap:5px">
-            <button class="btn bgrn bxs" style="font-size:11px" data-action="approve">Approve</button>
-            <button class="btn brd bxs" style="font-size:11px" data-action="reject">Reject</button>
-            <button class="btn bgh bxs" style="font-size:11px" onclick="showToast('Viewing ID...','')">View ID</button>
-          </div>
-        </div>
-      </div>
-      <div class="card csm" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#15803d);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style="flex:1;min-width:80px">
-            <div style="font-weight:700;font-size:13px;color:#fff">CardQueenZA</div>
-            <div style="font-size:10px;color:#80848e">67 trades · ★5.0 · Global</div>
-            <div style="font-size:10px;color:#80848e">ID submitted · 5h ago</div>
-          </div>
-          <div style="display:flex;gap:5px">
-            <button class="btn bgrn bxs" style="font-size:11px" data-action="approve">Approve</button>
-            <button class="btn brd bxs" style="font-size:11px" data-action="reject">Reject</button>
-            <button class="btn bgh bxs" style="font-size:11px" onclick="showToast('Viewing ID...','')">View ID</button>
-          </div>
-        </div>
+      <div id="adm-verify-list">
+        <div style="text-align:center;padding:30px;color:#80848e">Loading verify queue…</div>
       </div>
     </div>
 
@@ -975,27 +760,28 @@ input.otp-box { font-size: 18px !important; }
       </div>
       <div class="card" style="margin-bottom:10px">
         <div style="font-weight:700;font-size:12px;color:#fff;margin-bottom:10px">Add New Listing</div>
-        <div class="fg"><label class="fl">Card Name</label><input class="fi" placeholder="e.g. Charizard VMAX PSA 10"/></div>
+        <div class="fg"><label class="fl">Card Name</label><input class="fi" id="adm-shop-name" placeholder="e.g. Charizard VMAX PSA 10"/></div>
         <div class="g2">
-          <div class="fg"><label class="fl">Price (USD)</label><input class="fi" type="number" placeholder="308"/></div>
-          <div class="fg"><label class="fl">Grade</label><select class="fi"><option>PSA 10</option><option>PSA 9</option><option>BGS 9.5</option><option>Raw NM</option></select></div>
+          <div class="fg"><label class="fl">Price (USD)</label><input class="fi" id="adm-shop-price" type="number" placeholder="308"/></div>
+          <div class="fg"><label class="fl">Grade</label>
+            <select class="fi" id="adm-shop-grade">
+              <option>PSA 10</option><option>PSA 9</option><option>BGS 9.5</option><option>Raw NM</option>
+            </select>
+          </div>
         </div>
-        <div class="fg"><label class="fl">Seller</label><input class="fi" placeholder="Trainer username"/></div>
-        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" data-action="publishshop">
+        <div class="fg"><label class="fl">Seller</label><input class="fi" id="adm-shop-seller" placeholder="Trainer username"/></div>
+        <button id="adm-shop-publish-btn" class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="admPublishListing()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Publish Listing
         </button>
       </div>
-      <div class="card csm" style="margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
-        <div>
-          <div style="font-size:12px;font-weight:700;color:#fff">Charizard VMAX PSA 10</div>
-          <div style="font-size:10px;color:#80848e">$323 · TrainerAsh</div>
-        </div>
-        <div style="display:flex;gap:5px">
-          <button class="btn bgh bxs" style="font-size:10px" onclick="showToast('Editing listing...','')">Edit</button>
-          <button class="btn brd bxs" style="font-size:10px" data-action="removeshop">Remove</button>
-        </div>
+      <div id="adm-shop-list">
+        <div style="text-align:center;padding:20px;color:#80848e">Loading listings…</div>
       </div>
+      <button id="adm-shop-loadmore" class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:none;align-items:center;justify-content:center;gap:5px" onclick="admLoadMoreShop()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Load More
+      </button>
     </div>
 
     <!-- ══ PREMIUM ══ -->
@@ -1006,35 +792,29 @@ input.otp-box { font-size: 18px !important; }
       </div>
       <div class="g2" style="margin-bottom:12px">
         <div class="card" style="text-align:center;padding:14px">
-          <div style="font-size:22px;font-weight:900;color:#f59e0b">342</div>
+          <div id="adm-prem-active-count" style="font-size:22px;font-weight:900;color:#f59e0b">—</div>
           <div style="font-size:11px;color:#80848e">Active Subs</div>
         </div>
         <div class="card" style="text-align:center;padding:14px">
-          <div style="font-size:22px;font-weight:900;color:#23a55a">$9.2K</div>
+          <div id="adm-prem-rev" style="font-size:22px;font-weight:900;color:#23a55a">—</div>
           <div style="font-size:11px;color:#80848e">Monthly Rev</div>
         </div>
       </div>
       <div class="card" style="margin-bottom:10px">
         <div style="font-weight:700;font-size:12px;color:#fff;margin-bottom:10px">Pricing Configuration</div>
-        <div class="fg"><label class="fl">Monthly Price (USD)</label><input class="fi" type="number" value="7.99" placeholder="7.99"/></div>
-        <div class="fg"><label class="fl">Annual Price (USD)</label><input class="fi" type="number" value="79.99" placeholder="79.99"/></div>
-        <div class="fg"><label class="fl">Trial Period (days)</label><input class="fi" type="number" value="7" placeholder="7"/></div>
-        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Pricing updated!','grn')">Save Pricing</button>
+        <div class="fg"><label class="fl">Monthly Price (USD)</label><input class="fi" id="adm-prem-monthly" type="number" value="7.99" placeholder="7.99"/></div>
+        <div class="fg"><label class="fl">Annual Price (USD)</label><input class="fi" id="adm-prem-annual" type="number" value="79.99" placeholder="79.99"/></div>
+        <div class="fg"><label class="fl">Trial Period (days)</label><input class="fi" id="adm-prem-trial" type="number" value="7" placeholder="7"/></div>
+        <button id="adm-prem-save-btn" class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="admSavePricing()">Save Pricing</button>
       </div>
-      <div class="card csm" style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div>
-          <div style="font-size:12px;font-weight:700;color:#fff">TrainerAsh_KE</div>
-          <div style="font-size:10px;color:#80848e">Premium · Renews May 30</div>
-        </div>
-        <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Active</span>
+      <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Active Subscribers</div>
+      <div id="adm-prem-subs-list">
+        <div style="text-align:center;padding:20px;color:#80848e">Loading subscriptions…</div>
       </div>
-      <div class="card csm" style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div>
-          <div style="font-size:12px;font-weight:700;color:#fff">PokeKing_NG</div>
-          <div style="font-size:10px;color:#80848e">Premium Annual · Renews Jan 2026</div>
-        </div>
-        <span class="bdg" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:9px">Active</span>
-      </div>
+      <button id="adm-prem-loadmore" class="btn bgh bfw" style="font-size:11px;margin-top:6px;display:none;align-items:center;justify-content:center;gap:5px" onclick="admLoadMorePremium()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Load More
+      </button>
     </div>
 
     <!-- ══ SETTINGS ══ -->
@@ -1048,62 +828,62 @@ input.otp-box { font-size: 18px !important; }
         <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">General</div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
           <span style="font-size:12px;color:#dbdee1">Maintenance Mode</span>
-          <div class="tog" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog" id="setting-maintenance" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
           <span style="font-size:12px;color:#dbdee1">New Registrations</span>
-          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog on" id="setting-registrations" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
           <span style="font-size:12px;color:#dbdee1">Trade System</span>
-          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog on" id="setting-trade" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0">
           <span style="font-size:12px;color:#dbdee1">Push Notifications</span>
-          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog on" id="setting-push" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,.04)">
           <span style="font-size:12px;color:#dbdee1">Auto-archive resolved disputes</span>
-          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog on" id="setting-auto-archive" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
         <div class="lrow" style="justify-content:space-between;padding:6px 0">
           <span style="font-size:12px;color:#dbdee1">Require ID for high-value trades</span>
-          <div class="tog on" data-action="toggle"><div class="tog-d"></div></div>
+          <div class="tog on" id="setting-id-verify" data-action="toggle" onclick="this.classList.toggle('on')"><div class="tog-d"></div></div>
         </div>
       </div>
       <!-- Security -->
       <div class="card" style="margin-bottom:10px">
         <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Security</div>
-        <div class="fg"><label class="fl">Max Trade Value (USD)</label><input class="fi" type="number" value="3850" placeholder="3850"/></div>
-        <div class="fg"><label class="fl">Cooldown Between Trades (hrs)</label><input class="fi" type="number" value="2" placeholder="2"/></div>
-        <div class="fg"><label class="fl">Max Reports Before Auto-Review</label><input class="fi" type="number" value="3" placeholder="3"/></div>
-        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Security settings saved!','grn')">Save Security Settings</button>
+        <div class="fg"><label class="fl">Max Trade Value (USD)</label><input class="fi" id="adm-max-trade" type="number" value="3850" placeholder="3850"/></div>
+        <div class="fg"><label class="fl">Cooldown Between Trades (hrs)</label><input class="fi" id="adm-cooldown" type="number" value="2" placeholder="2"/></div>
+        <div class="fg"><label class="fl">Max Reports Before Auto-Review</label><input class="fi" id="adm-max-reports" type="number" value="3" placeholder="3"/></div>
+        <button id="adm-security-save-btn" class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="admSaveSettings()">Save Security Settings</button>
       </div>
       <!-- Announcements -->
       <div class="card" style="margin-bottom:10px">
         <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Announcements</div>
-        <div class="fg"><label class="fl">Banner Message</label><input class="fi" value="Live: New trades happening now — 1,247 active trades this week"/></div>
+        <div class="fg"><label class="fl">Banner Message</label><input class="fi" id="adm-banner-msg" placeholder="Enter announcement text…"/></div>
         <div class="fg"><label class="fl">Banner Type</label>
-          <select class="fi">
-            <option>Info</option><option>Warning</option><option>Success</option><option>Alert</option>
+          <select class="fi" id="adm-banner-type">
+            <option value="info">Info</option><option value="warning">Warning</option><option value="success">Success</option><option value="alert">Alert</option>
           </select>
         </div>
-        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Banner updated!','grn')">Update Banner</button>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="admUpdateBanner()">Update Banner</button>
       </div>
       <!-- Danger Zone -->
       <div class="card" style="border:1px solid rgba(237,66,69,.3);margin-bottom:10px">
         <div style="font-size:11px;font-weight:800;color:#ed4245;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Danger Zone</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Clearing cache...','')">Clear Cache</button>
-          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Exporting data...','')">Export Data</button>
-          <button class="btn brd bxs" style="font-size:11px" onclick="showToast('Backup started...','')">Backup DB</button>
+          <button id="adm-clear-cache-btn" class="btn brd bxs" style="font-size:11px" onclick="admClearCache()">Clear Cache</button>
+          <button id="adm-export-btn" class="btn brd bxs" style="font-size:11px" onclick="admExportData()">Export Data</button>
+          <button id="adm-backup-btn" class="btn brd bxs" style="font-size:11px" onclick="admBackupDb()">Backup DB</button>
         </div>
       </div>
       <!-- Admin Account -->
       <div class="card">
         <div style="font-size:11px;font-weight:800;color:#80848e;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Admin Account</div>
         <div class="fg"><label class="fl">Change Admin Password</label><div style="position:relative"><input class="fi" type="password" placeholder="New password" id="admNewPass" style="padding-right:40px"/><button type="button" onclick="togglePwVis('admNewPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="showToast('Password updated!','grn')">Update Password</button>
+        <button class="btn bg bfw" style="display:flex;align-items:center;justify-content:center;gap:5px" onclick="admChangeAdminPass()">Update Password</button>
       </div>
     </div>
 
@@ -2357,5 +2137,9 @@ document.getElementById('addCardModal').addEventListener('click',function(e){
   if(e.target===this) closeAddCardModal();
 });
 </script>
+
+<!-- ══ ADMIN PANEL CONNECTOR ══ -->
+<!-- Place admin-connect.js next to app.html and app-connect.js -->
+<script src="admin-connect.js"></script>
 </body>
 </html>
