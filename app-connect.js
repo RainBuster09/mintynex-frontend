@@ -93,11 +93,12 @@ window.doSendOTP = async function (mode) {
   }
 
   // Find the correct button to show loading spinner on:
-  // login → "Enter the Arena" = first .lbtn.acc in #trainerForm
-  // register → "Verify Phone with OTP" = .lbtn-otp in #registerForm
+  // login    → "Enter the Arena" = .lbtn.acc.lbtn-pulse in #trainerForm
+  // register → "Enter the Arena" = .lbtn.acc.lbtn-pulse in #registerForm
+  //   (the register button has class "lbtn acc lbtn-pulse", NOT "lbtn-otp")
   const btnSel  = mode === 'login'
     ? '#trainerForm .lbtn.acc'
-    : '#registerForm .lbtn-otp';
+    : '#registerForm .lbtn.acc';
   const btn     = document.querySelector(btnSel);
   const restore = btnLoading(btn, 'Sending OTP…');
 
@@ -256,34 +257,26 @@ window.doRegister = async function () {
 
   if (!res.ok) { apiErr(res, 'Registration failed'); return; }
 
-  // Store phone+purpose for verify step
-  window._otpPhone   = phone;
-  window._otpPurpose = 'REGISTER';
-
-  // Auto-send OTP immediately — no second button needed
-  const otpRestore = btnLoading(btn, 'Sending OTP…');
-  const otpRes = await AppApi.auth.sendOtp({ phone, purpose: 'REGISTER' });
-  otpRestore();
-
-  const devMsg  = otpRes.data?.message || res.data?.message || '';
+  const devMsg  = res.data?.message || '';
   const devCode = (devMsg.match(/\[DEV CODE: (\d+)\]/) || [])[1];
-
   showToast(
-    devCode ? `OTP sent! Dev code: ${devCode} 📲` : 'Account created! OTP sent to your phone 📲',
+    devCode ? `Account created! Dev OTP: ${devCode} 📲` : 'Account created! Check your phone for OTP 📲',
     'grn'
   );
+
+  // Store phone so verify step can use it
+  window._otpPhone   = phone;
+  window._otpPurpose = 'REGISTER';
 
   const otpRow = document.getElementById('otpRowRegister');
   if (otpRow) {
     otpRow.style.display = 'block';
-    otpRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     if (devCode) {
       const boxes = otpRow.querySelectorAll('.otp-box');
       devCode.split('').forEach((digit, i) => { if (boxes[i]) boxes[i].value = digit; });
     }
     wireOtpBoxes(otpRow);
-    const firstEmpty = [...otpRow.querySelectorAll('.otp-box')].find(b => !b.value);
-    (firstEmpty || otpRow.querySelector('.otp-box'))?.focus();
+    otpRow.querySelector('.otp-box')?.focus();
   }
 };
 
@@ -552,79 +545,8 @@ window.fpSetNewPassword = async function () {
 };
 
 /* ─────────────────────────────────────────────────────────────
-   FEED
+   FEED  —  owned by app-feed.js (renderFeed / submitPost live there)
 ───────────────────────────────────────────────────────────── */
-let _feedPage   = 0;
-let _feedLoading = false;
-
-window.renderFeed = async function () {
-  const container = document.getElementById('feedCards');
-  if (!container) return;
-  if (_feedPage === 0) {
-    container.innerHTML = [1,2,3].map(() => `
-      <div class="post" style="opacity:.5">
-        <div class="post-hd">
-          <div class="post-av" style="background:#383a40"></div>
-          <div style="flex:1;margin-left:10px">
-            <div style="height:12px;background:#383a40;border-radius:4px;width:40%;margin-bottom:6px"></div>
-            <div style="height:10px;background:#2b2d31;border-radius:4px;width:25%"></div>
-          </div>
-        </div>
-        <div style="height:200px;background:#383a40;border-radius:8px;margin:10px 0"></div>
-        <div style="height:12px;background:#2b2d31;border-radius:4px;width:80%;margin-bottom:6px"></div>
-        <div style="height:12px;background:#2b2d31;border-radius:4px;width:60%"></div>
-      </div>`).join('');
-  }
-  const res = await AppApi.posts.feed(_feedPage, 20);
-  if (!res.ok) {
-    if (typeof POSTS !== 'undefined' && POSTS.length) {
-      container.innerHTML = '';
-      POSTS.forEach((post, idx) => { if (typeof buildPostEl === 'function') container.appendChild(buildPostEl(post, idx)); });
-    }
-    return;
-  }
-  const posts = res.data?.content || res.data || [];
-  if (_feedPage === 0) container.innerHTML = '';
-  if (posts.length === 0 && _feedPage === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:#80848e">No posts yet. Be the first to share a pull! 🔥</div>';
-    return;
-  }
-  posts.forEach(post => {
-    const mapped = {
-      id: post.id, user: post.author?.username || post.username, flag: '',
-      rank: post.author?.rank || 'Trainer', verified: post.author?.verified || false,
-      time: timeAgo(post.createdAt),
-      avatar: post.author?.avatarUrl ? `<img src="${post.author.avatarUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>` : '🔥',
-      bg: 'linear-gradient(135deg,#1e1b4b,#4338ca)', cardBg: 'rgba(88,101,242,0.15)',
-      cardImg: post.mediaUrl || post.imageUrl || '', label: post.cardLabel || '',
-      caption: post.caption || '', tags: (post.tags || '').split(',').map(t => t.trim()).filter(Boolean),
-      likes: post.likesCount || 0, comments: post.commentsCount || 0,
-      shares: post.sharesCount || 0, liked: post.likedByMe || false, shared: false,
-    };
-    if (typeof POSTS !== 'undefined') {
-      const existing = POSTS.findIndex(p => p.id === mapped.id);
-      if (existing === -1) POSTS.push(mapped);
-    }
-    if (typeof buildPostEl === 'function') container.appendChild(buildPostEl(mapped, POSTS ? POSTS.length - 1 : 0));
-  });
-};
-
-window.submitPost = async function () {
-  const input = document.getElementById('postInput');
-  const text  = input?.value?.trim();
-  if (!text) { showToast('Type something first!', 'red'); return; }
-  const btn     = document.getElementById('postBtn');
-  const restore = btnLoading(btn, 'Posting…');
-  const res = await AppApi.posts.create({ caption: text });
-  restore();
-  if (!res.ok) { apiErr(res, 'Post failed'); return; }
-  if (input) input.value = '';
-  showToast('Post shared! 🔥', 'grn');
-  _feedPage = 0;
-  if (typeof POSTS !== 'undefined') POSTS.length = 0;
-  renderFeed();
-  document.querySelector('#pg-feed .scr')?.scrollTo({ top: 0, behavior: 'smooth' });
-};
 
 /* ─────────────────────────────────────────────────────────────
    BINDER

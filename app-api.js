@@ -5,8 +5,8 @@
 
 (function () {
 
-  const PROD_URL  = 'https://mintynex-backend.up.railway.app/api';
-  const LOCAL_URL = 'http://localhost:8080/api';
+const PROD_URL = 'https://mintynex-backend-production.up.railway.app/api';
+const LOCAL_URL = 'http://localhost:8080/api';
 
   function detectBaseUrl() {
     const saved = localStorage.getItem('mx_api_base');
@@ -95,6 +95,7 @@
       refresh:       (body) => request('/auth/refresh',        { method: 'POST', body }),
       resetPassword: (body) => request('/auth/reset-password', { method: 'POST', body }),
       logout:        ()     => request('/auth/logout',         { method: 'POST' }),
+      adminLogin:    (body) => request('/auth/admin-login',    { method: 'POST', body }),
     },
 
     /* ── Users ── */

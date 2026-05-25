@@ -523,7 +523,7 @@ input.otp-box { font-size: 18px !important; }
           <select class="fi fi-glow" id="rCountry"><option value="">Select country</option></select>
         </div>
         <div class="fg"><label class="fl">Password</label><div style="position:relative"><input class="fi fi-glow" id="rPass" type="password" placeholder="Min 8 chars" style="padding-right:40px"/><button type="button" onclick="togglePwVis('rPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#80848e;cursor:pointer;padding:4px;display:flex;align-items:center" aria-label="Show password"><svg id="eyeIcon_rPass" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="lbtn acc lbtn-pulse" onclick="doSendOTP('register')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
+        <button class="lbtn acc lbtn-pulse" onclick="doRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
         <div id="otpRowRegister" class="otp-row" style="display:none">
           <label class="fl">Enter OTP sent to your phone</label>
           <div class="otp-inputs">
@@ -2065,64 +2065,7 @@ window.handlePhotoUpload=function(input,type){
   });
 })();
 
-// Patch doSendOTP to read from dial-wrap instead of select
-(function(){
-  var _orig = window.doSendOTP;
-  window.doSendOTP = async function(mode){
-    // Inject .value onto dial elements so doSendOTP can read them
-    var p = mode==='login'?'t':'r';
-    var wrap = document.getElementById(p+'DialWrap');
-    var fakeSelect = document.getElementById(p+'Dial');
-    if(wrap && wrap.dataset.value){
-      // If there's still a real select, set its value; otherwise patch via closure
-      if(fakeSelect && fakeSelect.tagName==='SELECT') fakeSelect.value = wrap.dataset.value;
-      // Store globally so doSendOTP can pick it up
-      window['_dialValue_'+p] = wrap.dataset.value;
-    }
-    // Override dialEl value reading in doSendOTP
-    var origDialGet = Object.getOwnPropertyDescriptor(HTMLElement.prototype,'value');
-    return _orig.call(this, mode);
-  };
 
-  // Also patch to read _dialValue from wrap
-  var __orig = window.doSendOTP;
-  window.doSendOTP = async function(mode){
-    var p = mode==='login'?'t':'r';
-    var wrap = document.getElementById(p+'DialWrap');
-    if(wrap){
-      var dialVal = wrap.dataset.value || '';
-      var phoneEl = document.getElementById(p==='t'?'tPhone':'rPhone');
-      var phone = dialVal + (phoneEl?phoneEl.value.trim():'');
-      if(!dialVal){ showToast('Select your country dial code','red'); return; }
-      if(!phoneEl||!phoneEl.value.trim()){ showToast('Enter your phone number','red'); return; }
-      // Temporarily store so original code can use it
-      window._otpPhone = phone;
-      // Build purpose
-      var purposeMap = {login:'LOGIN',register:'REGISTER',reset:'RESET'};
-      var purpose = purposeMap[mode]||'LOGIN';
-      window._otpPurpose = purpose;
-      // Send OTP directly
-      var btn = document.querySelector(mode==='login'?'#trainerForm .lbtn.acc':'#registerForm .lbtn.acc');
-      var restore = window.btnLoading ? window.btnLoading(btn,'Sending…') : function(){};
-      var res = await AppApi.auth.sendOtp({phone, purpose});
-      if(restore) restore();
-      if(!res.ok){ if(window.apiErr) apiErr(res,'Failed to send OTP'); return; }
-      var devMsg = res.data&&res.data.message||'';
-      var devCode = (devMsg.match(/\[DEV CODE: (\d+)\]/)||[])[1];
-      showToast(devCode?'OTP sent — Dev code: '+devCode+' 📲':'OTP sent to '+phone+' 📲','grn');
-      var rowId = mode==='login'?'otpRowLogin':'otpRowRegister';
-      var otpRow = document.getElementById(rowId);
-      if(otpRow){
-        otpRow.style.display='block';
-        if(devCode){
-          var boxes = otpRow.querySelectorAll('.otp-box');
-          devCode.split('').forEach(function(d,i){ if(boxes[i]) boxes[i].value=d; });
-        }
-        var first=otpRow.querySelector('.otp-box'); if(first) first.focus();
-      }
-    }
-  };
-})();
 </script>
 
 <script>
@@ -2202,10 +2145,7 @@ document.getElementById('addCardModal').addEventListener('click',function(e){
 ══════════════════════════════════════════════════════════════ */
 (function() {
 
-  /* ── 1. Override renderFeed to use API-connected loadFeed ── */
-  window.renderFeed = function(reset) {
-    if (typeof loadFeed === 'function') loadFeed(reset !== false);
-  };
+  /* ── 1. renderFeed is defined in app-connect.js — do not override ── */
 
   /* ── 2. Override old sendMessage to use app-messages.js ── */
   if (!window.MXMessages) {
@@ -2301,10 +2241,7 @@ document.getElementById('addCardModal').addEventListener('click',function(e){
     });
   });
 
-  /* ── 7. On initial load, start feed ── */
-  document.addEventListener('DOMContentLoaded', function() {
-    if (typeof loadFeed === 'function') loadFeed(true);
-  });
+  /* ── 7. Initial feed load handled by app-init.js ── */
 
 })();
 </script>
