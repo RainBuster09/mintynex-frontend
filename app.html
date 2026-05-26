@@ -487,7 +487,7 @@ input.otp-box { font-size: 18px !important; }
             <input class="fi fi-phone" id="tPhone" type="tel" placeholder="712 345 678"/>
           </div>
         </div>
-        <button class="lbtn acc lbtn-pulse" onclick="doSendOTP('login')" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
+        <button class="lbtn acc lbtn-pulse" onclick="handleLoginBtn()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Enter the Arena</button>
         <div id="otpRowLogin" class="otp-row" style="display:none">
           <label class="fl">Enter OTP sent to your phone</label>
           <div class="otp-inputs">
@@ -498,7 +498,6 @@ input.otp-box { font-size: 18px !important; }
         <div style="text-align:right;margin-bottom:6px"><a onclick="showForgotPassword()" style="font-size:11px;color:#5865f2;cursor:pointer;text-decoration:none">Forgot password?</a></div>
         <div class="ldiv">or</div>
         <button class="lbtn lbtn-ghost" onclick="showRegister()" style="display:flex;align-items:center;justify-content:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Create Account</button>
-        <div class="lfoot">No account? <a onclick="showRegister()">Sign up free</a></div>
       </div>
       <div id="registerForm" style="display:none">
         <div class="fg"><label class="fl">Username</label><input class="fi fi-glow" id="rUser" placeholder="YourTrainerTag"/></div>
@@ -929,7 +928,7 @@ input.otp-box { font-size: 18px !important; }
     </div>
     <div class="srch">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#80848e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input placeholder="Search cards, trainers..." aria-label="Search"/>
+      <input placeholder="Search cards, trainers..." aria-label="Search" id="globalSearchInput" onkeydown="if(event.key==='Enter'&&this.value.trim()){showPg('players');setTimeout(()=>{var fc=document.getElementById('fci');if(fc){fc.value=this.value.trim();if(typeof doSearch==='function')doSearch('');}},100);}"/>
     </div>
     <div class="dtabs">
       <button class="dta on" data-pg="feed">Feed</button>
@@ -995,7 +994,7 @@ input.otp-box { font-size: 18px !important; }
               </div>
               <div class="composer-btn-row">
                 <div class="composer-media-btns">
-                  <button class="btn bgh bxs">📷 Photo</button>
+                  <button class="btn bgh bxs" onclick="triggerPostPhoto()">📷 Photo</button>
                   <button class="btn bgh bxs" data-pg="trade">⇄ Trade</button>
                   <button class="btn bgh bxs" data-action="addlocation"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location</button>
                 </div>
@@ -1091,7 +1090,7 @@ input.otp-box { font-size: 18px !important; }
             <div style="display:flex;gap:6px;flex-wrap:wrap">
               <button class="btn bgrn bsm" data-action="markmet">✓ Mark Met</button>
               <button class="btn bgh bsm" data-pg="messages">💬 Chat</button>
-              <button class="btn brd bxs" style="margin-left:auto">Cancel</button>
+              <button class="btn brd bxs" style="margin-left:auto" data-action="canceltrade">Cancel</button>
             </div>
           </div>
         </div>
@@ -1173,8 +1172,8 @@ input.otp-box { font-size: 18px !important; }
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input class="fi" placeholder="Search cards..." style="border:none;background:none;padding:0;font-size:12px;color:#fff"/>
             </div>
-            <button class="btn bgh bsm">Filter</button>
-            <button class="btn bgh bsm">↕ Sort</button>
+            <button class="btn bgh bsm" onclick="showToast('Filter coming soon','')">Filter</button>
+            <button class="btn bgh bsm" onclick="showToast('Sort coming soon','')">↕ Sort</button>
           </div>
           <div class="ga-lg">
             <div class="tcg"><div class="tcg-art"><img src="https://images.pokemontcg.io/swsh45/19_hires.png" alt="Charizard VMAX" loading="lazy" onerror="this.style.display='none'"/><div class="tcg-art-badge">🔥 TrainerAsh</div></div><div class="tcg-body"><div class="tcg-nm">Charizard VMAX</div><div class="tcg-meta"><span class="bdg bdg-g">PSA 10</span></div><div class="tcg-price">$310</div><div style="display:flex;gap:5px"><button class="btn bg bxs bfw" data-pg="messages">💬 Contact</button><button class="btn bgh bxs" data-pg="trade">⇄</button></div></div></div>
@@ -1217,9 +1216,9 @@ input.otp-box { font-size: 18px !important; }
       </div>
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
         <div style="padding:10px 12px;background:#2b2d31;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0">
-          <div style="width:34px;height:34px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px">💧</div>
-          <div><div style="font-weight:700;font-size:13px;color:#fff">ShinySister_TZ</div><div style="font-size:10px;color:#23a55a">● Online</div></div>
-          <div style="margin-left:auto;display:flex;gap:5px"><button class="btn bgh bxs" data-pg="trade">⇄ Trade</button><button class="btn bgh bxs">···</button></div>
+          <div style="width:34px;height:34px;border-radius:50%;background:#5865f2;display:flex;align-items:center;justify-content:center;font-size:15px" class="msg-chat-header-av">💧</div>
+          <div><div style="font-weight:700;font-size:13px;color:#fff" class="msg-chat-header-name">ShinySister_TZ</div><div style="font-size:10px;color:#23a55a">● Online</div></div>
+          <div style="margin-left:auto;display:flex;gap:5px"><button class="btn bgh bxs" data-pg="trade">⇄ Trade</button><button class="btn bgh bxs chat-options-btn" id="chatMoreBtn">···</button></div>
         </div>
         <div class="scr" id="msgList" style="flex:1;padding:12px">
           <div style="text-align:center;font-size:10px;color:#80848e;margin-bottom:10px">Today, 2:34 PM</div>
@@ -1375,7 +1374,7 @@ input.otp-box { font-size: 18px !important; }
   <div class="verify-progress"><div class="vp-step active"></div><div class="vp-step"></div><div class="vp-step"></div><div class="vp-step"></div></div>
   <div class="verify-step on" id="vs-0"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 1: Basic Info</div><div class="fg"><label class="fl">Full Name</label><input class="fi" placeholder="Your real name"/></div><div class="fg"><label class="fl">Country</label><select class="fi" id="verifyCountry"><option value="">Select country</option></select></div><button class="btn bg bfw" data-action="nextstep">Next →</button></div>
   <div class="verify-step" id="vs-1"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 2: Trade History</div><div style="background:#383a40;border-radius:8px;padding:12px;margin-bottom:12px"><div style="font-size:12px;color:#23a55a">✓ 38 trades completed — eligible!</div></div><div style="display:flex;gap:7px"><button class="btn bgh bsm" data-action="prevstep">← Back</button><button class="btn bg bfw" data-action="nextstep">Next →</button></div></div>
-  <div class="verify-step" id="vs-2"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 3: ID Verification</div><div class="fg"><label class="fl">Upload Government ID</label><button class="btn bgh bfw">📁 Choose File</button></div><div style="display:flex;gap:7px;margin-top:10px"><button class="btn bgh bsm" data-action="prevstep">← Back</button><button class="btn bg bfw" data-action="nextstep">Submit →</button></div></div>
+  <div class="verify-step" id="vs-2"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#fff">Step 3: ID Verification</div><div class="fg"><label class="fl">Upload Government ID</label><button class="btn bgh bfw" onclick="document.getElementById('verifyIdInput').click()">📁 Choose File</button><input type="file" id="verifyIdInput" accept="image/*,.pdf" style="display:none" onchange="if(this.files[0]){showToast('ID document selected ✓','grn');document.getElementById('verifyIdName').textContent=this.files[0].name;}"/><div id="verifyIdName" style="font-size:11px;color:#23a55a;margin-top:6px"></div></div><div style="display:flex;gap:7px;margin-top:10px"><button class="btn bgh bsm" data-action="prevstep">← Back</button><button class="btn bg bfw" data-action="nextstep">Submit →</button></div></div>
   <div class="verify-step" id="vs-3"><div style="text-align:center;padding:10px"><div style="font-size:44px;margin-bottom:8px">✅</div><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#fff">Application Submitted!</div><div style="font-size:12px;color:#b5bac1;margin-bottom:16px">Review takes 24-48 hours. You'll be notified.</div></div><button class="btn bg bfw" data-action="closeverify">Done</button></div>
 </div></div>
 
@@ -1522,6 +1521,34 @@ function switchMode(m){document.getElementById('trainerForm').style.display=m===
 function showRegister(){document.getElementById('trainerForm').style.display='none';document.getElementById('registerForm').style.display='block';}
 function showLogin(){document.getElementById('registerForm').style.display='none';document.getElementById('trainerForm').style.display='block';}
 function selectPlan(el,plan){document.querySelectorAll('.plan-opt').forEach(function(o){o.classList.remove('selected')});el.classList.add('selected');}
+
+/* ── Smart login button: password if filled, OTP if only phone ── */
+function handleLoginBtn() {
+  var user = (document.getElementById('tUser')||{}).value || '';
+  var pass = (document.getElementById('tPass')||{}).value || '';
+  var phone = (document.getElementById('tPhone')||{}).value || '';
+  if (user && pass) {
+    // Password login
+    if (typeof doLogin === 'function') doLogin();
+    else if (typeof doSendOTP === 'function') doSendOTP('login');
+  } else if (phone) {
+    // OTP login
+    if (typeof doSendOTP === 'function') doSendOTP('login');
+  } else {
+    if (typeof showToast === 'function') showToast('Enter your username + password or phone number', 'red');
+  }
+}
+
+/* ── Premium state persisted in sessionStorage (survives soft nav, not hard refresh) ── */
+(function() {
+  try {
+    var saved = JSON.parse(sessionStorage.getItem('mx_premium') || 'null');
+    if (saved && saved.active) {
+      // Will be applied once PREMIUM object is available (app-ui.js loads after)
+      window._savedPremium = saved;
+    }
+  } catch(_) {}
+})();
 
 function applyUserToUI(){var nm=USER.nm,el;el=document.getElementById('dName');if(el)el.textContent=nm;el=document.getElementById('profNmEl');if(el)el.innerHTML=nm+' <span class="bdg bdg-v">✓</span>';el=document.getElementById('binderNm');if(el)el.textContent=nm;var av=USER.avatarSrc?'<img src="'+USER.avatarSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""/>':'🔥';el=document.getElementById('avBtn');if(el)el.innerHTML=av;el=document.getElementById('dhAv');if(el)el.innerHTML=av;el=document.getElementById('postAv');if(el)el.innerHTML=av;el=document.getElementById('binderAv');if(el)el.innerHTML=av;}
 
@@ -1729,6 +1756,7 @@ function fpResetAll() {
 <script src="app-ui.js"></script>
 <script src="app-init.js"></script>
 <script src="app-connect.js"></script>
+<script src="app-fixes.js"></script>
 <script src="app-messages.js"></script>
 <script src="app-binder.js"></script>
 

@@ -104,9 +104,8 @@ const LOCAL_URL = 'http://localhost:8080/api';
       update:       (body)   => request('/users/me',     { method: 'PUT', body }),
       getById:      (id)     => request('/users/' + id),
       search:       (q)      => request('/users/search?q=' + encodeURIComponent(q || '')),
-      uploadAvatar: (fd)     => request('/users/avatar', { method: 'POST', formData: fd }),
-      // BUG FIX: was pointing to missing endpoint — now /users/banner exists on backend
-      uploadBanner: (fd)     => request('/users/banner', { method: 'POST', formData: fd }),
+      uploadAvatar: (fd)     => request('/users/me/avatar', { method: 'POST', formData: fd }),
+      uploadBanner: (fd)     => request('/users/me/banner', { method: 'POST', formData: fd }),
     },
 
     /* ── Posts ── */
@@ -141,6 +140,7 @@ const LOCAL_URL = 'http://localhost:8080/api';
       edit:         (msgId, body)         => request('/messages/' + msgId + '/edit', { method: 'PUT', body }),
       react:        (msgId, body)         => request('/messages/' + msgId + '/react', { method: 'POST', body }),
       delete:       (msgId)               => request('/messages/' + msgId, { method: 'DELETE' }),
+      deleteConversation: (userId)        => request('/messages/conversation/' + userId, { method: 'DELETE' }),
       markRead:     (userId)              => request('/messages/' + userId + '/read', { method: 'PUT' }),
     },
 

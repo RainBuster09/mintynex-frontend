@@ -59,6 +59,7 @@ window.activateTrial = function() {
   PREMIUM.isTrial = true;
   PREMIUM.plan = 'trial';
   PREMIUM.trialDaysLeft = 7;
+  try { sessionStorage.setItem('mx_premium', JSON.stringify(PREMIUM)); } catch(_) {}
   closePremiumModal();
   closeTrialPopup();
   updatePremiumBadge();
@@ -69,6 +70,7 @@ window.activatePremium = function(plan) {
   PREMIUM.active = true;
   PREMIUM.isTrial = false;
   PREMIUM.plan = plan || 'monthly';
+  try { sessionStorage.setItem('mx_premium', JSON.stringify(PREMIUM)); } catch(_) {}
   closePremiumModal();
   updatePremiumBadge();
   showToast('✅ Premium activated! Welcome to MintyNex Premium!', 'grn');
@@ -215,6 +217,14 @@ function initBottomNav() {
   document.querySelectorAll('.gbn[data-pg]').forEach(btn => {
     btn.addEventListener('click', () => showPg(btn.getAttribute('data-pg')));
   });
+  // Restore premium from session if available
+  try {
+    const saved = window._savedPremium || JSON.parse(sessionStorage.getItem('mx_premium') || 'null');
+    if (saved && saved.active) {
+      Object.assign(PREMIUM, saved);
+      updatePremiumBadge();
+    }
+  } catch(_) {}
 }
 
 /* ─────────────────────────────────────────────
@@ -812,19 +822,39 @@ document.addEventListener('click', function(e) {
     if (act==='share' && idx>=0) openShareSheet(idx);
     if (act==='proposetrade') { proposeTrade(); }
     if (act==='friend') showToast('Friend request sent to '+(nm||'trainer')+'!','grn');
-    if (act==='addreview') showToast('Opening review form for '+(nm||'trainer')+'...','');
+    if (act==='addreview') {
+      const reviewName = nm || 'trainer';
+      const star = prompt(`Rate ${reviewName} (1-5 stars):`);
+      const rating = parseInt(star);
+      if (rating >= 1 && rating <= 5) showToast(`★${rating} review submitted for ${reviewName}!`, 'grn');
+    }
     if (act==='addlocation') {
       const loc = prompt('Add location (city or area):');
       const postInput = document.getElementById('postInput');
       if (loc && postInput) postInput.value = (postInput.value ? postInput.value + ' ' : '') + '[' + loc.trim() + ']';
     }
     if (act==='contact' || act==='addcart') showToast('Added to cart! 🛒','grn');
-    if (act==='buynow') showToast('Purchase flow coming soon!','grn');
+    if (act==='buynow') openPremiumModal('Shop Access — Buy Cards');
     if (act==='approve') showToast('Approved! ✓','grn');
     if (act==='reject') showToast('Rejected.','red');
-    if (act==='accept') showToast('Trade accepted! 🤝','grn');
-    if (act==='decline') showToast('Trade declined.','red');
-    if (act==='markmet') showToast('Trade marked as completed! ✓','grn');
+    if (act==='accept') {
+      showToast('Trade accepted! 🤝','grn');
+      if (window.AppApi?.trades?.accept) AppApi.trades.accept(actEl.dataset.tradeId || '0').catch(()=>{});
+    }
+    if (act==='decline') {
+      showToast('Trade declined.','red');
+      if (window.AppApi?.trades?.reject) AppApi.trades.reject(actEl.dataset.tradeId || '0').catch(()=>{});
+    }
+    if (act==='markmet') {
+      showToast('Trade marked as completed! ✓','grn');
+      if (window.AppApi?.trades?.complete) AppApi.trades.complete(actEl.dataset.tradeId || '0').catch(()=>{});
+    }
+    if (act==='canceltrade') {
+      if (confirm('Cancel this trade?')) {
+        showToast('Trade cancelled.','red');
+        if (window.AppApi?.trades?.reject) AppApi.trades.reject(actEl.dataset.tradeId || '0').catch(()=>{});
+      }
+    }
     if (act==='publishshop'||act==='publishmart') showToast('Listing published! ✓','grn');
     if (act==='flagtrade') {
       if (window.AppApi?.trades?.flag) AppApi.trades.flag({ reason: 'manual_flag' });
@@ -838,6 +868,7 @@ document.addEventListener('click', function(e) {
     if (act==='markallread') {
       document.querySelectorAll('.ni.unread').forEach(n=>n.classList.remove('unread'));
       const nb=document.getElementById('nBdg'); if(nb) nb.style.display='none';
+      if (window.AppApi?.notifications?.markAllRead) AppApi.notifications.markAllRead().catch(()=>{});
     }
     if (act==='toggle') actEl.classList.toggle('on');
     if (act==='removip') actEl.closest('.card')?.remove();
@@ -847,7 +878,7 @@ document.addEventListener('click', function(e) {
       row?.remove();
       showToast('Listing removed.','red');
     }
-    if (act==='addcard') showToast('Card picker coming soon!','grn');
+    if (act==='addcard') { if(typeof openAddCardModal==='function') openAddCardModal(); else showToast('Card picker coming soon!','grn'); }
     if (act==='uploadavatar') triggerUpload('avatar');
     if (act==='uploadbanner') triggerUpload('banner');
     if (act==='openverify') openVerify();

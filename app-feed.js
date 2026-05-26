@@ -355,10 +355,17 @@ window.openComments = async function(idx) {
 
   // BUG FIX: wire send button directly — was using data-action which required
   // the global delegator to be set up, but modal is dynamically created
-  document.getElementById('commentSendBtn').onclick = submitComment;
-  document.getElementById('commentInput').addEventListener('keydown', e => {
+  const sendBtn = document.getElementById('commentSendBtn');
+  const cInput  = document.getElementById('commentInput');
+  sendBtn.onclick = null;
+  sendBtn.onclick = submitComment;
+  // Replace input to clear any previously-attached Enter listeners
+  const freshInput = cInput.cloneNode(true);
+  cInput.parentNode.replaceChild(freshInput, cInput);
+  freshInput.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(); }
   });
+  freshInput.focus();
 
   // Load comments from API
   const list = document.getElementById('commentList');
@@ -418,7 +425,7 @@ function buildCommentEl(username, content, time, avatar) {
 }
 
 async function submitComment() {
-  const input = document.getElementById('commentInput');
+  const input = document.getElementById('commentInput') || document.querySelector('#commentBody input.fi');
   const text  = input ? input.value.trim() : '';
   if (!text) return;
 
