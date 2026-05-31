@@ -124,9 +124,10 @@ function buildPostEl(post, idx) {
   div.className = 'post';
   div.dataset.postId = post.id;
 
+  const defaultAvatarSvg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
   const avatarHtml = post.avatarIsUrl && post.avatar
     ? `<img src="${escHtml(post.avatar)}" alt="${escHtml(post.user)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`
-    : `<span>${escHtml(post.avatar || '🔥')}</span>`;
+    : (post.avatar && post.avatar !== '🔥' ? `<span>${escHtml(post.avatar)}</span>` : defaultAvatarSvg);
 
   const mediaHtml = post.cardImg
     ? `<div class="post-img" style="background:${post.bg}">
@@ -578,4 +579,32 @@ window.showPostMenu = function(idx) {
 };
 
 /* ── Init ── */
-document.addEventListener('DOMContentLoaded', () => loadFeed(true));
+document.addEventListener('DOMContentLoaded', () => {
+  loadFeed(true);
+
+  // ── Composer: show action buttons only when focused ──
+  const postInput   = document.getElementById('postInput');
+  const composerActions = document.getElementById('composerActions');
+  const composerCard    = postInput ? postInput.closest('.composer-card') : null;
+
+  if (postInput && composerActions) {
+    postInput.addEventListener('focus', () => {
+      composerActions.style.display = 'flex';
+    });
+    if (composerCard) {
+      composerCard.addEventListener('focusout', () => {
+        setTimeout(() => {
+          if (!composerCard.contains(document.activeElement) && !postInput.value.trim()) {
+            composerActions.style.display = 'none';
+          }
+        }, 150);
+      });
+    }
+  }
+
+  // ── postAv: sync with USER avatar if available ──
+  const postAv = document.getElementById('postAv');
+  if (postAv && typeof USER !== 'undefined' && USER.avatarSrc) {
+    postAv.innerHTML = `<img src="${USER.avatarSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""/>`;
+  }
+});

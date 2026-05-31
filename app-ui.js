@@ -363,16 +363,64 @@ window.doLogout = function() {
   const p=document.getElementById('tPass'); if(p) p.value='';
 };
 
-window.doAdminLogin = function() {
-  const u = document.getElementById('aUser');
-  const p = document.getElementById('aPass');
-  if (u && p && (u.value==='admin' || u.value==='admin@mintynex.com') && p.value==='admin123') {
+// calls the real backend, checks for ADMIN role
+window.doAdminLogin = async function() {
+  const uEl = document.getElementById('aUser');
+  const pEl = document.getElementById('aPass');
+  if (!uEl || !pEl) return;
+
+  const username = uEl.value.trim();
+  const password = pEl.value;
+  if (!username || !password) {
+    showToast('Enter your admin username and password', 'red');
+    return;
+  }
+
+  // Show loading state on the button
+  const btn = document.querySelector('#login-screen .lbtn.danger');
+  const origText = btn ? btn.innerHTML : null;
+  if (btn) btn.innerHTML = '<span style="opacity:.7">Signing in…</span>';
+
+  try {
+    const baseUrl = (typeof AppApi !== 'undefined' && AppApi.getBaseUrl)
+      ? AppApi.getBaseUrl().replace(/\/api$/, '')
+      : '';
+
+    const res = await fetch(baseUrl + '/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      showToast(data.message || 'Invalid credentials', 'red');
+      return;
+    }
+
+    // Must be ADMIN role
+    if (!data.user || data.user.role !== 'ADMIN') {
+      showToast('Access denied — not an admin account', 'red');
+      return;
+    }
+
+    // Store token so AdminApi calls work
+    if (typeof AppApi !== 'undefined') {
+      AppApi.accessToken = data.accessToken;
+    }
+
+    // Show the admin panel
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('adm').classList.add('on');
-    showToast('Admin panel loaded', 'grn');
+    showToast('Welcome back, ' + (data.user.displayName || username), 'grn');
     renderPremiumAdminTab();
-  } else {
-    showToast('Invalid admin credentials', 'red');
+
+  } catch (err) {
+    showToast('Network error — could not reach server', 'red');
+    console.error('[doAdminLogin]', err);
+  } finally {
+    if (btn && origText) btn.innerHTML = origText;
   }
 };
 window.admBack = function() {
@@ -520,7 +568,9 @@ function initPullToRefresh() {
    PHOTO UPLOAD
 ───────────────────────────────────────────── */
 window.triggerUpload = function(type) {
-  const input = document.getElementById(type==='avatar'?'avatarFileInput':'bannerFileInput');
+  const inputId = type === 'avatar' ? 'avatarFileInput' : 'bannerFileInput';
+  const fallbackId = type === 'banner' ? 'bannerFileInputTop' : null;
+  const input = document.getElementById(inputId) || (fallbackId && document.getElementById(fallbackId));
   if (input) input.click();
 };
 
@@ -681,15 +731,18 @@ window.triggerUpload = function(type) {
 
   function _applyPhoto(dataUrl, type) {
     if (type === 'avatar') {
-      document.querySelectorAll('.avbtn,.dh-av,#profAvEl,#binderAv,#postAv').forEach(el => {
+      const defaultSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+      const imgHtml = `<img src="${dataUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`;
+      ['avBtn','dhAv','profAvEl','binderAv','postAv'].forEach(id => {
+        const el = document.getElementById(id);
         if (!el) return;
         el.style.background = 'transparent';
-        el.innerHTML = `<img src="${dataUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`;
+        el.innerHTML = imgHtml;
       });
       showToast('Profile photo updated! ✓', 'grn');
     }
     if (type === 'banner') {
-      const ban = document.querySelector('.prof-ban');
+      const ban = document.getElementById('profBanner') || document.querySelector('.prof-ban');
       if (ban) {
         ban.style.backgroundImage = `url(${dataUrl})`;
         ban.style.backgroundSize = 'cover';
@@ -935,8 +988,8 @@ document.addEventListener('click', function(e) {
   if (e.target.id==='msgSendBtn') sendMessage();
   if (e.target.id==='commentSendBtn') submitComment();
   if (e.target.id==='postBtn') submitPost();
-  if (e.target.id==='prevBtn') { if(window.MXBinder){/* handled by app-binder.js */}else if(pg>0){pg--;renderBinder();} }
-  if (e.target.id==='nextBtn') { if(window.MXBinder){/* handled by app-binder.js */}else if(pg<TP-1){pg++;renderBinder();} }
+  if (e.target.id==='prevBtn') { if(pg>0){pg--;renderBinder();} }
+  if (e.target.id==='nextBtn') { if(pg<TP-1){pg++;renderBinder();} }
 });
 
 document.addEventListener('keydown', e => {
@@ -960,10 +1013,29 @@ document.addEventListener('DOMContentLoaded', () => {
   initButtonAnimations();
   initPullToRefresh();
 
+  // ── Floating navbar: hide on scroll down, show on scroll up ──
+  const nav = document.querySelector('.tnav');
+  let _lastScrollY = 0;
+  document.addEventListener('scroll', function(e) {
+    const scr = e.target;
+    if (!scr || scr.scrollTop === undefined || !nav) return;
+    const y = scr.scrollTop;
+    if (y < 10) {
+      nav.classList.remove('nav-hidden');
+    } else if (y > _lastScrollY + 4) {
+      nav.classList.add('nav-hidden');
+    } else if (y < _lastScrollY - 4) {
+      nav.classList.remove('nav-hidden');
+    }
+    _lastScrollY = y;
+  }, true);
+
   const ai=document.getElementById('avatarFileInput');
   if(ai) ai.addEventListener('change',function(){handlePhotoUpload(this,'avatar');});
   const bi=document.getElementById('bannerFileInput');
   if(bi) bi.addEventListener('change',function(){handlePhotoUpload(this,'banner');});
+  const bi2=document.getElementById('bannerFileInputTop');
+  if(bi2) bi2.addEventListener('change',function(){handlePhotoUpload(this,'banner');});
   const verifyUploadInput = document.createElement('input');
   verifyUploadInput.type = 'file';
   verifyUploadInput.accept = 'image/*,application/pdf';
